@@ -2,21 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
-
 
 // Rutas de autenticación
 Route::middleware('guest')->group(function () {
@@ -26,35 +16,33 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
+// Rutas 2FA (fuera de guest para que funcionen después del primer login)
+Route::get('/2fa/verify', [AuthController::class, 'showTwoFactorForm'])->name('2fa.verify');
+Route::post('/2fa/verify', [AuthController::class, 'verifyTwoFactor'])->name('2fa.verify.post');
+Route::post('/2fa/resend', [AuthController::class, 'resendTwoFactorCode'])->name('2fa.resend');
+
 // Rutas protegidas
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/home', function () {
         return view('home');
     })->name('home');
+
+    // Rutas de perfil para gestionar 2FA
+    Route::get('/profile/2fa', [ProfileController::class, 'show2FA'])->name('profile.2fa');
+    Route::post('/profile/2fa/enable', [ProfileController::class, 'enable2FA'])->name('profile.2fa.enable');
+    Route::post('/profile/2fa/disable', [ProfileController::class, 'disable2FA'])->name('profile.2fa.disable');
 });
+
+// Rutas con roles
 Route::middleware(['auth', 'role:1'])->group(function () {
-    // Solo administradores
     Route::get('/admin', function () {
         return view('admin.dashboard');
     });
 });
 
 Route::middleware(['auth', 'role:1,2'])->group(function () {
-    // Administradores y Operadores
     Route::get('/operaciones', function () {
         return view('operaciones.index');
     });
-});
-
-Route::get('/test-email', function () {
-    try {
-        \Illuminate\Support\Facades\Mail::raw('Este es un email de prueba', function ($message) {
-            $message->to('davidramoz132@gmail.com')
-                    ->subject('Prueba de Email');
-        });
-        return 'Email enviado correctamente!';
-    } catch (\Exception $e) {
-        return 'Error: ' . $e->getMessage();
-    }
 });
