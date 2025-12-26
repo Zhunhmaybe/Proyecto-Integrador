@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PasswordResetController;
 
 Route::get('/', function () {
     return redirect('/login');
@@ -46,3 +47,16 @@ Route::middleware(['auth', 'role:1,2'])->group(function () {
         return view('operaciones.index');
     });
 });
+
+//Resetear contraseña
+Route::get('/forgot-password', [PasswordResetController::class, 'form'])
+    ->name('password.request');
+
+Route::post('/forgot-password', [PasswordResetController::class, 'send'])
+    ->name('password.email');
+
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'resetForm'])
+    ->name('password.reset');
+
+Route::post('/reset-password', [PasswordResetController::class, 'update'])
+    ->name('password.update');

@@ -64,6 +64,12 @@
                                 <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
                             </div>
 
+                            <div class="text-center mb-2">
+                                <a href="{{ route('password.request') }}" class="text-decoration-none">
+                                    ¿Olvidaste tu contraseña?
+                                </a>
+                            </div>
+
                             <div class="text-center">
                                 <a href="{{ url('/register') }}">¿No tienes cuenta? Regístrate</a>
                             </div>
