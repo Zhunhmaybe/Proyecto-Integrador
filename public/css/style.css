@@ -1,0 +1,117 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #000;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+input[type="text"], 
+input[type="tel"], 
+input[type="date"], 
+input[type="time"] {
+    width: 95%;
+    border: none;
+    padding: 4px;
+    font-size: 14px;
+}
+
+.textarea-field {
+    width: 95%;
+    border: none;
+    resize: vertical;
+}
+
+.textarea-full {
+    width: 99%;
+    border: none;
+    resize: vertical;
+}
+
+.checkbox-cell {
+    text-align: center;
+}
+
+input[type="checkbox"], 
+input[type="radio"] {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+#menor-edad {
+    display: none;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    display: block;
+    margin: 20px auto;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.section-title {
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.authorization-text {
+    margin-bottom: 15px;
+}
+
+.checkbox-container {
+    margin: 15px 0;
+}
+
+.firma-cell {
+    height: 60px;
+}
+
+.pagina {
+    page-break-after: always;
+    break-after: page;
+}
+
+.no-corte {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+table {
+    page-break-inside: avoid;
+}
+

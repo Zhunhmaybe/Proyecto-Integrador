@@ -46,3 +46,8 @@ Route::middleware(['auth', 'role:1,2'])->group(function () {
         return view('operaciones.index');
     });
 });
+
+//consentimiento informado
+Route::get('/consentimiento', function () {
+    return view('acciones.consentimiento');
+})->name('consentimiento');
