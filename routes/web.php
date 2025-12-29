@@ -6,8 +6,20 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PasswordResetController;
 
 Route::get('/', function () {
-    return redirect('/login');
+    return redirect()->route('inicial');
 });
+
+Route::get('/Inicial', function () {
+    return view('inicial');
+})->name('inicial');
+
+Route::get('/servicios', function () {
+    return view('servicios');
+})->name('servicios');
+
+Route::get('/contacto', function () {
+    return view('contacto');
+})->name('contacto');
 
 // Rutas de autenticación
 Route::middleware('guest')->group(function () {
