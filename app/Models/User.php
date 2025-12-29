@@ -10,7 +10,7 @@ use Carbon\Carbon;
 
 class User extends Authenticatable
 {
-   use HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     protected $table = 'usuarios';
 
@@ -21,6 +21,13 @@ class User extends Authenticatable
         'password',
         'rol',
         'estado',
+
+        // SEGURIDAD LOGIN
+        'failed_attempts',
+        'is_locked',
+        'lock_code',
+
+        // 2FA
         'two_factor_enabled',
         'two_factor_code',
         'two_factor_expires_at',
@@ -66,15 +73,15 @@ class User extends Authenticatable
     // Obtener nombre del rol
     public function getNombreRolAttribute(): string
     {
-        return match($this->rol) {
+        return match ($this->rol) {
             1 => 'Administrador',
             2 => 'Operador',
             3 => 'Usuario',
             default => 'Desconocido',
         };
     }
-    
-     // Métodos para 2FA
+
+    // Métodos para 2FA
     public function generateTwoFactorCode(): string
     {
         $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);

@@ -72,3 +72,6 @@ Route::get('/reset-password/{token}', [PasswordResetController::class, 'resetFor
 
 Route::post('/reset-password', [PasswordResetController::class, 'update'])
     ->name('password.update');
+//Desbloquear cuenta
+Route::get('/unlock', [AuthController::class, 'unlockForm'])->name('lock.form');
+Route::post('/unlock', [AuthController::class, 'unlock'])->name('lock.verify');

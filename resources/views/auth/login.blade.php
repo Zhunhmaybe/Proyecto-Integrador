@@ -80,6 +80,37 @@
         </div>
     </div>
 
+    {{-- 🔒 MODAL: SESIÓN CERRADA POR INACTIVIDAD --}}
+@if (session('session_expired'))
+<div class="modal fade show" id="sessionExpiredModal" tabindex="-1"
+     style="display:block; background:rgba(0,0,0,0.6);">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Sesión cerrada</h5>
+            </div>
+
+            <div class="modal-body text-center">
+                <p>
+                    Tu sesión se cerró automáticamente por
+                    <strong>inactividad</strong>.
+                </p>
+            </div>
+
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-danger"
+                        onclick="window.location.href='{{ route('login') }}'">
+                    Aceptar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+@endif
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
