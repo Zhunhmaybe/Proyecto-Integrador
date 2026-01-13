@@ -2,135 +2,231 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <title>Seguridad 2FA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuración 2FA</title>
+
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f7fb;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+        }
+
+        /* ===== LAYOUT ===== */
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 260px;
+            background: #0b4f79;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .sidebar .logo img {
+            width: 110px;
+        }
+
+        .sidebar a {
+            color: #cfe6f5;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .sidebar a.active,
+        .sidebar a:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+
+        .sidebar .user {
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 15px;
+            font-size: 13px;
+        }
+
+        /* ===== CONTENT ===== */
+        .content {
+            flex: 1;
+            padding: 30px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ===== CARD ===== */
+        .card-box {
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .card-header-custom {
+            background: #b7d8ee;
+            padding: 20px 30px;
+        }
+
+        .card-body-custom {
+            padding: 30px;
+        }
+
+        .btn-primary-custom {
+            background: #0b4f79;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 30px;
+            color: white;
+        }
+
+        .btn-primary-custom:hover {
+            background: #083d5f;
+        }
+
+        .btn-warning-custom {
+            background: #e0b23f;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 30px;
+            color: white;
+        }
+
+        .btn-warning-custom:hover {
+            background: #c89b2d;
+        }
+
+        .btn-danger-custom {
+            background: #dc3545;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 30px;
+            color: white;
+        }
+
+        .badge-status {
+            font-size: 14px;
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">Mi Aplicación</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('home') }}">Inicio</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            {{ Auth::user()->nombre }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ route('profile.2fa') }}">Seguridad 2FA</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item">Cerrar Sesión</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+
+<div class="wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="/images/logo-danny.png" alt="Logo Danny">
+            <p class="mt-2 fw-bold">
+                DANNY LARA<br>
+                <small>Dental Solutions</small>
+            </p>
         </div>
-    </nav>
 
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">Autenticación de Dos Factores (2FA)</h4>
-                    </div>
-                    <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success">
-                                {{ session('success') }}
-                            </div>
-                        @endif
+        <a href="{{ route('home') }}">👤 Mi Perfil</a>
 
-                        @if (session('error'))
-                            <div class="alert alert-danger">
-                                {{ session('error') }}
-                            </div>
-                        @endif
+        <div class="user">
+            <strong>{{ Auth::user()->nombre }}</strong><br>
+            <small>Recepcionista</small>
 
-                        <div class="mb-4">
-                            <h5>Estado actual:</h5>
-                            @if(Auth::user()->two_factor_enabled)
-                                <span class="badge bg-success fs-6">
-                                    <i class="bi bi-shield-check"></i> Habilitado
-                                </span>
-                            @else
-                                <span class="badge bg-secondary fs-6">
-                                    <i class="bi bi-shield-x"></i> Deshabilitado
-                                </span>
-                            @endif
-                        </div>
+            <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                @csrf
+                <button class="btn btn-light btn-sm w-100">Cerrar Sesión</button>
+            </form>
+        </div>
+    </aside>
 
-                        <div class="alert alert-info">
-                            <h5 class="alert-heading">¿Qué es la autenticación de dos factores?</h5>
-                            <p class="mb-0">
-                                La autenticación de dos factores añade una capa extra de seguridad a tu cuenta.
-                                Cuando está habilitada, se te enviará un código de 6 dígitos a tu email cada vez que inicies sesión.
-                            </p>
-                        </div>
+    <!-- CONTENT -->
+    <main class="content">
 
-                        @if(Auth::user()->two_factor_enabled)
-                            <div class="card bg-light">
-                                <div class="card-body">
-                                    <h5 class="card-title">2FA está activo</h5>
-                                    <p class="card-text">
-                                        Tu cuenta está protegida con autenticación de dos factores.
-                                        Se te enviará un código a <strong>{{ Auth::user()->email }}</strong> cada vez que inicies sesión.
-                                    </p>
-                                    <form method="POST" action="{{ route('profile.2fa.disable') }}">
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de querer deshabilitar 2FA?')">
-                                            Deshabilitar 2FA
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        @else
-                            <div class="card bg-light">
-                                <div class="card-body">
-                                    <h5 class="card-title">Habilitar 2FA</h5>
-                                    <p class="card-text">
-                                        Protege tu cuenta habilitando la autenticación de dos factores.
-                                        Recibirás códigos de verificación en <strong>{{ Auth::user()->email }}</strong>.
-                                    </p>
-                                    <form method="POST" action="{{ route('profile.2fa.enable') }}">
-                                        @csrf
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="bi bi-shield-lock"></i> Habilitar 2FA
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        @endif
+        <h3 class="fw-bold mb-4" style="max-width:900px;width:100%">
+            Seguridad – Autenticación 2FA
+        </h3>
 
-                        <div class="mt-4">
-                            <h5>Beneficios de 2FA:</h5>
-                            <ul>
-                                <li>Mayor seguridad para tu cuenta</li>
-                                <li>Protección contra accesos no autorizados</li>
-                                <li>Notificación instantánea de intentos de inicio de sesión</li>
-                            </ul>
-                        </div>
-                    </div>
+        <div class="card-box">
+
+            <div class="card-header-custom">
+                <h4 class="mb-0">Autenticación de Dos Factores (2FA)</h4>
+            </div>
+
+            <div class="card-body-custom">
+
+                @if (session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+
+                @if (session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
+
+                <div class="mb-4">
+                    <strong>Estado actual:</strong><br><br>
+                    @if(Auth::user()->two_factor_enabled)
+                        <span class="badge bg-success badge-status">Habilitado</span>
+                    @else
+                        <span class="badge bg-secondary badge-status">Deshabilitado</span>
+                    @endif
                 </div>
 
-                <div class="text-center mt-3">
-                    <a href="{{ route('home') }}" class="btn btn-secondary">Volver al inicio</a>
+                <div class="alert alert-info">
+                    <strong>¿Qué es 2FA?</strong><br>
+                    Añade una capa extra de seguridad.  
+                    Se enviará un código de 6 dígitos a tu correo
+                    <strong>{{ Auth::user()->email }}</strong>
+                    en cada inicio de sesión.
                 </div>
+
+                @if(Auth::user()->two_factor_enabled)
+                    <div class="mt-4">
+                        <p>Tu cuenta está protegida con 2FA.</p>
+                        <form method="POST" action="{{ route('profile.2fa.disable') }}">
+                            @csrf
+                            <button type="submit"
+                                    class="btn-danger-custom"
+                                    onclick="return confirm('¿Deshabilitar 2FA?')">
+                                Deshabilitar 2FA
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <div class="mt-4">
+                        <p>Activa 2FA para proteger tu cuenta.</p>
+                        <form method="POST" action="{{ route('profile.2fa.enable') }}">
+                            @csrf
+                            <button type="submit" class="btn-primary-custom">
+                                Habilitar 2FA
+                            </button>
+                        </form>
+                    </div>
+                @endif
+
             </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -9,7 +9,7 @@ Route::get('/', function () {
     return redirect()->route('inicial');
 });
 
-Route::get('/Inicial', function () {
+Route::get('/Inicio', function () {
     return view('inicial');
 })->name('inicial');
 
