@@ -24,7 +24,7 @@ class CitaController extends Controller
     public function buscarPaciente(Request $request)
     {
         $request->validate([
-            'cedula' => 'required|string|max:20',
+            'cedula' => 'required|string|max:10',
         ]);
 
         $paciente = Paciente::where('cedula', $request->cedula)->first();
