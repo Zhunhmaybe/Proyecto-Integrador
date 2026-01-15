@@ -142,7 +142,6 @@ public function login(Request $request)
     return redirect()->intended('/home');
 }
 
-
     // Mostrar formulario de verificación 2FA
     public function showTwoFactorForm(Request $request)
     {
@@ -272,7 +271,7 @@ public function login(Request $request)
             Log::error('Error al enviar notificación de registro: ' . $e->getMessage());
         }
 
-        return redirect('/home');
+        return redirect('/login');
     }
 
     // Cerrar sesión
