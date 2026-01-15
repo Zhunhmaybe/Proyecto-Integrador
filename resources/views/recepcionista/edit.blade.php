@@ -157,7 +157,7 @@
             <img src="/images/logo-danny.png" alt="Logo Danny">
         </div>
 
-        <a href="{{ route('recepcionista.perfil') }}" class="active">👤 Mi Perfil</a>
+        <a href="{{ route('home') }}" class="active">👤 Mi Perfil</a>
         <a href="{{ route('citas.create') }}">📅 Citas</a>
         <a href="{{ route('pacientes.index') }}">👥 Pacientes</a>
 
@@ -199,7 +199,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('recepcionista.perfil.update') }}">
+                <form method="POST" action="{{ route('perfil.update') }}">
                     @csrf
                     @method('PUT')
 
@@ -217,10 +217,11 @@
 
                         <div class="col-md-6">
                             <label class="form-label">Correo Electrónico</label>
-                            <input type="email"
-                                   class="form-control"
-                                   value="{{ Auth::user()->email }}"
-                                   disabled>
+<input class="form-control"
+       name="email"
+       value="{{ Auth::user()->email }}"
+       readonly>
+
                         </div>
                     </div>
 
@@ -244,7 +245,7 @@
 
                     <div class="actions">
                         <button type="submit" class="btn-save">Guardar Cambios</button>
-                        <a href="{{ route('recepcionista.perfil') }}" class="btn btn-outline-secondary btn-cancel">
+                        <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-cancel">
                             Cancelar
                         </a>
                     </div>

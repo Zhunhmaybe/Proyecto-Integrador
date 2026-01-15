@@ -196,7 +196,7 @@
             <img src="/images/logo-danny.png" alt="Logo Danny">
         </div>
 
-        <a href="#" class="active">👤 Mi Perfil</a>
+        <a href="{{ route('home') }}" class="active">👤 Mi Perfil</a>
         <a href="{{ route('citas.create') }}">📅 Citas</a>
         <a href="{{ route('pacientes.index') }}">👥 Pacientes</a>
 
@@ -260,7 +260,10 @@
                 <div class="text-center">
 
 <div class="action-buttons">
-    <button class="btn-edit">Editar</button>
+    <a href="{{ route('perfil.edit') }}" class="btn btn-gold">
+    Editar
+</a>
+
     
     <a href="{{ route('profile.2fa') }}"
        class="btn-2fa"

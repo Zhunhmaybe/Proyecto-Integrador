@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PacienteController;
+use App\Http\Controllers\CitaController;
 
 Route::get('/', function () {
     return redirect()->route('inicial');
@@ -41,6 +42,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', function () {
         return view('home');
     })->name('home');
+    
+        // Editar perfil
+    Route::get('/perfil/editar', [AuthController::class, 'editProfile'])
+        ->name('perfil.edit');
+
+    Route::put('/perfil/actualizar', [AuthController::class, 'updateProfile'])
+        ->name('perfil.update');
+
 
     // Rutas de perfil para gestionar 2FA
     Route::get('/profile/2fa', [ProfileController::class, 'show2FA'])->name('profile.2fa');
@@ -90,8 +99,11 @@ Route::post('/pacientes', [PacienteController::class, 'store'])
 Route::put('/pacientes/{paciente}', [PacienteController::class, 'update'])
     ->name('pacientes.update');
 
+    Route::get('/pacientes/{paciente}/citas', [PacienteController::class, 'citas'])
+    ->name('pacientes.citas');
+
+
 //Ruta Chat
-use App\Http\Controllers\CitaController;
 
 Route::middleware(['auth'])->group(function () {
 

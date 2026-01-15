@@ -203,6 +203,12 @@
                         </div>
                     @else
                         <h5 class="fw-bold mb-3">Información del Paciente</h5>
+<a href="{{ route('pacientes.citas', $pacienteSeleccionado->id) }}"
+   class="btn btn-outline-primary mb-3">
+    📅 Ver Citas del Paciente
+</a>
+
+
 
                         <form method="POST"
                               action="{{ route('pacientes.update', $pacienteSeleccionado->id) }}">

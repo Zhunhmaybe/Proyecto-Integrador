@@ -211,7 +211,7 @@
             <img src="/images/logo-danny.png" alt="Logo Danny">
         </div>
 
-        <a href="{{ url('/home') }}">👤 Mi Perfil</a>
+        <a href="{{ url('home') }}">👤 Mi Perfil</a>
         <a href="{{ route('citas.create') }}">📅 Citas</a>
         <a href="{{ route('pacientes.index') }}" class="active">👥 Pacientes</a>
 
