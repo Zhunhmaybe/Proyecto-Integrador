@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('usuarios', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 100);
-            $table->string('tel', 20)->nullable();
+            $table->string('tel', 10)->nullable();
             $table->string('email', 100)->unique();
             $table->string('password');
-            $table->integer('rol')->default(3)->comment('1=Administrador, 2=Operador, 3=Usuario');
+            $table->integer('rol')->default(3)->comment('1=Administrador, 2=Doctor, 3=Recepcionista');
             $table->integer('estado')->default(1)->comment('1=Activo, 2=Inactivo');
             $table->integer('failed_attempts')->default(0);
             $table->integer('is_locked')->default(0);

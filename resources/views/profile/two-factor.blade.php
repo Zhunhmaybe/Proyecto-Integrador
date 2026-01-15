@@ -128,6 +128,17 @@
             padding: 8px 15px;
             border-radius: 20px;
         }
+        .btn-link-soft {
+            color: #6c7a89;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .btn-link-soft:hover {
+            color: #0b4f79;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -138,17 +149,15 @@
     <aside class="sidebar">
         <div class="logo">
             <img src="/images/logo-danny.png" alt="Logo Danny">
-            <p class="mt-2 fw-bold">
-                DANNY LARA<br>
-                <small>Dental Solutions</small>
-            </p>
         </div>
 
-        <a href="{{ route('home') }}">👤 Mi Perfil</a>
+        <a href="{{ route('home') }}"  class="active">👤 Mi Perfil</a>
+        <a href="#">📅 Citas</a>
+        <a href="{{ route('pacientes.index') }}">👥 Pacientes</a>
 
         <div class="user">
             <strong>{{ Auth::user()->nombre }}</strong><br>
-            <small>Recepcionista</small>
+            <small>{{Auth::user()->nombre_rol}}</small>
 
             <form method="POST" action="{{ route('logout') }}" class="mt-2">
                 @csrf
@@ -179,7 +188,6 @@
                 @if (session('error'))
                     <div class="alert alert-danger">{{ session('error') }}</div>
                 @endif
-
                 <div class="mb-4">
                     <strong>Estado actual:</strong><br><br>
                     @if(Auth::user()->two_factor_enabled)
@@ -219,6 +227,7 @@
                             </button>
                         </form>
                     </div>
+                    <a href="{{ route('home') }}" class="btn-link-soft">Volver</a>
                 @endif
 
             </div>

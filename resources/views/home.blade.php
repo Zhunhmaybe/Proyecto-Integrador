@@ -194,19 +194,16 @@
     <aside class="sidebar">
         <div class="logo">
             <img src="/images/logo-danny.png" alt="Logo Danny">
-            <p class="mt-2 fw-bold">
-                DANNY LARA<br>
-                <small>Dental Solutions</small>
-            </p>
         </div>
 
         <a href="#" class="active">👤 Mi Perfil</a>
-        <a href="#">📅 Citas</a>
-        <a href="#">👥 Pacientes</a>
+        <a href="{{ route('citas.create') }}">📅 Citas</a>
+        <a href="{{ route('pacientes.index') }}">👥 Pacientes</a>
+
 
         <div class="user">
             <strong>{{ Auth::user()->nombre }}</strong><br>
-            <small>Recepcionista</small>
+            <small>{{Auth::user()->nombre_rol}}</small>
 
             <form method="POST" action="{{ route('logout') }}" class="mt-2">
                 @csrf
@@ -225,7 +222,7 @@
                 <div class="avatar"></div>
                 <div>
                     <h4>{{ Auth::user()->nombre }}</h4>
-                    <small>Recepcionista</small>
+                    <small>{{Auth::user()->nombre_rol}}</small>
                 </div>
             </div>
 
@@ -254,9 +251,9 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">Fecha de Nacimiento:</label>
+                        <label class="form-label">Estado:</label>
                         <input type="text" class="form-control"
-                               value="{{ Auth::user()->fecha_nacimiento ?? 'No registrada' }}" disabled>
+                               value="{{ Auth::user()->nombre_estado ?? 'No registrada' }}" disabled>
                     </div>
                 </div>
 
@@ -264,7 +261,7 @@
 
 <div class="action-buttons">
     <button class="btn-edit">Editar</button>
-
+    
     <a href="{{ route('profile.2fa') }}"
        class="btn-2fa"
        title="Seguridad 2FA">
@@ -280,5 +277,36 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+@if (session('session_expired'))
+<div class="modal fade show" id="sessionExpiredModal"
+     tabindex="-1"
+     style="display:block; background:rgba(0,0,0,0.6);">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Sesión cerrada</h5>
+            </div>
+
+            <div class="modal-body text-center">
+                <p>
+                    Tu sesión se cerró automáticamente por
+                    <strong>inactividad de 2 minutos</strong>.
+                </p>
+            </div>
+
+            <div class="modal-footer justify-content-center">
+                <button type="button"
+                        class="btn btn-danger"
+                        onclick="window.location.href='{{ route('login') }}'">
+                    Aceptar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+@endif
+
 </body>
 </html>

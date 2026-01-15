@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\PacienteController;
 
 Route::get('/', function () {
     return redirect()->route('inicial');
@@ -75,3 +76,31 @@ Route::post('/reset-password', [PasswordResetController::class, 'update'])
 //Desbloquear cuenta
 Route::get('/unlock', [AuthController::class, 'unlockForm'])->name('lock.form');
 Route::post('/unlock', [AuthController::class, 'unlock'])->name('lock.verify');
+
+//Recepcionista 
+Route::get('/pacientes', [PacienteController::class, 'index'])
+    ->name('pacientes.index');
+
+Route::get('/pacientes/crear', [PacienteController::class, 'create'])
+    ->name('pacientes.create');
+
+Route::post('/pacientes', [PacienteController::class, 'store'])
+    ->name('pacientes.store');
+
+Route::put('/pacientes/{paciente}', [PacienteController::class, 'update'])
+    ->name('pacientes.update');
+
+//Ruta Chat
+use App\Http\Controllers\CitaController;
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/citas/create', [CitaController::class, 'create'])
+        ->name('citas.create');
+
+    Route::post('/citas/buscar-paciente', [CitaController::class, 'buscarPaciente'])
+        ->name('citas.buscarPaciente');
+
+    Route::post('/citas', [CitaController::class, 'store'])
+        ->name('citas.store');
+});

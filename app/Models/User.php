@@ -39,6 +39,7 @@ class User extends Authenticatable
         'two_factor_code',
     ];
 
+
     protected function casts(): array
     {
         return [
@@ -75,8 +76,18 @@ class User extends Authenticatable
     {
         return match ($this->rol) {
             1 => 'Administrador',
-            2 => 'Operador',
-            3 => 'Usuario',
+            2 => 'Doctor',
+            3 => 'Secretaria',
+            default => 'Desconocido',
+        };
+    }
+
+    // Obtener nombre del estado
+    public function getNombreEstadoAttribute(): string
+    {
+        return match ($this->estado) {
+            1 => 'Activo',
+            2 => 'Inactivo',
             default => 'Desconocido',
         };
     }
