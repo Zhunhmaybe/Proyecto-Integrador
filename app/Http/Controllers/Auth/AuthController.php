@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+
 
 class AuthController extends Controller
 {
@@ -21,74 +24,124 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    // Procesar login
-    public function login(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|min:6',
-        ], [
-            'email.required' => 'El email es obligatorio',
-            'email.email' => 'Debe ser un email válido',
-            'password.required' => 'La contraseña es obligatoria',
-            'password.min' => 'La contraseña debe tener al menos 6 caracteres',
-        ]);
+public function login(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email',
+        'password' => 'required|min:6',
+    ], [
+        'email.required' => 'El email es obligatorio',
+        'email.email' => 'Debe ser un email válido',
+        'password.required' => 'La contraseña es obligatoria',
+        'password.min' => 'La contraseña debe tener al menos 6 caracteres',
+    ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
+    if ($validator->fails()) {
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
+    }
 
-        $credentials = $request->only('email', 'password');
-        $user = User::where('email', $request->email)->first();
+    $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return redirect()->back()
-                ->withErrors(['email' => 'Las credenciales no coinciden con nuestros registros.'])
-                ->withInput();
-        }
+    // ❌ Usuario no existe
+    if (!$user) {
+        return redirect()->back()
+            ->withErrors(['email' => 'Las credenciales no coinciden con nuestros registros.'])
+            ->withInput();
+    }
 
-        // Verificar si el usuario está activo
-        if ($user->estado != 1) {
-            return redirect()->back()
-                ->withErrors(['email' => 'Tu cuenta está inactiva. Contacta al administrador.'])
-                ->withInput();
-        }
+    // 🔒 Cuenta bloqueada
+    if ($user->is_locked == 1) {
+        return redirect()->route('lock.form')
+            ->withErrors(['email' => 'Cuenta bloqueada. Revisa tu correo para desbloquear.']);
+    }
 
-        // Si tiene 2FA habilitado, generar código
-        if ($user->two_factor_enabled) {
-            $code = $user->generateTwoFactorCode();
+    // ❌ Contraseña incorrecta
+    if (!Hash::check($request->password, $user->password)) {
 
-            // Enviar código por email
+        $user->failed_attempts += 1;
+
+        // 🚨 Bloquear al 3er intento
+        if ($user->failed_attempts >= 3) {
+
+            $code = rand(100000, 999999);
+
+            $user->update([
+                'is_locked' => 1,
+                'lock_code' => $code
+            ]);
+
+            // 📧 Correo de advertencia
             try {
-                $user->notify(new TwoFactorCodeNotification($code));
+                Mail::raw(
+                    "Se detectaron múltiples intentos fallidos de inicio de sesión.\n\n".
+                    "Tu código de desbloqueo es: $code",
+                    function ($message) use ($user) {
+                        $message->to($user->email)
+                                ->subject('Advertencia de seguridad - Cuenta bloqueada');
+                    }
+                );
             } catch (\Exception $e) {
-                Log::error('Error al enviar código 2FA: ' . $e->getMessage());
+                Log::error('Error al enviar correo de bloqueo: ' . $e->getMessage());
             }
 
-            // Guardar el ID del usuario en sesión temporal
-            $request->session()->put('2fa:user:id', $user->id);
-            $request->session()->put('2fa:remember', $request->filled('remember'));
-
-            return redirect()->route('2fa.verify');
+            return redirect()->route('lock.form')
+                ->withErrors(['email' => 'Cuenta bloqueada. Código enviado a tu correo.']);
         }
 
-        // Login normal sin 2FA
-        Auth::login($user, $request->filled('remember'));
-        $request->session()->regenerate();
+        $user->save();
 
-        // Enviar notificación de login
-        try {
-            $loginTime = Carbon::now()->format('d/m/Y H:i:s');
-            $ipAddress = $request->ip();
-            $user->notify(new LoginNotification($loginTime, $ipAddress));
-        } catch (\Exception $e) {
-            Log::error('Error al enviar notificación de login: ' . $e->getMessage());
-        }
-
-        return redirect()->intended('/home');
+        return redirect()->back()
+            ->withErrors(['password' => 'Contraseña incorrecta'])
+            ->withInput();
     }
+
+    // ✅ Verificar si el usuario está activo
+    if ($user->estado != 1) {
+        return redirect()->back()
+            ->withErrors(['email' => 'Tu cuenta está inactiva. Contacta al administrador.'])
+            ->withInput();
+    }
+
+    // 🔄 Resetear intentos fallidos
+    $user->update([
+        'failed_attempts' => 0
+    ]);
+
+    // 🔐 2FA
+    if ($user->two_factor_enabled) {
+
+        $code = $user->generateTwoFactorCode();
+
+        try {
+            $user->notify(new TwoFactorCodeNotification($code));
+        } catch (\Exception $e) {
+            Log::error('Error al enviar código 2FA: ' . $e->getMessage());
+        }
+
+        $request->session()->put('2fa:user:id', $user->id);
+        $request->session()->put('2fa:remember', $request->filled('remember'));
+
+        return redirect()->route('2fa.verify');
+    }
+
+    // ✅ Login normal
+    Auth::login($user, $request->filled('remember'));
+    $request->session()->regenerate();
+
+    // 📧 Notificación de login exitoso
+    try {
+        $loginTime = Carbon::now()->format('d/m/Y H:i:s');
+        $ipAddress = $request->ip();
+        $user->notify(new LoginNotification($loginTime, $ipAddress));
+    } catch (\Exception $e) {
+        Log::error('Error al enviar notificación de login: ' . $e->getMessage());
+    }
+
+    return redirect()->intended('/home');
+}
+
 
     // Mostrar formulario de verificación 2FA
     public function showTwoFactorForm(Request $request)
@@ -231,4 +284,38 @@ class AuthController extends Controller
 
         return redirect('/login');
     }
+
+     public function unlockForm()
+    {
+        return view('auth.unlock');
+    }
+
+    //Desbloquear
+public function unlock(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'code' => 'required'
+    ]);
+
+    $code = trim($request->code);
+
+    $user = User::where('email', $request->email)
+                ->where('lock_code', $code)
+                ->first();
+
+    if (!$user) {
+        return back()->withErrors(['code' => 'Código inválido']);
+    }
+
+    $user->update([
+        'failed_attempts' => 0,
+        'is_locked' => 0,
+        'lock_code' => null
+    ]);
+
+    return redirect()->route('login')
+        ->with('status', 'Cuenta desbloqueada correctamente');
+}
+
 }

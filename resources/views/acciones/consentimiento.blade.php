@@ -143,7 +143,7 @@
                 <th>Firma</th>
             </tr>
             <tr>
-                <td><input type="text" id="nombreProfesional"></td>
+                <td>Danny Lara Castillo</td>
                 <td><p>Odontología</p></td>
                 <td><input type="tel" id="telefonoProfesional"></td>
                 <td><input type="text" id="codigoProfesional"></td>

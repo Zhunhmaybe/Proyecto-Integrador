@@ -3,10 +3,23 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PasswordResetController;
 
 Route::get('/', function () {
-    return redirect('/login');
+    return redirect()->route('inicial');
 });
+
+Route::get('/Inicial', function () {
+    return view('inicial');
+})->name('inicial');
+
+Route::get('/servicios', function () {
+    return view('servicios');
+})->name('servicios');
+
+Route::get('/contacto', function () {
+    return view('contacto');
+})->name('contacto');
 
 // Rutas de autenticación
 Route::middleware('guest')->group(function () {
@@ -51,3 +64,20 @@ Route::middleware(['auth', 'role:1,2'])->group(function () {
 Route::get('/consentimiento', function () {
     return view('acciones.consentimiento');
 })->name('consentimiento');
+
+//Resetear contraseña
+Route::get('/forgot-password', [PasswordResetController::class, 'form'])
+    ->name('password.request');
+
+Route::post('/forgot-password', [PasswordResetController::class, 'send'])
+    ->name('password.email');
+
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'resetForm'])
+    ->name('password.reset');
+
+Route::post('/reset-password', [PasswordResetController::class, 'update'])
+    ->name('password.update');
+        
+//Desbloquear cuenta
+Route::get('/unlock', [AuthController::class, 'unlockForm'])->name('lock.form');
+Route::post('/unlock', [AuthController::class, 'unlock'])->name('lock.verify');
