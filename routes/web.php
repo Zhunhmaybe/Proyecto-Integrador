@@ -60,14 +60,14 @@ Route::middleware('auth')->group(function () {
 // Rutas con roles
 Route::middleware(['auth', 'role:1'])->group(function () {
     Route::get('/admin', function () {
-        return view('admin.dashboard');
-    });
+        return view('admin.dashboard'); // Asegúrate de tener esta vista creada
+    })->name('admin.dashboard');
 });
 
-Route::middleware(['auth', 'role:1,2'])->group(function () {
-    Route::get('/operaciones', function () {
-        return view('operaciones.index');
-    });
+Route::middleware(['auth', 'role:2'])->group(function () {
+    Route::get('/auditor', function () {
+        return view('auditor.dashboard'); // Asegúrate de tener esta vista creada
+    })->name('auditor.dashboard');
 });
 
 //consentimiento informado

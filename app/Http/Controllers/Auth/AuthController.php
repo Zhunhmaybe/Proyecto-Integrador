@@ -139,6 +139,13 @@ class AuthController extends Controller
             Log::error('Error al enviar notificación de login: ' . $e->getMessage());
         }
 
+        // REDIRECCIÓN POR ROL
+        if ($user->rol == 1) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->rol == 2) {
+            return redirect()->route('auditor.dashboard');
+        }
+
         return redirect()->intended('/home');
     }
 
@@ -194,6 +201,13 @@ class AuthController extends Controller
             Log::error('Error al enviar notificación de login: ' . $e->getMessage());
         }
 
+        // REDIRECCIÓN POR ROL
+        if ($user->rol == 1) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->rol == 2) {
+            return redirect()->route('auditor.dashboard');
+        }
+
         return redirect()->intended('/home');
     }
 
@@ -233,7 +247,7 @@ class AuthController extends Controller
             'tel' => 'nullable|string|max:20',
             'email' => 'required|string|email|max:100|unique:usuarios,email',
             'password' => 'required|string|min:6|confirmed',
-            'rol' => 'nullable|integer|in:1,2,3',
+            // 'rol' ya no se valida porque se asigna automáticamente
         ], [
             'nombre.required' => 'El nombre es obligatorio',
             'email.required' => 'El email es obligatorio',
@@ -255,7 +269,7 @@ class AuthController extends Controller
             'tel' => $request->tel,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'rol' => $request->rol ?? 3,
+            'rol' => 3, // FORZADO A RECEPCIONISTA (3)
             'estado' => 1,
             'two_factor_enabled' => false, // 2FA deshabilitado por defecto
         ]);
@@ -271,7 +285,7 @@ class AuthController extends Controller
             Log::error('Error al enviar notificación de registro: ' . $e->getMessage());
         }
 
-        return redirect('/login');
+        return redirect('/home'); // Nuevo usuario va siempre a home (rol 3)
     }
 
     // Cerrar sesión

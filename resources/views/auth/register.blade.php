@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,7 +55,7 @@
             padding: 45px 40px;
             max-width: 450px;
             width: 100%;
-            box-shadow: 0 10px 40px rgba(0,0,0,.15);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, .15);
             border: 3px dotted #e0e0e0;
             z-index: 2;
             position: relative;
@@ -70,7 +71,7 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 15px;
-            box-shadow: 0 4px 15px rgba(244,196,48,.25);
+            box-shadow: 0 4px 15px rgba(244, 196, 48, .25);
         }
 
         .icon-circle svg {
@@ -108,7 +109,7 @@
         }
 
         .btn-register:hover {
-            box-shadow: 0 8px 20px rgba(44,127,184,.3);
+            box-shadow: 0 8px 20px rgba(44, 127, 184, .3);
             transform: translateY(-2px);
         }
 
@@ -122,118 +123,109 @@
 
 <body>
 
-<!-- FONDO -->
-<div class="background-container">
-    <div class="wave-decoration">
-        <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-            <path fill="#ffffff"
-                d="M0,160
+    <!-- FONDO -->
+    <div class="background-container">
+        <div class="wave-decoration">
+            <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+                <path fill="#ffffff"
+                    d="M0,160
                    C240,160 480,240 720,240
                    C960,240 1200,160 1440,160
                    L1440,320 L0,320 Z">
-            </path>
-        </svg>
-    </div>
-</div>
-
-<!-- REGISTRO -->
-<div class="register-container">
-    <div class="register-card">
-
-        <div class="icon-circle">
-            <svg viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
-                         10-4.48 10-10S17.52 2 12 2z"/>
+                </path>
             </svg>
         </div>
+    </div>
 
-        <h2 class="register-title">Crear Cuenta</h2>
-        <p class="register-subtitle">Únete a nuestro sistema</p>
+    <!-- REGISTRO -->
+    <div class="register-container">
+        <div class="register-card">
 
-        {{-- ERRORES --}}
-        @if ($errors->any())
+            <div class="icon-circle">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
+                         10-4.48 10-10S17.52 2 12 2z" />
+                </svg>
+            </div>
+
+            <h2 class="register-title">Crear Cuenta</h2>
+            <p class="register-subtitle">Únete a nuestro sistema</p>
+
+            {{-- ERRORES --}}
+            @if ($errors->any())
             <div class="alert alert-danger">
                 <ul class="mb-0">
                     @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
+                    <li>{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
-        @endif
+            @endif
 
-        <!-- FORMULARIO FUNCIONAL -->
-        <form method="POST" action="{{ url('/register') }}">
-            @csrf
+            <!-- FORMULARIO FUNCIONAL -->
+            <form method="POST" action="{{ url('/register') }}">
+                @csrf
 
-            <div class="mb-3">
-                <label class="form-label">Nombre Completo</label>
-                <input type="text"
-                       name="nombre"
-                       value="{{ old('nombre') }}"
-                       class="form-control @error('nombre') is-invalid @enderror"
-                       required autofocus>
-                @error('nombre') <div class="invalid-feedback">{{ $message }}</div> @enderror
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">Nombre Completo</label>
+                    <input type="text"
+                        name="nombre"
+                        value="{{ old('nombre') }}"
+                        class="form-control @error('nombre') is-invalid @enderror"
+                        required autofocus>
+                    @error('nombre') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">Teléfono (opcional)</label>
-                <input type="text"
-                       name="tel"
-                       value="{{ old('tel') }}"
-                       class="form-control @error('tel') is-invalid @enderror">
-                @error('tel') <div class="invalid-feedback">{{ $message }}</div> @enderror
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">Teléfono (opcional)</label>
+                    <input type="text"
+                        name="tel"
+                        value="{{ old('tel') }}"
+                        class="form-control @error('tel') is-invalid @enderror">
+                    @error('tel') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input type="email"
-                       name="email"
-                       value="{{ old('email') }}"
-                       class="form-control @error('email') is-invalid @enderror"
-                       required>
-                @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email"
+                        name="email"
+                        value="{{ old('email') }}"
+                        class="form-control @error('email') is-invalid @enderror"
+                        required>
+                    @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">Contraseña</label>
-                <input type="password"
-                       name="password"
-                       class="form-control @error('password') is-invalid @enderror"
-                       required>
-                @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password"
+                        name="password"
+                        class="form-control @error('password') is-invalid @enderror"
+                        required>
+                    @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">Confirmar Contraseña</label>
-                <input type="password"
-                       name="password_confirmation"
-                       class="form-control"
-                       required>
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">Confirmar Contraseña</label>
+                    <input type="password"
+                        name="password_confirmation"
+                        class="form-control"
+                        required>
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">Rol (opcional)</label>
-                <select name="rol"
-                        class="form-select @error('rol') is-invalid @enderror">
-                    <option value="3" selected>Recepcionista</option>
-                    <option value="2">Doctor</option>
-                    <option value="1">Administrador</option>
-                </select>
-                @error('rol') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                <small class="text-muted">Por defecto se asigna Recepcionista</small>
-            </div>
 
-            <button type="submit" class="btn btn-register">Registrarse</button>
 
-            <div class="text-center mt-3">
-                ¿Ya tienes cuenta?
-                <a href="{{ url('/login') }}" class="link-login">Inicia Sesión</a>
-            </div>
-        </form>
+                <button type="submit" class="btn btn-register">Registrarse</button>
 
+                <div class="text-center mt-3">
+                    ¿Ya tienes cuenta?
+                    <a href="{{ url('/login') }}" class="link-login">Inicia Sesión</a>
+                </div>
+            </form>
+
+        </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
