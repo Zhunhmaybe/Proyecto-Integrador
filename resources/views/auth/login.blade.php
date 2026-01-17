@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
 
-    <!-- Bootstrap -->
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -162,7 +162,7 @@
 
 <body>
 
-<!-- ===== FONDO + OLA ===== -->
+
 <div class="background-container">
     <div class="wave-decoration">
         <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
@@ -179,7 +179,7 @@
     </div>
 </div>
 
-<!-- ===== LOGIN ===== -->
+
 <div class="login-container">
     <div class="login-card">
 
@@ -208,7 +208,7 @@
             </div>
         @endif
 
-        <!-- 🔑 FORMULARIO FUNCIONAL -->
+        
         <form method="POST" action="{{ url('/login') }}">
             @csrf
 

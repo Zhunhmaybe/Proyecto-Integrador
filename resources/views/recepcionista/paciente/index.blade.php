@@ -8,126 +8,14 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <style>
-        body {
-            background: #f4f7fb;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .wrapper {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            width: 260px;
-            background: #0b4f79;
-            color: white;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar .logo {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .sidebar .logo img {
-            width: 110px;
-        }
-
-        .sidebar a {
-            color: #cfe6f5;
-            text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 6px;
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .sidebar a.active,
-        .sidebar a:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-        }
-
-        .sidebar .user {
-            margin-top: auto;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            padding-top: 15px;
-            font-size: 13px;
-        }
-
-
-        /* CONTENT */
-        .content {
-            flex: 1;
-            padding: 30px;
-        }
-
-        .panel {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, .12);
-            padding: 20px;
-            height: 80vh;
-        }
-
-        /* LISTA PACIENTES */
-        .paciente-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .paciente-item:hover,
-        .paciente-item.active {
-            background: #e9f2fb;
-        }
-
-        .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #ccc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .btn-gold {
-            background: #e0b23f;
-            color: #fff;
-            border-radius: 25px;
-            border: none;
-            padding: 8px 30px;
-        }
-
-        .btn-gold:hover {
-            background: #c89b2d;
-        }
-
-        input,
-        textarea {
-            border-radius: 10px !important;
-        }
-    </style>
+    @vite(['resources/css/recepcionista/paciente/index.css'])
 </head>
 
 <body>
 
     <div class="wrapper">
 
-        <!-- SIDEBAR -->
+
         <aside class="sidebar">
             <div class="logo">
                 <img src="/images/logo-danny.png" alt="Logo Danny">
@@ -149,13 +37,13 @@
             </div>
         </aside>
 
-        <!-- CONTENT -->
+
         <main class="content">
             <h4 class="fw-bold mb-3">Directorio de Pacientes</h4>
 
             <div class="row g-4">
 
-                <!-- IZQUIERDA -->
+
                 <div class="col-md-4">
                     <div class="panel">
 
@@ -199,7 +87,7 @@
                     </div>
                 </div>
 
-                <!-- DERECHA -->
+
                 <div class="col-md-8">
                     <div class="panel">
 

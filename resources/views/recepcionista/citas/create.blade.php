@@ -6,7 +6,7 @@
     <title>Registrar nueva cita</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap -->
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -108,7 +108,7 @@
 
     <div class="wrapper">
 
-        <!-- SIDEBAR -->
+        
         <aside class="sidebar">
             <div class="logo">
                 <img src="/images/logo-danny.png" alt="Logo Danny">
@@ -129,7 +129,7 @@
             </div>
         </aside>
 
-        <!-- CONTENT -->
+        
         <main class="content">
 
             <h4 class="fw-bold mb-2">Registrar nueva cita</h4>
@@ -142,7 +142,7 @@
             @endif
 
 
-            <!-- BUSCAR CLIENTE -->
+            
             <div class="panel mb-4">
                 <h5 class="fw-bold mb-3">Buscar Cliente</h5>
 
@@ -185,7 +185,7 @@
 
             </div>
 
-            <!-- FORMULARIO -->
+            
             <div class="panel">
 
                 <form method="POST" action="{{ route('citas.store') }}">
@@ -193,7 +193,7 @@
 
                     <div class="row g-4">
 
-                        <!-- DATOS PACIENTE -->
+                        
                         <div class="col-md-6">
                             <span class="section-title">1. Datos del Paciente</span>
 
@@ -229,7 +229,7 @@
                             </div>
                         </div>
 
-                        <!-- DETALLES CITA -->
+                        
                         <div class="col-md-6">
                             <span class="section-title">2. Detalles de la Cita</span>
 

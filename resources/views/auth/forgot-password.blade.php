@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recuperar contraseña</title>
 
-    <!-- Bootstrap -->
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -95,7 +95,7 @@
 
 <body>
 
-<!-- FONDO + OLA -->
+
 <div class="background-container">
     <div class="wave-decoration">
         <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
@@ -112,7 +112,7 @@
     </div>
 </div>
 
-<!-- RECUPERAR CONTRASEÑA -->
+
 <div class="recover-container">
     <div class="recover-card">
 
@@ -136,7 +136,7 @@
             </div>
         @endif
 
-        <!-- FORMULARIO FUNCIONAL -->
+        
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
 
@@ -166,3 +166,4 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
