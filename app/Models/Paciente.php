@@ -37,6 +37,6 @@ class Paciente extends Model
 
     public function citas()
     {
-        return $this->hasMany(Citas::class);
+        return $this->hasMany(Citas::class)->orderBy('fecha_inicio', 'desc');
     }
 }

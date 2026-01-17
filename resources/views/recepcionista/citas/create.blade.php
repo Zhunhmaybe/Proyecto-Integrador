@@ -130,6 +130,13 @@
 
         <h4 class="fw-bold mb-2">Registrar nueva cita</h4>
         <p class="text-muted mb-4">Aquí puedes gestionar tus próximas citas.</p>
+        @if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+        ✅ {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
+
 
         <!-- BUSCAR CLIENTE -->
         <div class="panel mb-4">
@@ -157,19 +164,20 @@
                     </a>
                 </div>
             </form>
-            @if(isset($paciente_no_encontrado))
+@if(session('paciente_no_encontrado'))
     <div class="alert alert-warning d-flex justify-content-between align-items-center mt-3">
         <div>
             ❌ No existe ningún paciente con la cédula
-            <strong>{{ $paciente_no_encontrado }}</strong>
+            <strong>{{ session('paciente_no_encontrado') }}</strong>
         </div>
 
-        <a href="{{ route('pacientes.create') }}?cedula={{ $paciente_no_encontrado }}"
+        <a href="{{ route('pacientes.create', ['cedula' => session('paciente_no_encontrado')]) }}"
            class="btn btn-gold">
             Crear Paciente
         </a>
     </div>
 @endif
+
 
         </div>
 
@@ -243,14 +251,6 @@
                             <label>Fecha y Hora Inicio</label>
                             <input type="datetime-local"
                                    name="fecha_inicio"
-                                   class="form-control"
-                                   required>
-                        </div>
-
-                        <div class="mt-3">
-                            <label>Fecha y Hora Fin</label>
-                            <input type="datetime-local"
-                                   name="fecha_fin"
                                    class="form-control"
                                    required>
                         </div>

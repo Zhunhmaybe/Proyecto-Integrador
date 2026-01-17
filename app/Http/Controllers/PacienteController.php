@@ -72,4 +72,14 @@ class PacienteController extends Controller
 
         return redirect()->back()->with('success', 'Paciente actualizado correctamente');
     }
+    public function citas(Paciente $paciente)
+{
+    $paciente->load([
+        'citas.especialidad',
+        'citas.doctor'
+    ]);
+
+    return view('recepcionista.paciente.citas', compact('paciente'));
+}
+
 }

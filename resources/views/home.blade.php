@@ -194,15 +194,15 @@
 
     <div class="wrapper">
 
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
-            <div class="logo">
-                <img src="/images/logo-danny.png" alt="Logo Danny">
-            </div>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="/images/logo-danny.png" alt="Logo Danny">
+        </div>
 
-            <a href="#" class="active">👤 Mi Perfil</a>
-            <a href="{{ route('citas.create') }}">📅 Citas</a>
-            <a href="{{ route('pacientes.index') }}">👥 Pacientes</a>
+        <a href="{{ route('home') }}" class="active">👤 Mi Perfil</a>
+        <a href="{{ route('citas.create') }}">📅 Citas</a>
+        <a href="{{ route('pacientes.index') }}">👥 Pacientes</a>
 
 
             <div class="user">
@@ -261,44 +261,52 @@
 
                     <div class="text-center">
 
-                        <div class="action-buttons">
-                            <button class="btn-edit">Editar</button>
+<div class="action-buttons">
+    <a href="{{ route('perfil.edit') }}" class="btn btn-gold">
+    Editar
+</a>
 
-                            <a href="{{ route('profile.2fa') }}" class="btn-2fa" title="Seguridad 2FA">
-                                🔐2FA
-                            </a>
-                        </div>
+    
+    <a href="{{ route('profile.2fa') }}"
+       class="btn-2fa"
+       title="Seguridad 2FA">
+        🔐2FA
+    </a>
+</div>
 
 
-                    </div>
+            </div>
 
-                </div>
-        </main>
-    </div>
+        </div>
+    </main>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    @if (session('session_expired'))
-        <div class="modal fade show" id="sessionExpiredModal" tabindex="-1"
-            style="display:block; background:rgba(0,0,0,0.6);">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+@if (session('session_expired'))
+<div class="modal fade show" id="sessionExpiredModal"
+     tabindex="-1"
+     style="display:block; background:rgba(0,0,0,0.6);">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
 
-                    <div class="modal-header bg-danger text-white">
-                        <h5 class="modal-title">Sesión cerrada</h5>
-                    </div>
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Sesión cerrada</h5>
+            </div>
 
-                    <div class="modal-body text-center">
-                        <p>
-                            Tu sesión se cerró automáticamente por
-                            <strong>inactividad de 2 minutos</strong>.
-                        </p>
-                    </div>
+            <div class="modal-body text-center">
+                <p>
+                    Tu sesión se cerró automáticamente por
+                    <strong>inactividad de 2 minutos</strong>.
+                </p>
+            </div>
 
-                    <div class="modal-footer justify-content-center">
-                        <button type="button" class="btn btn-danger" onclick="window.location.href='{{ route('login') }}'">
-                            Aceptar
-                        </button>
-                    </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button"
+                        class="btn btn-danger"
+                        onclick="window.location.href='{{ route('login') }}'">
+                    Aceptar
+                </button>
+            </div>
 
                 </div>
             </div>

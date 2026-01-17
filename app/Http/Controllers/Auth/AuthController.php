@@ -316,5 +316,37 @@ public function unlock(Request $request)
     return redirect()->route('login')
         ->with('status', 'Cuenta desbloqueada correctamente');
 }
+// Mostrar formulario editar perfil
+public function editProfile()
+{
+    $user = Auth::user();
+
+    return view('recepcionista.edit', compact('user'));
+}
+
+// Actualizar perfil
+public function updateProfile(Request $request)
+{
+    $user = Auth::user();
+
+    $request->validate([
+        'nombre' => 'required|string|max:100',
+        'email' => 'required|email|max:100|unique:usuarios,email,' . $user->id,
+        'tel' => 'nullable|string|max:10',
+    ], [
+        'nombre.required' => 'El nombre es obligatorio',
+        'email.required' => 'El correo es obligatorio',
+        'email.unique' => 'Este correo ya está en uso',
+    ]);
+
+    $user->update([
+        'nombre' => $request->nombre,
+        'email' => $request->email,
+        'tel' => $request->tel,
+    ]);
+
+    return redirect()->route('home')
+        ->with('success', 'Perfil actualizado correctamente');
+}
 
 }

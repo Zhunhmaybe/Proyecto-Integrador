@@ -1,4 +1,3 @@
-php artisan make:migration create_documentos_table
 <?php
 
 use Illuminate\Database\Migrations\Migration;

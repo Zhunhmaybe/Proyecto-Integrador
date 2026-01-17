@@ -29,7 +29,6 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->timestamp('fecha_inicio');
-            $table->timestamp('fecha_fin');
             $table->string('estado', 20)->default('pendiente');
             $table->string('motivo', 255)->nullable();
 
