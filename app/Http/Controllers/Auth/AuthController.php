@@ -24,123 +24,123 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-public function login(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'email' => 'required|email',
-        'password' => 'required|min:6',
-    ], [
-        'email.required' => 'El email es obligatorio',
-        'email.email' => 'Debe ser un email válido',
-        'password.required' => 'La contraseña es obligatoria',
-        'password.min' => 'La contraseña debe tener al menos 6 caracteres',
-    ]);
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+        ], [
+            'email.required' => 'El email es obligatorio',
+            'email.email' => 'Debe ser un email válido',
+            'password.required' => 'La contraseña es obligatoria',
+            'password.min' => 'La contraseña debe tener al menos 6 caracteres',
+        ]);
 
-    if ($validator->fails()) {
-        return redirect()->back()
-            ->withErrors($validator)
-            ->withInput();
-    }
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
 
-    $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
-    // ❌ Usuario no existe
-    if (!$user) {
-        return redirect()->back()
-            ->withErrors(['email' => 'Las credenciales no coinciden con nuestros registros.'])
-            ->withInput();
-    }
+        // ❌ Usuario no existe
+        if (!$user) {
+            return redirect()->back()
+                ->withErrors(['email' => 'Las credenciales no coinciden con nuestros registros.'])
+                ->withInput();
+        }
 
-    // 🔒 Cuenta bloqueada
-    if ($user->is_locked == 1) {
-        return redirect()->route('lock.form')
-            ->withErrors(['email' => 'Cuenta bloqueada. Revisa tu correo para desbloquear.']);
-    }
+        // 🔒 Cuenta bloqueada
+        if ($user->is_locked == 1) {
+            return redirect()->route('lock.form')
+                ->withErrors(['email' => 'Cuenta bloqueada. Revisa tu correo para desbloquear.']);
+        }
 
-    // ❌ Contraseña incorrecta
-    if (!Hash::check($request->password, $user->password)) {
+        // ❌ Contraseña incorrecta
+        if (!Hash::check($request->password, $user->password)) {
 
-        $user->failed_attempts += 1;
+            $user->failed_attempts += 1;
 
-        // 🚨 Bloquear al 3er intento
-        if ($user->failed_attempts >= 3) {
+            // 🚨 Bloquear al 3er intento
+            if ($user->failed_attempts >= 3) {
 
-            $code = rand(100000, 999999);
+                $code = rand(100000, 999999);
 
-            $user->update([
-                'is_locked' => 1,
-                'lock_code' => $code
-            ]);
+                $user->update([
+                    'is_locked' => 1,
+                    'lock_code' => $code
+                ]);
 
-            // 📧 Correo de advertencia
-            try {
-                Mail::raw(
-                    "Se detectaron múltiples intentos fallidos de inicio de sesión.\n\n".
-                    "Tu código de desbloqueo es: $code",
-                    function ($message) use ($user) {
-                        $message->to($user->email)
+                // 📧 Correo de advertencia
+                try {
+                    Mail::raw(
+                        "Se detectaron múltiples intentos fallidos de inicio de sesión.\n\n" .
+                            "Tu código de desbloqueo es: $code",
+                        function ($message) use ($user) {
+                            $message->to($user->email)
                                 ->subject('Advertencia de seguridad - Cuenta bloqueada');
-                    }
-                );
-            } catch (\Exception $e) {
-                Log::error('Error al enviar correo de bloqueo: ' . $e->getMessage());
+                        }
+                    );
+                } catch (\Exception $e) {
+                    Log::error('Error al enviar correo de bloqueo: ' . $e->getMessage());
+                }
+
+                return redirect()->route('lock.form')
+                    ->withErrors(['email' => 'Cuenta bloqueada. Código enviado a tu correo.']);
             }
 
-            return redirect()->route('lock.form')
-                ->withErrors(['email' => 'Cuenta bloqueada. Código enviado a tu correo.']);
+            $user->save();
+
+            return redirect()->back()
+                ->withErrors(['password' => 'Contraseña incorrecta'])
+                ->withInput();
         }
 
-        $user->save();
+        // ✅ Verificar si el usuario está activo
+        if ($user->estado != 1) {
+            return redirect()->back()
+                ->withErrors(['email' => 'Tu cuenta está inactiva. Contacta al administrador.'])
+                ->withInput();
+        }
 
-        return redirect()->back()
-            ->withErrors(['password' => 'Contraseña incorrecta'])
-            ->withInput();
-    }
+        // 🔄 Resetear intentos fallidos
+        $user->update([
+            'failed_attempts' => 0
+        ]);
 
-    // ✅ Verificar si el usuario está activo
-    if ($user->estado != 1) {
-        return redirect()->back()
-            ->withErrors(['email' => 'Tu cuenta está inactiva. Contacta al administrador.'])
-            ->withInput();
-    }
+        // 🔐 2FA
+        if ($user->two_factor_enabled) {
 
-    // 🔄 Resetear intentos fallidos
-    $user->update([
-        'failed_attempts' => 0
-    ]);
+            $code = $user->generateTwoFactorCode();
 
-    // 🔐 2FA
-    if ($user->two_factor_enabled) {
+            try {
+                $user->notify(new TwoFactorCodeNotification($code));
+            } catch (\Exception $e) {
+                Log::error('Error al enviar código 2FA: ' . $e->getMessage());
+            }
 
-        $code = $user->generateTwoFactorCode();
+            $request->session()->put('2fa:user:id', $user->id);
+            $request->session()->put('2fa:remember', $request->filled('remember'));
 
+            return redirect()->route('2fa.verify');
+        }
+
+        // ✅ Login normal
+        Auth::login($user, $request->filled('remember'));
+        $request->session()->regenerate();
+
+        // 📧 Notificación de login exitoso
         try {
-            $user->notify(new TwoFactorCodeNotification($code));
+            $loginTime = Carbon::now()->format('d/m/Y H:i:s');
+            $ipAddress = $request->ip();
+            $user->notify(new LoginNotification($loginTime, $ipAddress));
         } catch (\Exception $e) {
-            Log::error('Error al enviar código 2FA: ' . $e->getMessage());
+            Log::error('Error al enviar notificación de login: ' . $e->getMessage());
         }
 
-        $request->session()->put('2fa:user:id', $user->id);
-        $request->session()->put('2fa:remember', $request->filled('remember'));
-
-        return redirect()->route('2fa.verify');
+        return redirect()->intended('/home');
     }
-
-    // ✅ Login normal
-    Auth::login($user, $request->filled('remember'));
-    $request->session()->regenerate();
-
-    // 📧 Notificación de login exitoso
-    try {
-        $loginTime = Carbon::now()->format('d/m/Y H:i:s');
-        $ipAddress = $request->ip();
-        $user->notify(new LoginNotification($loginTime, $ipAddress));
-    } catch (\Exception $e) {
-        Log::error('Error al enviar notificación de login: ' . $e->getMessage());
-    }
-
-    return redirect()->intended('/home');
-}
 
     // Mostrar formulario de verificación 2FA
     public function showTwoFactorForm(Request $request)
@@ -284,69 +284,69 @@ public function login(Request $request)
         return redirect('/login');
     }
 
-     public function unlockForm()
+    public function unlockForm()
     {
         return view('auth.unlock');
     }
 
     //Desbloquear
-public function unlock(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-        'code' => 'required'
-    ]);
+    public function unlock(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'code' => 'required'
+        ]);
 
-    $code = trim($request->code);
+        $code = trim($request->code);
 
-    $user = User::where('email', $request->email)
-                ->where('lock_code', $code)
-                ->first();
+        $user = User::where('email', $request->email)
+            ->where('lock_code', $code)
+            ->first();
 
-    if (!$user) {
-        return back()->withErrors(['code' => 'Código inválido']);
+        if (!$user) {
+            return back()->withErrors(['code' => 'Código inválido']);
+        }
+
+        $user->update([
+            'failed_attempts' => 0,
+            'is_locked' => 0,
+            'lock_code' => null
+        ]);
+
+        return redirect()->route('login')
+            ->with('status', 'Cuenta desbloqueada correctamente');
+    }
+    // Mostrar formulario editar perfil
+    public function editProfile()
+    {
+        $user = Auth::user();
+
+        return view('recepcionista.edit', compact('user'));
     }
 
-    $user->update([
-        'failed_attempts' => 0,
-        'is_locked' => 0,
-        'lock_code' => null
-    ]);
+    // Actualizar perfil
+    public function updateProfile(Request $request)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
 
-    return redirect()->route('login')
-        ->with('status', 'Cuenta desbloqueada correctamente');
-}
-// Mostrar formulario editar perfil
-public function editProfile()
-{
-    $user = Auth::user();
+        $request->validate([
+            'nombre' => 'required|string|max:100',
+            'email' => 'required|email|max:100|unique:usuarios,email,' . $user->id,
+            'tel' => 'nullable|string|max:10',
+        ], [
+            'nombre.required' => 'El nombre es obligatorio',
+            'email.required' => 'El correo es obligatorio',
+            'email.unique' => 'Este correo ya está en uso',
+        ]);
 
-    return view('recepcionista.edit', compact('user'));
-}
+        $user->update([
+            'nombre' => $request->nombre,
+            'email' => $request->email,
+            'tel' => $request->tel,
+        ]);
 
-// Actualizar perfil
-public function updateProfile(Request $request)
-{
-    $user = Auth::user();
-
-    $request->validate([
-        'nombre' => 'required|string|max:100',
-        'email' => 'required|email|max:100|unique:usuarios,email,' . $user->id,
-        'tel' => 'nullable|string|max:10',
-    ], [
-        'nombre.required' => 'El nombre es obligatorio',
-        'email.required' => 'El correo es obligatorio',
-        'email.unique' => 'Este correo ya está en uso',
-    ]);
-
-    $user->update([
-        'nombre' => $request->nombre,
-        'email' => $request->email,
-        'tel' => $request->tel,
-    ]);
-
-    return redirect()->route('home')
-        ->with('success', 'Perfil actualizado correctamente');
-}
-
+        return redirect()->route('home')
+            ->with('success', 'Perfil actualizado correctamente');
+    }
 }

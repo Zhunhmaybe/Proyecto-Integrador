@@ -42,8 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', function () {
         return view('home');
     })->name('home');
-    
-        // Editar perfil
+
+    // Editar perfil
     Route::get('/perfil/editar', [AuthController::class, 'editProfile'])
         ->name('perfil.edit');
 
@@ -87,7 +87,7 @@ Route::get('/reset-password/{token}', [PasswordResetController::class, 'resetFor
 
 Route::post('/reset-password', [PasswordResetController::class, 'update'])
     ->name('password.update');
-        
+
 //Desbloquear cuenta
 Route::get('/unlock', [AuthController::class, 'unlockForm'])->name('lock.form');
 Route::post('/unlock', [AuthController::class, 'unlock'])->name('lock.verify');
@@ -105,7 +105,7 @@ Route::post('/pacientes', [PacienteController::class, 'store'])
 Route::put('/pacientes/{paciente}', [PacienteController::class, 'update'])
     ->name('pacientes.update');
 
-    Route::get('/pacientes/{paciente}/citas', [PacienteController::class, 'citas'])
+Route::get('/pacientes/{paciente}/citas', [PacienteController::class, 'citas'])
     ->name('pacientes.citas');
 
 
@@ -116,8 +116,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/citas/create', [CitaController::class, 'create'])
         ->name('citas.create');
 
-    Route::post('/citas/buscar-paciente', [CitaController::class, 'buscarPaciente'])
-        ->name('citas.buscarPaciente');
+
 
     Route::post('/citas', [CitaController::class, 'store'])
         ->name('citas.store');

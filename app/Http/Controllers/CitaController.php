@@ -10,61 +10,50 @@ use Illuminate\Http\Request;
 
 class CitaController extends Controller
 {
-    // Vista principal
-    public function create()
+    // Vista principal y búsqueda de paciente
+    public function create(Request $request)
     {
+        $paciente = null;
+
+        // Si hay una cédula en la petición (búsqueda GET)
+        if ($request->has('cedula') && $request->cedula != null) {
+            $paciente = Paciente::where('cedula', $request->cedula)->first();
+
+            if (!$paciente) {
+                // Si buscó pero no encontró, enviamos mensaje de error
+                session()->flash('paciente_no_encontrado', $request->cedula);
+            }
+        }
+
         return view('recepcionista.citas.create', [
-            'paciente' => null,
-            'doctores' => User::where('rol', '1')->get(),
+            'paciente'      => $paciente,
+            // Normalizamos traer doctores con rol 2 (según lógica anterior de buscarPaciente)
+            'doctores'      => User::where('rol', 2)->get(),
             'especialidades' => Especialidades::all()
         ]);
     }
 
-    // Buscar paciente por cédula
-    public function buscarPaciente(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
-            'cedula' => 'required|string|max:10',
+            'paciente_id' => 'required|exists:pacientes,id',
+            'doctor_id' => 'required|exists:usuarios,id',
+            'especialidad_id' => 'required|exists:especialidades,id',
+            'fecha_inicio' => 'required|date',
+            'motivo' => 'nullable|string|max:255',
         ]);
 
-        $paciente = Paciente::where('cedula', $request->cedula)->first();
-
-        if (!$paciente) {
-            return redirect()
-                ->route('citas.create')
-                ->with('paciente_no_encontrado', $request->cedula);
-        }
-
-        return view('recepcionista.citas.create', [
-            'paciente' => $paciente,
-            'especialidades' => Especialidades::all(),
-            'doctores' => User::where('rol', 2)->get(),
+        Citas::create([
+            'paciente_id' => $request->paciente_id,
+            'doctor_id' => $request->doctor_id,
+            'especialidad_id' => $request->especialidad_id,
+            'fecha_inicio' => $request->fecha_inicio,
+            'estado' => 'pendiente',
+            'motivo' => $request->motivo
         ]);
+
+        return redirect()
+            ->route('citas.create')
+            ->with('success', 'Cita agendada correctamente');
     }
-
-public function store(Request $request)
-{
-    $request->validate([
-        'paciente_id' => 'required|exists:pacientes,id',
-        'doctor_id' => 'required|exists:usuarios,id',
-        'especialidad_id' => 'required|exists:especialidades,id',
-        'fecha_inicio' => 'required|date',
-        'fecha_fin' => 'required|date|after:fecha_inicio',
-        'motivo' => 'nullable|string|max:255',
-    ]);
-
-    Citas::create([
-        'paciente_id' => $request->paciente_id,
-        'doctor_id' => $request->doctor_id,
-        'especialidad_id' => $request->especialidad_id,
-        'fecha_inicio' => $request->fecha_inicio,
-        'estado' => 'pendiente',
-        'motivo' => $request->motivo
-    ]);
-
-    return redirect()
-        ->route('citas.create')
-        ->with('success', 'Cita agendada correctamente');
-}
-
 }

@@ -15,14 +15,12 @@ class Citas extends Model
         'doctor_id',
         'especialidad_id',
         'fecha_inicio',
-        'fecha_fin',
         'estado',
         'motivo',
     ];
 
     protected $casts = [
         'fecha_inicio' => 'datetime',
-        'fecha_fin'    => 'datetime',
     ];
     public function paciente()
     {

@@ -40,7 +40,7 @@ class PasswordResetController extends Controller
             "Restablece tu contraseña aquí:\n$link",
             function ($message) use ($request) {
                 $message->to($request->email)
-                        ->subject('Recuperación de contraseña');
+                    ->subject('Recuperación de contraseña');
             }
         );
 

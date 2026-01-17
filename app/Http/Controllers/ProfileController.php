@@ -14,6 +14,7 @@ class ProfileController extends Controller
 
     public function enable2FA(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         if ($user->two_factor_enabled) {
@@ -28,6 +29,7 @@ class ProfileController extends Controller
 
     public function disable2FA(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         if (!$user->two_factor_enabled) {
