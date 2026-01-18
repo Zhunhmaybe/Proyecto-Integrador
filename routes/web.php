@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PasswordResetController;
@@ -39,13 +40,28 @@ Route::post('/2fa/resend', [AuthController::class, 'resendTwoFactorCode'])->name
 // Rutas protegidas
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    // Route Dispatcher based on Role
     Route::get('/home', function () {
-        return view('home');
+        $role = Auth::user()->rol;
+        switch ($role) {
+            case 0:
+                return redirect()->route('doctor.dashboard');
+            case 1:
+                return redirect()->route('admin.dashboard');
+            case 2:
+                return redirect()->route('auditor.dashboard');
+            case 3:
+                return redirect()->route('recepcionista.edit');
+            case 4:
+                return redirect()->route('usuario.dashboard');
+            default:
+                return view('home'); // Fallback
+        }
     })->name('home');
 
     // Editar perfil
     Route::get('/perfil/editar', [AuthController::class, 'editProfile'])
-        ->name('perfil.edit');
+        ->name('recepcionista.edit');
 
     Route::put('/perfil/actualizar', [AuthController::class, 'updateProfile'])
         ->name('perfil.update');
@@ -57,17 +73,35 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/2fa/disable', [ProfileController::class, 'disable2FA'])->name('profile.2fa.disable');
 });
 
-// Rutas con roles
+// Rutas con roles - DASHBOARDS
+Route::middleware(['auth', 'role:0'])->group(function () {
+    Route::get('/doctor', function () {
+        return view('doctor.dashboard');
+    })->name('doctor.dashboard');
+});
+
 Route::middleware(['auth', 'role:1'])->group(function () {
     Route::get('/admin', function () {
-        return view('admin.dashboard'); // Asegúrate de tener esta vista creada
+        return view('admin.dashboard');
     })->name('admin.dashboard');
 });
 
 Route::middleware(['auth', 'role:2'])->group(function () {
     Route::get('/auditor', function () {
-        return view('auditor.dashboard'); // Asegúrate de tener esta vista creada
+        return view('auditor.dashboard');
     })->name('auditor.dashboard');
+});
+
+
+Route::middleware(['auth', 'role:3'])->group(function () {
+    // Aquí puedes agrupar las rutas de recepcionista existentes si lo deseas, o dejarlas como están
+    // Por ahora, el dispatcher dirige a 'recepcionista.edit'
+});
+
+Route::middleware(['auth', 'role:4'])->group(function () {
+    Route::get('/usuario', function () {
+        return view('usuario.dashboard');
+    })->name('usuario.dashboard');
 });
 
 //consentimiento informado

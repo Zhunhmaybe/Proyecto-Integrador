@@ -124,7 +124,7 @@
                 <div class="modal-footer justify-content-center">
                     <button type="button"
                         class="btn btn-danger"
-                        onclick="window.location.href='{{ route('login') }}'">
+                        onclick="redirectToLogin()">
                         Aceptar
                     </button>
                 </div>
@@ -134,6 +134,11 @@
     </div>
     @endif
 
+    <script>
+        function redirectToLogin() {
+            window.location.href = "{{ route('login') }}";
+        }
+    </script>
 </body>
 
 </html>

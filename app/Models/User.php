@@ -51,19 +51,30 @@ class User extends Authenticatable
     }
 
     // Métodos helper para roles
+    // Métodos helper para roles
+    public function esDoctor(): bool
+    {
+        return $this->rol === 0;
+    }
+
     public function esAdministrador(): bool
     {
         return $this->rol === 1;
     }
 
-    public function esOperador(): bool
+    public function esAuditor(): bool
     {
         return $this->rol === 2;
     }
 
-    public function esUsuario(): bool
+    public function esRecepcionista(): bool
     {
         return $this->rol === 3;
+    }
+
+    public function esUsuario(): bool
+    {
+        return $this->rol === 4;
     }
 
     public function estaActivo(): bool
@@ -75,9 +86,11 @@ class User extends Authenticatable
     public function getNombreRolAttribute(): string
     {
         return match ($this->rol) {
+            0 => 'Doctor',
             1 => 'Administrador',
-            2 => 'Doctor',
-            3 => 'Secretaria',
+            2 => 'Auditor',
+            3 => 'Recepcionista',
+            4 => 'Usuario',
             default => 'Desconocido',
         };
     }
