@@ -64,11 +64,8 @@ Route::middleware(['auth', 'role:1'])->group(function () {
     })->name('admin.dashboard');
 });
 
-Route::middleware(['auth', 'role:2'])->group(function () {
-    Route::get('/auditor', function () {
-        return view('auditor.dashboard'); // Asegúrate de tener esta vista creada
-    })->name('auditor.dashboard');
-});
+// Rutas del módulo de auditoría
+require __DIR__ . '/auditor.php';
 
 //consentimiento informado
 Route::get('/consentimiento', function () {
