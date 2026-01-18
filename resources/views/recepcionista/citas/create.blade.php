@@ -151,6 +151,7 @@
                     <div class="col-md-8">
                         <input type="text"
                             name="cedula"
+                            maxlength="10"
                             class="form-control"
                             placeholder="Ingrese la cédula del cliente"
                             value="{{ request('cedula') }}"

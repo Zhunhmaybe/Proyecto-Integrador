@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recuperar contraseña</title>
-
-    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body {
+</head>
+<style>
+            body {
             margin: 0;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto;
             overflow-x: hidden;
@@ -90,80 +89,71 @@
             font-weight: 600;
             text-decoration: none;
         }
-    </style>
-</head>
-
+</style>
 <body>
-
-
-<div class="background-container">
-    <div class="wave-decoration">
-        <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-            <path
-                fill="#ffffff"
-                d="
+    <div class="background-container">
+        <div class="wave-decoration">
+            <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+                <path fill="#ffffff" d="
                     M0,160
                     C240,160 480,240 720,240
                     C960,240 1200,160 1440,160
                     L1440,320 L0,320 Z
                 ">
-            </path>
-        </svg>
-    </div>
-</div>
-
-
-<div class="recover-container">
-    <div class="recover-card">
-
-        <h2 class="text-center mb-4">Recuperar contraseña</h2>
-
-        {{-- MENSAJE DE ÉXITO --}}
-        @if (session('status'))
-            <div class="alert alert-success text-center">
-                {{ session('status') }}
-            </div>
-        @endif
-
-        {{-- ERRORES --}}
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        
-        <form method="POST" action="{{ route('password.email') }}">
-            @csrf
-
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input type="email"
-                       name="email"
-                       class="form-control"
-                       placeholder="usuario@ejemplo.com"
-                       required>
-            </div>
-
-            <button type="submit" class="btn btn-recover mb-3">
-                Enviar enlace
-            </button>
-        </form>
-
-        <div class="text-center">
-            <a href="{{ route('login') }}" class="link-login">
-                Volver a iniciar sesión
-            </a>
+                </path>
+            </svg>
         </div>
-
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <div class="recover-container">
+        <div class="recover-card">
+
+            <h2 class="text-center mb-4">Recuperar contraseña</h2>
+
+            {{-- MENSAJE DE ÉXITO --}}
+            @if (session('status'))
+                <div class="alert alert-success text-center">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            {{-- ERRORES --}}
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+
+            <form method="POST" action="{{ route('password.email') }}">
+                @csrf
+
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" placeholder="usuario@ejemplo.com"
+                        required>
+                </div>
+
+                <button type="submit" class="btn btn-recover mb-3">
+                    Enviar enlace
+                </button>
+            </form>
+
+            <div class="text-center">
+                <a href="{{ route('login') }}" class="link-login">
+                    Volver a iniciar sesión
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
 
+</html>

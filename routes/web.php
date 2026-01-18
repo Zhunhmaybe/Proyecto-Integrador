@@ -6,6 +6,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\CitaController;
+use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\EspecialidadesController;
 
 Route::get('/', function () {
     return redirect()->route('inicial');
@@ -62,6 +64,45 @@ Route::middleware(['auth', 'role:1'])->group(function () {
     Route::get('/admin', function () {
         return view('admin.dashboard'); // Asegúrate de tener esta vista creada
     })->name('admin.dashboard');
+
+
+    //Doctores
+    Route::get('/doctores', [DoctorController::class, 'index'])
+        ->name('admin.doctores.index');
+
+    Route::get('/doctores/crear', [DoctorController::class, 'create'])
+        ->name('admin.doctores.create');
+
+    Route::post('/doctores', [DoctorController::class, 'store'])
+        ->name('admin.doctores.store');
+
+    Route::get('/doctores/{doctor}/editar', [DoctorController::class, 'edit'])
+        ->name('admin.doctores.edit');
+
+    Route::put('/doctores/{doctor}', [DoctorController::class, 'update'])
+        ->name('admin.doctores.update');
+
+
+
+    // ===== ESPECIALIDADES =====
+
+    Route::get('/especialidades', [EspecialidadesController::class, 'index'])
+        ->name('admin.especialidades.index');
+
+    Route::get('/especialidades/crear', [EspecialidadesController::class, 'create'])
+        ->name('admin.especialidades.create');
+
+    Route::post('/especialidades', [EspecialidadesController::class, 'store'])
+        ->name('admin.especialidades.store');
+
+    Route::get('/especialidades/{especialidad}/editar', [EspecialidadesController::class, 'edit'])
+        ->name('admin.especialidades.edit');
+
+    Route::put('/especialidades/{especialidad}', [EspecialidadesController::class, 'update'])
+        ->name('admin.especialidades.update');
+
+    Route::delete('/especialidades/{especialidad}', [EspecialidadesController::class, 'destroy'])
+        ->name('admin.especialidades.destroy');
 });
 
 Route::middleware(['auth', 'role:2'])->group(function () {
@@ -115,9 +156,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/citas/create', [CitaController::class, 'create'])
         ->name('citas.create');
-
-
-
     Route::post('/citas', [CitaController::class, 'store'])
         ->name('citas.store');
 });

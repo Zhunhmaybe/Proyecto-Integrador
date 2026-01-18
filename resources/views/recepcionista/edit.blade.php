@@ -96,6 +96,7 @@
                                 <input type="text"
                                     name="tel"
                                     class="form-control"
+                                    maxlength="10"
                                     value="{{ old('tel', Auth::user()->tel) }}">
                             </div>
 
