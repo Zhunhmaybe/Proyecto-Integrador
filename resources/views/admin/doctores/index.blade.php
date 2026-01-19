@@ -22,7 +22,7 @@
             <a href="{{ route('pacientes.index') }}">Pacientes</a>
             <a href="{{ route('admin.doctores.index') }}" class="active">👤 Doctores</a>
             <a href="{{ route('admin.especialidades.index') }}">Especialidades</a>
-            <a href="{{ route('admin.dashboard') }}">Usuarios</a>
+            <a href="{{ route('admin.usuarios.index') }}">Usuarios</a>
             <a href="{{ route('citas.create') }}">📅 Citas</a>
             <a href="{{ route('pacientes.index') }}">Roles</a>
 

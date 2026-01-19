@@ -3,33 +3,33 @@
 
 <head>
     <meta charset="UTF-8">
+    <title>Mi Perfil</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administrador</title>
+
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    @vite(['resources/css/admin/admin-panel.css'])
+
+    @vite(['resources/css/home.css'])
 </head>
 
-<body class="bg-light">
+<body>
 
     <div class="wrapper">
+
 
         <aside class="sidebar">
             <div class="logo">
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('admin.dashboard') }}" class="active">Mi perfil</a>
-            <a href="{{ route('admin.pacientes.index') }}" >Pacientes</a>
-            <a href="{{ route('admin.doctores.index') }}" >👤 Doctores</a>
-            <a href="{{ route('admin.especialidades.index') }}" >Especialidades</a>
-            <a href="{{ route('admin.usuarios.index') }}" >Usuarios</a>
+            <a href="{{ route('recepcionista.dashboard') }}" class="active">👤 Mi Perfil</a>
             <a href="{{ route('citas.create') }}">📅 Citas</a>
-            <a href="{{ route('pacientes.index') }}">Roles</a>
+            <a href="{{ route('pacientes.index') }}">👥 Pacientes</a>
 
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
-                <small>{{ Auth::user()->nombre_rol }}</small>
+                <small>{{Auth::user()->nombre_rol}}</small>
 
                 <form method="POST" action="{{ route('logout') }}" class="mt-2">
                     @csrf
@@ -38,8 +38,9 @@
             </div>
         </aside>
 
+
         <main class="content">
-            <h3 class="fw-bold mb-4">Administrador </h3>
+            <h3 class="fw-bold mb-4">Mi perfil</h3>
 
             <div class="profile-card">
 
@@ -47,7 +48,7 @@
                     <div class="avatar"></div>
                     <div>
                         <h4>{{ Auth::user()->nombre }}</h4>
-                        <small>{{ Auth::user()->nombre_rol }}</small>
+                        <small>{{Auth::user()->nombre_rol}}</small>
                     </div>
                 </div>
 
@@ -69,10 +70,15 @@
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <label class="form-label">Teléfono:</label>
-                            <input type="text" class="form-control"
-                                value="{{ Auth::user()->tel ?? 'No registrado' }}" disabled>
+                            <input type="text" class="form-control" value="{{ Auth::user()->tel ?? 'No registrado' }}"
+                                disabled>
                         </div>
 
+                        <div class="col-md-6">
+                            <label class="form-label">Estado:</label>
+                            <input type="text" class="form-control"
+                                value="{{ Auth::user()->nombre_estado ?? 'No registrada' }}" disabled>
+                        </div>
                     </div>
 
                     <div class="text-center">
@@ -83,7 +89,9 @@
                             </a>
 
 
-                            <a href="{{ route('profile.2fa') }}" class="btn-2fa" title="Seguridad 2FA">
+                            <a href="{{ route('profile.2fa') }}"
+                                class="btn-2fa"
+                                title="Seguridad 2FA">
                                 🔐2FA
                             </a>
                         </div>
@@ -97,32 +105,35 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @if (session('session_expired'))
-        <div class="modal fade show session-modal-overlay" id="sessionExpiredModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+    <div class="modal fade show session-modal-overlay" id="sessionExpiredModal"
+        tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
 
-                    <div class="modal-header bg-danger text-white">
-                        <h5 class="modal-title">Sesión cerrada</h5>
-                    </div>
-
-                    <div class="modal-body text-center">
-                        <p>
-                            Tu sesión se cerró automáticamente por
-                            <strong>inactividad de 2 minutos</strong>.
-                        </p>
-                    </div>
-
-                    <div class="modal-footer justify-content-center">
-                        <button type="button" class="btn btn-danger"
-                            onclick="window.location.href='{{ route('login') }}'">
-                            Aceptar
-                        </button>
-                    </div>
-
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Sesión cerrada</h5>
                 </div>
+
+                <div class="modal-body text-center">
+                    <p>
+                        Tu sesión se cerró automáticamente por
+                        <strong>inactividad de 2 minutos</strong>.
+                    </p>
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="button"
+                        class="btn btn-danger"
+                        onclick="window.location.href='{{ route('login') }}'">
+                        Aceptar
+                    </button>
+                </div>
+
             </div>
         </div>
+    </div>
     @endif
+
 </body>
 
 </html>
