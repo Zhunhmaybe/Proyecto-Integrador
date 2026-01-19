@@ -131,8 +131,8 @@
 
 @push('scripts')
 <script>
-    const logsData = @json($logs - > items());
-
+    const logsData = @json($logs->items());
+    
     function showDetails(logId) {
         const log = logsData.find(l => l.id === logId);
         if (!log) return;
