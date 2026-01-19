@@ -88,10 +88,6 @@ class AuditLogController extends Controller
             $query->whereDate('created_at', '>=', $request->fecha_inicio);
         }
 
-        if ($request->filled('fecha_fin')) {
-            $query->whereDate('created_at', '<=', $request->fecha_fin);
-        }
-
         $logs = $query->orderBy('created_at', 'desc')->get();
 
         // Generar CSV

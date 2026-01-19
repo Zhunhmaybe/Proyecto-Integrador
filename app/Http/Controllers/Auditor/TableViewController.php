@@ -59,9 +59,6 @@ class TableViewController extends Controller
             $query->whereDate('fecha_inicio', '>=', $request->fecha_inicio);
         }
 
-        if ($request->filled('fecha_fin')) {
-            $query->whereDate('fecha_inicio', '<=', $request->fecha_fin);
-        }
 
         $citas = $query->orderBy('fecha_inicio', 'desc')->paginate(20)->appends(request()->query());
         $estados = Citas::select('estado')->distinct()->pluck('estado');
