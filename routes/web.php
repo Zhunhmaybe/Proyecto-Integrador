@@ -128,6 +128,24 @@ Route::middleware(['auth', 'role:1'])->group(function () {
     //Usuarios
     Route::get('/usuarios', [AdminController::class, 'usuariosIndex'])
         ->name('admin.usuarios.index');
+    //Citas
+    Route::get('/admin/citas', [AdminController::class, 'citasIndex'])
+        ->name('admin.citas.index');
+
+    Route::post('/admin/citas', [AdminController::class, 'Adminstore'])
+        ->name('admin.citas.store');
+
+    Route::get('/admin/citas/{cita}/editar', [AdminController::class, 'citasEdit'])
+        ->name('admin.citas.edit');
+
+    Route::put('/admin/citas/{cita}', [AdminController::class, 'citasUpdate'])
+        ->name('admin.citas.update');
+
+    Route::get('/admin/citas/create', [AdminController::class, 'Admincreate'])
+        ->name('admin.citas.create');
+    //Roles
+    Route::get('/admin/roles', [AdminController::class, 'rolesIndex'])
+        ->name('admin.roles.index');
 });
 
 Route::middleware(['auth', 'role:2'])->group(function () {

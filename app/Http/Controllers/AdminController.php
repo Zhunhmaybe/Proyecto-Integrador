@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Paciente;
+use App\Models\Citas;
+use App\Models\Especialidades;
+
+
 
 class AdminController extends Controller
 {
@@ -124,4 +128,107 @@ class AdminController extends Controller
 
         return view('admin.usuarios.index', compact('usuarios'));
     }
+    //Citas
+
+    public function Admincreate(Request $request)
+    {
+        $paciente = null;
+
+        // Si hay una cédula en la petición (búsqueda GET)
+        if ($request->has('cedula') && $request->cedula != null) {
+            $paciente = Paciente::where('cedula', $request->cedula)->first();
+
+            if (!$paciente) {
+                // Si buscó pero no encontró, enviamos mensaje de error
+                session()->flash('paciente_no_encontrado', $request->cedula);
+            }
+        }
+
+        return view('admin.citas.create', [
+            'paciente'      => $paciente,
+            // Normalizamos traer doctores con rol 2 (según lógica anterior de buscarPaciente)
+            'doctores'      => User::where('rol', 2)->get(),
+            'especialidades' => Especialidades::all()
+        ]);
+    }
+
+    public function citasIndex()
+    {
+        $citas = Citas::with(['paciente', 'doctor', 'especialidad'])
+            ->orderBy('fecha_inicio', 'desc')
+            ->get();
+
+        return view('admin.citas.create', compact('citas'));
+    }
+    public function citasEdit(Citas $cita)
+    {
+        $cita->load(['paciente', 'doctor', 'especialidad']);
+
+        $doctores = User::where('rol', 2)->get(); // doctores
+        $especialidades = Especialidades::all();
+
+        return view('admin.citas.edit', compact(
+            'cita',
+            'doctores',
+            'especialidades'
+        ));
+    }
+
+    public function citasUpdate(Request $request, Citas $cita)
+    {
+        $request->validate([
+            'doctor_id'       => 'required|exists:usuarios,id',
+            'especialidad_id' => 'required|exists:especialidades,id',
+            'fecha_inicio'    => 'required|date',
+            'estado'          => 'required|in:pendiente,confirmada,cancelada',
+            'motivo'          => 'nullable|string|max:255',
+        ]);
+
+        $cita->update([
+            'doctor_id'       => $request->doctor_id,
+            'especialidad_id' => $request->especialidad_id,
+            'fecha_inicio'    => $request->fecha_inicio,
+            'estado'          => $request->estado,
+            'motivo'          => $request->motivo,
+        ]);
+
+        return redirect()
+            ->route('admin.pacientes.citas', $cita->paciente_id);
+    }
+
+    public function Adminstore(Request $request)
+    {
+        $request->validate([
+            'paciente_id' => 'required|exists:pacientes,id',
+            'doctor_id' => 'required|exists:usuarios,id',
+            'especialidad_id' => 'required|exists:especialidades,id',
+            'fecha_inicio' => 'required|date',
+            'motivo' => 'nullable|string|max:255',
+        ]);
+
+        Citas::create([
+            'paciente_id' => $request->paciente_id,
+            'doctor_id' => $request->doctor_id,
+            'especialidad_id' => $request->especialidad_id,
+            'fecha_inicio' => $request->fecha_inicio,
+            'estado' => 'pendiente',
+            'motivo' => $request->motivo
+        ]);
+
+        return redirect()
+            ->route('admin.citas.create')
+            ->with('success', 'Cita agendada correctamente');
+    }
+    public function rolesIndex()
+{
+    // Agrupar usuarios por rol
+    $roles = User::select('rol')
+        ->selectRaw('COUNT(*) as total')
+        ->groupBy('rol')
+        ->orderBy('rol')
+        ->get();
+
+    return view('admin.roles.index', compact('roles'));
+}
+
 }

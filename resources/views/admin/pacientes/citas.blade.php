@@ -14,7 +14,7 @@
 <body>
 
     <div class="wrapper">
-        
+
         <aside class="sidebar">
             <div class="logo">
                 <img src="/images/logo-danny.png" alt="Logo Danny">
@@ -22,11 +22,11 @@
 
             <a href="{{ route('admin.dashboard') }}">Mi perfil</a>
             <a href="{{ route('admin.pacientes.index') }}" class="active">Pacientes</a>
-            <a href="{{ route('admin.doctores.index') }}" >👤 Doctores</a>
+            <a href="{{ route('admin.doctores.index') }}">👤 Doctores</a>
             <a href="{{ route('admin.especialidades.index') }}">Especialidades</a>
-            <a href="{{ route('admin.usuarios.index') }}" >Usuarios</a>
-            <a href="{{ route('citas.create') }}">📅 Citas</a>
-            <a href="{{ route('pacientes.index') }}">Roles</a>
+            <a href="{{ route('admin.usuarios.index') }}">Usuarios</a>
+            <a href="{{ route('admin.citas.create') }}">📅 Citas</a>
+            <a href="{{ route('admin.roles.index') }}">Roles</a>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
@@ -57,40 +57,48 @@
 
             <div class="panel">
 
-                @if($paciente->citas->isEmpty())
-                <div class="text-center text-muted py-5">
-                    Este paciente no tiene citas registradas.
-                </div>
+                @if ($paciente->citas->isEmpty())
+                    <div class="text-center text-muted py-5">
+                        Este paciente no tiene citas registradas.
+                    </div>
                 @else
-                @foreach($paciente->citas as $cita)
-                <div class="cita-card">
+                    @foreach ($paciente->citas as $cita)
+                        <div class="cita-card">
 
-                    <div class="d-flex justify-content-between mb-2">
-                        <strong>{{ $cita->especialidad->nombre }}</strong>
-                        <span class="badge-estado">
-                            {{ ucfirst($cita->estado) }}
-                        </span>
-                    </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <strong>{{ $cita->especialidad->nombre }}</strong>
+                                <span class="badge-estado">
+                                    {{ ucfirst($cita->estado) }}
+                                </span>
+                            </div>
 
-                    <div class="row">
-                        <div class="col-md-4">
-                            <small class="text-muted">Doctor</small><br>
-                            {{ $cita->doctor->nombre }}
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <small class="text-muted">Doctor</small><br>
+                                    {{ $cita->doctor->nombre }}
+                                </div>
+
+                                <div class="col-md-4">
+                                    <small class="text-muted">Inicio</small><br>
+                                    {{ \Carbon\Carbon::parse($cita->fecha_inicio)->format('d/m/Y H:i') }}
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <small class="text-muted">Motivo</small><br>
+                                {{ $cita->motivo ?? '—' }}
+                            </div>
+
+                            <div class="d-flex justify-content-end mt-3">
+                                <a href="{{ route('admin.citas.edit', $cita->id) }}"
+                                    class="btn btn-sm btn-outline-primary">
+                                    ✏️ Editar cita
+                                </a>
+                            </div>
+
+
                         </div>
-
-                        <div class="col-md-4">
-                            <small class="text-muted">Inicio</small><br>
-                            {{ \Carbon\Carbon::parse($cita->fecha_inicio)->format('d/m/Y H:i') }}
-                        </div>
-                    </div>
-
-                    <div class="mt-3">
-                        <small class="text-muted">Motivo</small><br>
-                        {{ $cita->motivo ?? '—' }}
-                    </div>
-
-                </div>
-                @endforeach
+                    @endforeach
                 @endif
 
             </div>
