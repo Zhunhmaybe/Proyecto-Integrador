@@ -23,7 +23,10 @@ export default defineConfig({
                 'resources/css/recepcionista/paciente/create.css',
                 'resources/css/recepcionista/paciente/index.css',
                 'resources/css/servicios.css',
-                'resources/css/welcome.css'
+                'resources/css/welcome.css',
+                'resources/css/auditor/layout.css',
+                'resources/css/auditor/dashboard.css',
+                'resources/css/auditor/tables.css'
             ],
             refresh: true,
         }),
