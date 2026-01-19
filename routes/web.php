@@ -65,7 +65,6 @@ Route::middleware(['auth', 'role:1'])->group(function () {
         return view('admin.dashboard'); // Asegúrate de tener esta vista creada
     })->name('admin.dashboard');
 
-
     //Doctores
     Route::get('/doctores', [DoctorController::class, 'index'])
         ->name('admin.doctores.index');
@@ -81,7 +80,6 @@ Route::middleware(['auth', 'role:1'])->group(function () {
 
     Route::put('/doctores/{doctor}', [DoctorController::class, 'update'])
         ->name('admin.doctores.update');
-
 
 
     // ===== ESPECIALIDADES =====
