@@ -1,0 +1,253 @@
+/* ================================
+   BASE
+================================ */
+body {
+    background: #f4f7fb;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    margin: 0;
+    color: #333;
+}
+
+/* ================================
+   LAYOUT GENERAL
+================================ */
+.container {
+    display: flex;
+    min-height: 100vh;
+    padding: 0;
+    max-width: 100%;
+}
+
+/* ================================
+   SIDEBAR
+================================ */
+.sidebar {
+    width: 260px;
+    background: #0b4f79;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar .logo {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.sidebar .logo img {
+    width: 110px;
+}
+
+.sidebar a {
+    color: #cfe6f5;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.sidebar a.active,
+.sidebar a:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+}
+
+.sidebar .user {
+    margin-top: auto;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding-top: 15px;
+    font-size: 13px;
+}
+
+/* ================================
+   PANEL PRINCIPAL
+================================ */
+.panel {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0,0,0,.12);
+    padding: 30px;
+    margin: 30px auto;
+    width: 100%;
+    max-width: 1200px;
+}
+
+/* ================================
+   TITULOS
+================================ */
+.panel h3 {
+    font-weight: 700;
+    color: #0b4f79;
+    margin-bottom: 25px;
+}
+
+.section-title {
+    display: block;
+    font-weight: 600;
+    font-size: 15px;
+    color: #0b4f79;
+    margin: 30px 0 15px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #e6eef5;
+}
+
+/* ================================
+   ALERTAS
+================================ */
+.alert {
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.alert-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: none;
+}
+
+.alert-danger {
+    background: #fdecea;
+    color: #c62828;
+    border: none;
+}
+
+/* ================================
+   BUSCADOR
+================================ */
+.search-box {
+    background: #f8fafc;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #e1e7ee;
+    margin-bottom: 30px;
+}
+
+/* ================================
+   FORMULARIOS
+================================ */
+label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+}
+
+.form-control,
+.form-select {
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #0b4f79;
+    box-shadow: 0 0 0 .15rem rgba(11,79,121,.15);
+}
+
+/* ================================
+   CHECKBOXES
+================================ */
+.form-check {
+    margin-top: 10px;
+}
+
+.form-check-input:checked {
+    background-color: #0b4f79;
+    border-color: #0b4f79;
+}
+
+/* ================================
+   TABLA HISTORIAL CLÍNICO
+================================ */
+.table {
+    margin-top: 20px;
+    font-size: 14px;
+    background: #fff;
+}
+
+.table thead {
+    background: #0b4f79;
+    color: #fff;
+}
+
+.table th {
+    text-align: center;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* ================================
+   BADGES ESTADO
+================================ */
+.badge {
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge-abierta {
+    background: #e3f2fd;
+    color: #0b4f79;
+    border: 1px solid #0b4f79;
+}
+
+.badge-cerrada {
+    background: #fdecea;
+    color: #c62828;
+    border: 1px solid #c62828;
+}
+
+/* ================================
+   BOTONES
+================================ */
+.btn {
+    border-radius: 20px;
+    font-size: 14px;
+    padding: 8px 26px;
+}
+
+.btn-primary {
+    background: #0b4f79;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #083b5a;
+}
+
+.btn-secondary {
+    background: #adb5bd;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background: #868e96;
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+@media (max-width: 992px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .panel {
+        margin: 20px;
+    }
+}

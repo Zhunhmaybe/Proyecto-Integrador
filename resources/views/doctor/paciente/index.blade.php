@@ -21,11 +21,10 @@
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('doctor.dashboard') }}" >Mi perfil</a>
-            <a href="{{ route('doctor.pacientes.index') }}" class="active">Pacientes</a>
-            <a href="{{ route('citas.create') }}">📅 Citas</a>
-            <a href="{{ route('admin.dashboard') }}">Historial Clinico</a>
-
+            <a href="{{ route('doctor.dashboard') }}" class="active">Mi perfil</a>
+            <a href="{{ route('doctor.pacientes.index') }}">Pacientes</a>
+            <a href="{{ route('doctor.citas.index') }}">📅 Citas</a>
+            <a href="{{ route('doctor.historia.index') }}">Historial Clinico</a>
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
                 <small>{{ Auth::user()->nombre_rol }}</small>
@@ -94,14 +93,19 @@
                             </div>
                         @else
                             <h5 class="fw-bold mb-3">Información del Paciente</h5>
-                            <a href="{{ route('pacientes.citas', $pacienteSeleccionado->id) }}"
+                            <a href="{{ route('doctor.pacientes.citas', $pacienteSeleccionado->id) }}"
                                 class="btn btn-outline-primary mb-3">
                                 📅 Ver Citas del Paciente
                             </a>
 
 
+                            <a href="{{ route('doctor.pacientes.historia', $pacienteSeleccionado->id) }}"
+                                class="btn btn-outline-primary mb-3">
+                                📅 Ver Historiale Clinico
+                            </a>
 
-                            <form method="POST" action="{{ route('pacientes.update', $pacienteSeleccionado->id) }}">
+                            <form method="POST"
+                                action="{{ route('doctor.pacientes.update', $pacienteSeleccionado->id) }}">
                                 @csrf
                                 @method('PUT')
 

@@ -24,8 +24,8 @@
 
             <a href="{{ route('doctor.dashboard') }}" class="active">Mi perfil</a>
             <a href="{{ route('doctor.pacientes.index') }}">Pacientes</a>
-            <a href="{{ route('citas.create') }}">📅 Citas</a>
-            <a href="{{ route('admin.dashboard') }}">Historial Clinico</a>
+            <a href="{{ route('doctor.citas.index') }}">📅 Citas</a>
+            <a href="{{ route('doctor.historia.index') }}">Historial Clinico</a>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>

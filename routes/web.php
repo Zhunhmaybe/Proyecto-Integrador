@@ -107,6 +107,42 @@ Route::middleware(['auth', 'role:0'])->group(function () {
 
     Route::get('/doctor/pacientes/{paciente}/citas', [DoctorController::class, 'pacientesCitas'])
         ->name('doctor.pacientes.citas');
+
+    //Citas
+    Route::get('/doctor/citas', [DoctorController::class, 'citasIndex'])
+        ->name('doctor.citas.index');
+
+    Route::post('/doctor/citas', [DoctorController::class, 'Adminstore'])
+        ->name('doctor.citas.store');
+
+    Route::get('/doctor/citas/{cita}/editar', [DoctorController::class, 'citasEdit'])
+        ->name('doctor.citas.edit');
+
+    Route::put('/doctor/citas/{cita}', [DoctorController::class, 'citasUpdate'])
+        ->name('doctor.citas.update');
+
+    Route::get('/doctor/citas/create', [DoctorController::class, 'Admincreate'])
+        ->name('doctor.citas.create');
+
+    //Historial Clinico
+    Route::get(
+        '/doctor/historia/create',
+        [DoctorController::class, 'historiaCreate']
+    )->name('doctor.historia.create');
+
+    Route::get(
+        '/doctor/historia',
+        [DoctorController::class, 'historiaIndex']
+    )->name('doctor.historia.index');
+
+    Route::post(
+        '/doctor/historia/store',
+        [DoctorController::class, 'historiaStore']
+    )->name('doctor.historia.store');
+    Route::get(
+        'pacientes/{paciente}/historia',
+        [DoctorController::class, 'pacienteHistorias']
+    )->name('doctor.pacientes.historia');
 });
 
 Route::middleware(['auth', 'role:1'])->group(function () {
@@ -247,7 +283,7 @@ Route::middleware(['auth', 'role:3'])->group(function () {
 
     Route::get('/secretaria/pacientes/{paciente}/citas', [RecepcionistaController::class, 'pacientesCitas'])
         ->name('secretaria.pacientes.citas');
-        
+
     //Citas
     Route::get('/secretaria/citas', [RecepcionistaController::class, 'citasIndex'])
         ->name('secretaria.citas.index');

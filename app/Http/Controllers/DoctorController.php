@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Paciente;
 use App\Models\Citas;
+use App\Models\Especialidades;
+use App\Models\HistoriaClinica;
+
 
 class DoctorController extends Controller
 {
@@ -126,6 +129,229 @@ class DoctorController extends Controller
         return view('doctor.paciente.citas', compact('paciente'));
     }
 
+    //Citas
+    public function Admincreate(Request $request)
+    {
+        $paciente = null;
+
+        // Si hay una cédula en la petición (búsqueda GET)
+        if ($request->has('cedula') && $request->cedula != null) {
+            $paciente = Paciente::where('cedula', $request->cedula)->first();
+
+            if (!$paciente) {
+                // Si buscó pero no encontró, enviamos mensaje de error
+                session()->flash('paciente_no_encontrado', $request->cedula);
+            }
+        }
+
+        return view('doctor.citas.create', [
+            'paciente'      => $paciente,
+            // Normalizamos traer doctores con rol 2 (según lógica anterior de buscarPaciente)
+            'doctores'      => User::where('rol', 0)->get(),
+            'especialidades' => Especialidades::all()
+        ]);
+    }
+
+    public function citasIndex()
+    {
+        $citas = Citas::with(['paciente', 'doctor', 'especialidad'])
+            ->orderBy('fecha_inicio', 'desc')
+            ->get();
+
+        return view('doctor.citas.create', [
+            'citas' => $citas,
+            'paciente' => null,
+            'doctores' => User::where('rol', 0)->get(),
+            'especialidades' => Especialidades::all()
+        ]);
+    }
+
+    public function citasUpdate(Request $request, Citas $cita)
+    {
+        $request->validate([
+            'doctor_id'       => 'required|exists:usuarios,id',
+            'especialidad_id' => 'required|exists:especialidades,id',
+            'fecha_inicio'    => 'required|date',
+            'estado'          => 'required|in:pendiente,confirmada,cancelada',
+            'motivo'          => 'nullable|string|max:255',
+        ]);
+
+        $cita->update([
+            'doctor_id'       => $request->doctor_id,
+            'especialidad_id' => $request->especialidad_id,
+            'fecha_inicio'    => $request->fecha_inicio,
+            'estado'          => $request->estado,
+            'motivo'          => $request->motivo,
+        ]);
+
+        return redirect()
+            ->route('doctor.pacientes.citas', $cita->paciente_id);
+    }
+
+    public function Adminstore(Request $request)
+    {
+        $request->validate([
+            'paciente_id' => 'required|exists:pacientes,id',
+            'doctor_id' => 'required|exists:usuarios,id',
+            'especialidad_id' => 'required|exists:especialidades,id',
+            'fecha_inicio' => 'required|date',
+            'motivo' => 'nullable|string|max:255',
+        ]);
+
+        Citas::create([
+            'paciente_id' => $request->paciente_id,
+            'doctor_id' => $request->doctor_id,
+            'especialidad_id' => $request->especialidad_id,
+            'fecha_inicio' => $request->fecha_inicio,
+            'estado' => 'pendiente',
+            'motivo' => $request->motivo
+        ]);
+
+        return redirect()
+            ->route('doctor.pacientes.create')
+            ->with('success', 'Cita agendada correctamente');
+    }
+
+    public function historiaIndex()
+    {
+        $historias = HistoriaClinica::with('paciente')
+            ->orderBy('fecha_atencion', 'desc')
+            ->get();
+
+        return view('doctor.historia_clinica.create', [
+            'historias' => $historias,
+            'paciente'  => null
+        ]);
+    }
+
+    // ===============================
+    // HISTORIA CLÍNICA - CREAR / BUSCAR
+    // ===============================
+    public function historiaCreate(Request $request)
+    {
+        $paciente = null;
+
+        if ($request->has('cedula') && $request->cedula != null) {
+            $paciente = Paciente::where('cedula', $request->cedula)->first();
+
+            if (!$paciente) {
+                session()->flash('paciente_no_encontrado', $request->cedula);
+            }
+        }
+
+        return view('doctor.historia_clinica.create', [
+            'paciente'  => $paciente,
+            'historias' => $paciente
+                ? HistoriaClinica::where('paciente_id', $paciente->id)
+                ->orderBy('fecha_atencion', 'desc')
+                ->get()
+                : collect()
+        ]);
+    }
+
+    // ===============================
+    // GUARDAR HISTORIA CLÍNICA
+    // ===============================
+    public function historiaStore(Request $request)
+    {
+        $request->validate([
+            'paciente_id'      => 'required|exists:pacientes,id',
+            'numero_historia'  => 'required|string|max:50',
+            'fecha_atencion'   => 'required|date',
+            'estado_historia'  => 'required|in:abierta,cerrada',
+            'motivo_consulta'  => 'nullable|string',
+            'enfermedad_actual' => 'nullable|string',
+
+            // Constantes vitales
+            'temperatura'             => 'nullable|string|max:10',
+            'presion_arterial'        => 'nullable|string|max:10',
+            'pulso'                   => 'nullable|string|max:10',
+            'frecuencia_respiratoria' => 'nullable|string|max:10',
+
+            // Examen clínico
+            'labios'     => 'nullable|string',
+            'lengua'     => 'nullable|string',
+            'paladar'    => 'nullable|string',
+            'piso_boca'  => 'nullable|string',
+            'encias'     => 'nullable|string',
+            'carrillos'  => 'nullable|string',
+            'orofaringe' => 'nullable|string',
+            'atm'        => 'nullable|string',
+
+            'observaciones' => 'nullable|string',
+        ]);
+
+        // 🔒 Evitar 2 historias abiertas
+        if (HistoriaClinica::where('paciente_id', $request->paciente_id)
+            ->where('estado_historia', 'abierta')
+            ->exists()
+        ) {
+
+            return back()->withErrors('El paciente ya tiene una historia clínica abierta');
+        }
+
+        HistoriaClinica::create([
+            'paciente_id'       => $request->paciente_id,
+            'numero_historia'   => $request->numero_historia,
+            'fecha_atencion'    => $request->fecha_atencion,
+            'estado_historia'   => $request->estado_historia,
+            'motivo_consulta'   => $request->motivo_consulta,
+            'enfermedad_actual' => $request->enfermedad_actual,
+
+            // Antecedentes personales
+            'alergias'             => $request->alergias,
+            'cardiopatias'         => $request->boolean('cardiopatias'),
+            'diabetes'             => $request->boolean('diabetes'),
+            'hipertension'         => $request->boolean('hipertension'),
+            'tuberculosis'         => $request->boolean('tuberculosis'),
+            'antecedentes_otros'   => $request->antecedentes_otros,
+
+            // Antecedentes familiares
+            'fam_diabetes'     => $request->boolean('fam_diabetes'),
+            'fam_hipertension' => $request->boolean('fam_hipertension'),
+            'fam_cancer'       => $request->boolean('fam_cancer'),
+            'fam_tuberculosis' => $request->boolean('fam_tuberculosis'),
+
+            // Constantes vitales
+            'temperatura'             => $request->temperatura,
+            'presion_arterial'        => $request->presion_arterial,
+            'pulso'                   => $request->pulso,
+            'frecuencia_respiratoria' => $request->frecuencia_respiratoria,
+
+            // Examen clínico
+            'labios'     => $request->labios,
+            'lengua'     => $request->lengua,
+            'paladar'    => $request->paladar,
+            'piso_boca'  => $request->piso_boca,
+            'encias'     => $request->encias,
+            'carrillos'  => $request->carrillos,
+            'orofaringe' => $request->orofaringe,
+            'atm'        => $request->atm,
+
+            // Observaciones
+            'observaciones' => $request->observaciones,
+
+            // Auditoría
+            'profesional_id' => Auth::id(),
+        ]);
+
+        return redirect()
+            ->route('doctor.pacientes.index')
+            ->with('success', 'Historia clínica creada correctamente');
+    }
+    // ===============================
+    // VER HISTORIAS CLÍNICAS DEL PACIENTE
+    // ===============================
+    public function pacienteHistorias(Paciente $paciente)
+    {
+        $paciente->load([
+            'historiasClinicas',
+            'historiasClinicas.paciente',
+        ]);
+
+        return view('doctor.paciente.historia_clinica', compact('paciente'));
+    }
+
     // FORM CREAR
     public function create()
     {
@@ -156,6 +382,8 @@ class DoctorController extends Controller
             ->route('admin.doctores.index')
             ->with('success', 'Doctor creado correctamente');
     }
+
+    //Crear Historial Clinico
 
     // FORM EDITAR
     public function edit(User $doctor)

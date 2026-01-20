@@ -83,4 +83,5 @@ class HistoriaClinica extends Model
     {
         return $this->hasMany(Tratamiento::class, 'historia_id');
     }
+
 }

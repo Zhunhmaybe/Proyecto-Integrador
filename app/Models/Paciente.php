@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\HistoriaClinica;
 
 class Paciente extends Model
 {
@@ -38,5 +39,10 @@ class Paciente extends Model
     public function citas()
     {
         return $this->hasMany(Citas::class)->orderBy('fecha_inicio', 'desc');
+    }
+
+    public function historiasClinicas()
+    {
+        return $this->hasMany(HistoriaClinica::class, 'paciente_id');
     }
 }
