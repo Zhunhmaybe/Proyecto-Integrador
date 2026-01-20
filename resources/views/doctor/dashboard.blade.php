@@ -1,23 +1,135 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="es">
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard Doctor') }}</div>
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Perfil</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-                <div class="card-body">
-                    @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    @vite(['resources/css/home.css'])
+</head>
+
+<body>
+
+    <div class="wrapper">
+
+
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="/images/logo-danny.png" alt="Logo Danny">
+            </div>
+
+            <a href="{{ route('doctor.dashboard') }}" class="active">Mi perfil</a>
+            <a href="{{ route('doctor.pacientes.index') }}">Pacientes</a>
+            <a href="{{ route('citas.create') }}">📅 Citas</a>
+            <a href="{{ route('admin.dashboard') }}">Historial Clinico</a>
+
+            <div class="user">
+                <strong>{{ Auth::user()->nombre }}</strong><br>
+                <small>{{ Auth::user()->nombre_rol }}</small>
+
+                <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                    @csrf
+                    <button class="btn btn-sm btn-light w-100">Cerrar Sesión</button>
+                </form>
+            </div>
+        </aside>
+
+
+        <main class="content">
+            <h3 class="fw-bold mb-4">Mi perfil</h3>
+
+            <div class="profile-card">
+
+                <div class="profile-header">
+                    <div class="avatar"></div>
+                    <div>
+                        <h4>{{ Auth::user()->nombre }}</h4>
+                        <small>{{ Auth::user()->nombre_rol }}</small>
                     </div>
-                    @endif
+                </div>
 
-                    {{ __('Bienvenido, Doctor!') }}
+                <div class="profile-body">
+                    <h5>Información Personal:</h5>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre Completo:</label>
+                            <input type="text" class="form-control" value="{{ Auth::user()->nombre }}" disabled>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Correo Electrónico:</label>
+                            <input type="email" class="form-control" value="{{ Auth::user()->email }}" disabled>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Teléfono:</label>
+                            <input type="text" class="form-control"
+                                value="{{ Auth::user()->tel ?? 'No registrado' }}" disabled>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Estado:</label>
+                            <input type="text" class="form-control"
+                                value="{{ Auth::user()->nombre_estado ?? 'No registrada' }}" disabled>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+
+                        <div class="action-buttons">
+                            <a href="{{ route('perfil.edit') }}" class="btn btn-gold">
+                                Editar
+                            </a>
+
+
+                            <a href="{{ route('profile.2fa') }}" class="btn-2fa" title="Seguridad 2FA">
+                                🔐2FA
+                            </a>
+                        </div>
+
+
+                    </div>
+
+                </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @if (session('session_expired'))
+        <div class="modal fade show session-modal-overlay" id="sessionExpiredModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">Sesión cerrada</h5>
+                    </div>
+
+                    <div class="modal-body text-center">
+                        <p>
+                            Tu sesión se cerró automáticamente por
+                            <strong>inactividad de 2 minutos</strong>.
+                        </p>
+                    </div>
+
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-danger"
+                            onclick="window.location.href='{{ route('login') }}'">
+                            Aceptar
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
-    </div>
-</div>
-@endsection
+    @endif
+
+</body>
+
+</html>

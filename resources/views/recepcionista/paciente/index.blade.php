@@ -21,9 +21,9 @@
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('home') }}">👤 Mi Perfil</a>
-            <a href="{{ route('citas.create') }}">📅 Citas</a>
-            <a href="{{ route('pacientes.index') }}" class="active">👥 Pacientes</a>
+            <a href="{{ route('recepcionista.home') }}">👤 Mi Perfil</a>
+            <a href="{{ route('secretaria.citas.index') }}">📅 Citas</a>
+            <a href="{{ route('secretaria.pacientes.index') }}" class="active">👥 Pacientes</a>
 
 
             <div class="user">
@@ -53,7 +53,7 @@
                         @if($pacientes->isEmpty())
                         <div class="text-center mt-5">
                             <p class="text-muted">No hay pacientes registrados</p>
-                            <a href="{{ route('pacientes.create') }}"
+                            <a href="{{ route('secretaria.pacientes.create') }}"
                                 class="btn btn-gold">
                                 Crear Paciente
                             </a>
@@ -61,7 +61,7 @@
                         @else
                         <div style="max-height: 65vh; overflow-y: auto;">
                             @foreach($pacientes as $p)
-                            <a href="{{ route('pacientes.index', ['paciente' => $p->id]) }}"
+                            <a href="{{ route('secretaria.pacientes.index', ['paciente' => $p->id]) }}"
                                 class="paciente-item
                                    {{ optional($pacienteSeleccionado)->id === $p->id ? 'active' : '' }}">
 
@@ -77,7 +77,7 @@
                             @endforeach
                         </div>
                         <div class="text-center mt-3 pt-3 border-top">
-                            <a href="{{ route('pacientes.create') }}"
+                            <a href="{{ route('secretaria.pacientes.create') }}"
                                 class="btn btn-gold w-100">
                                 + Crear Paciente
                             </a>
@@ -97,7 +97,7 @@
                         </div>
                         @else
                         <h5 class="fw-bold mb-3">Información del Paciente</h5>
-                        <a href="{{ route('pacientes.citas', $pacienteSeleccionado->id) }}"
+                        <a href="{{ route('secretaria.pacientes.citas', $pacienteSeleccionado->id) }}"
                             class="btn btn-outline-primary mb-3">
                             📅 Ver Citas del Paciente
                         </a>
@@ -105,7 +105,7 @@
 
 
                         <form method="POST"
-                            action="{{ route('pacientes.update', $pacienteSeleccionado->id) }}">
+                            action="{{ route('secretaria.pacientes.update', $pacienteSeleccionado->id) }}">
                             @csrf
                             @method('PUT')
 
@@ -143,7 +143,7 @@
                             </div>
 
                             <div class="text-end">
-                                <a href="{{ route('pacientes.index') }}"
+                                <a href="{{ route('secretaria.pacientes.index') }}"
                                     class="btn btn-light">
                                     Cancelar
                                 </a>

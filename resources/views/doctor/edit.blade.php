@@ -22,9 +22,10 @@
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('recepcionista.home') }}" class="active">👤 Mi Perfil</a>
-            <a href="{{ route('secretaria.citas.index') }}">📅 Citas</a>
-            <a href="{{ route('secretaria.pacientes.index') }}">👥 Pacientes</a>
+            <a href="{{ route('admin.dashboard') }}" class="active">Mi perfil</a>
+            <a href="{{ route('doctor.pacientes.index') }}">Pacientes</a>
+            <a href="{{ route('citas.create') }}">📅 Citas</a>
+            <a href="{{ route('admin.dashboard') }}">Historial Clinico</a>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
@@ -111,7 +112,7 @@
 
                         <div class="actions">
                             <button type="submit" class="btn-save">Guardar Cambios</button>
-                            <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-cancel">
+                            <a href="{{ route('doctor.dashboard') }}" class="btn btn-outline-secondary btn-cancel">
                                 Cancelar
                             </a>
                         </div>

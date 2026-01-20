@@ -147,7 +147,7 @@ class AdminController extends Controller
         return view('admin.citas.create', [
             'paciente'      => $paciente,
             // Normalizamos traer doctores con rol 2 (según lógica anterior de buscarPaciente)
-            'doctores'      => User::where('rol', 2)->get(),
+            'doctores'      => User::where('rol', 0)->get(),
             'especialidades' => Especialidades::all()
         ]);
     }
@@ -164,7 +164,7 @@ class AdminController extends Controller
     {
         $cita->load(['paciente', 'doctor', 'especialidad']);
 
-        $doctores = User::where('rol', 2)->get(); // doctores
+        $doctores = User::where('rol', 0)->get(); // doctores
         $especialidades = Especialidades::all();
 
         return view('admin.citas.edit', compact(
@@ -219,16 +219,16 @@ class AdminController extends Controller
             ->route('admin.citas.create')
             ->with('success', 'Cita agendada correctamente');
     }
+    //Roles
     public function rolesIndex()
-{
-    // Agrupar usuarios por rol
-    $roles = User::select('rol')
-        ->selectRaw('COUNT(*) as total')
-        ->groupBy('rol')
-        ->orderBy('rol')
-        ->get();
+    {
+        // Agrupar usuarios por rol
+        $roles = User::select('rol')
+            ->selectRaw('COUNT(*) as total')
+            ->groupBy('rol')
+            ->orderBy('rol')
+            ->get();
 
-    return view('admin.roles.index', compact('roles'));
-}
-
+        return view('admin.roles.index', compact('roles'));
+    }
 }

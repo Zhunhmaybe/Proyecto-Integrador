@@ -22,9 +22,9 @@
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('recepcionista.dashboard') }}" class="active">👤 Mi Perfil</a>
-            <a href="{{ route('citas.create') }}">📅 Citas</a>
-            <a href="{{ route('pacientes.index') }}">👥 Pacientes</a>
+            <a href="{{ route('recepcionista.home') }}" class="active">👤 Mi Perfil</a>
+            <a href="{{ route('secretaria.citas.index') }}">📅 Citas</a>
+            <a href="{{ route('secretaria.pacientes.index') }}">👥 Pacientes</a>
 
 
             <div class="user">

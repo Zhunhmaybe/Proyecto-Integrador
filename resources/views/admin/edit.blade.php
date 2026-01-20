@@ -27,8 +27,8 @@
             <a href="{{ route('admin.doctores.index') }}" >👤 Doctores</a>
             <a href="{{ route('admin.especialidades.index') }}" >Especialidades</a>
             <a href="{{ route('admin.dashboard') }}" >Usuarios</a>
-            <a href="{{ route('citas.create') }}">📅 Citas</a>
-            <a href="{{ route('pacientes.index') }}">Roles</a>
+            <a href="{{ route('admin.citas.create') }}">📅 Citas</a>
+            <a href="{{ route('admin.roles.index') }}">Roles</a>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
@@ -115,7 +115,7 @@
 
                         <div class="actions">
                             <button type="submit" class="btn-save">Guardar Cambios</button>
-                            <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-cancel">
+                            <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary btn-cancel">
                                 Cancelar
                             </a>
                         </div>

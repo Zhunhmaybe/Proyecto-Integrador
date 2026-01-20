@@ -1,203 +1,257 @@
-@extends('layouts.auditor')
+<!DOCTYPE html>
+<html lang="es">
 
-@section('title', 'Logs de Auditoría')
-@section('page-title', 'Logs de Auditoría')
+<head>
+    <meta charset="UTF-8">
+    <title>Logs de Auditoría</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-@section('content')
-@push('styles')
-@vite('resources/css/auditor/tables.css')
-@endpush
+    <!-- CSS -->
+    <link rel="stylesheet" href="tables.css">
 
-<!-- Filtros -->
-<div class="filter-card">
-    <form method="GET" action="{{ route('auditor.logs.index') }}">
-        <div class="filter-grid">
-            <div class="form-group">
-                <label class="form-label">Buscar</label>
-                <input type="text" name="search" class="form-control" placeholder="ID, IP, tabla..."
-                    value="{{ request('search') }}">
-            </div>
+    <!-- Bootstrap (opcional) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    @vite(['resources/css/auditor/logs/index.css'])
+</head>
 
-            <div class="form-group">
-                <label class="form-label">Acción</label>
-                <select name="accion" class="form-control">
-                    <option value="">Todas</option>
-                    @foreach($acciones as $accion)
-                    <option value="{{ $accion }}" {{ request('accion') == $accion ? 'selected' : '' }}>{{ $accion }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Tabla</label>
-                <select name="tabla_afectada" class="form-control">
-                    <option value="">Todas</option>
-                    @foreach($tablas as $tabla)
-                    <option value="{{ $tabla }}" {{ request('tabla_afectada') == $tabla ? 'selected' : '' }}>{{ $tabla }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Usuario</label>
-                <select name="usuario_id" class="form-control">
-                    <option value="">Todos</option>
-                    @foreach($usuarios as $usuario)
-                    <option value="{{ $usuario->id }}" {{ request('usuario_id') == $usuario->id ? 'selected' : '' }}>
-                        {{ $usuario->nombre }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Fecha Inicio</label>
-                <input type="date" name="fecha_inicio" class="form-control" value="{{ request('fecha_inicio') }}">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Fecha Fin</label>
-                <input type="date" name="fecha_fin" class="form-control" value="{{ request('fecha_fin') }}">
-            </div>
+<body>
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="/images/logo-danny.png" alt="Logo Danny">
         </div>
 
-        <div class="filter-actions">
-            <a href="{{ route('auditor.logs.index') }}" class="btn btn-secondary">Limpiar</a>
-            <button type="submit" class="btn btn-primary">Filtrar</button>
-            <a href="{{ route('auditor.logs.export', request()->all()) }}" class="btn btn-success">Exportar CSV</a>
-        </div>
-    </form>
-</div>
+        <a href="{{ route('auditor.dashboard') }}" >Mi perfil</a>
+        <a href="{{ route('auditor.logs.index') }}" class="active">LOGS</a>
+        <a href="{{ route('auditor.tables.citas') }}">Citas</a>
+        <a href="{{ route('auditor.tables.pacientes') }}">Pacientes</a>
+        <a href="{{ route('auditor.tables.users') }}">Usuarios</a>
 
-<!-- Tabla de Logs -->
-<div class="content-card">
-    <div class="table-container">
-        <table>
-            <thead>
+
+        <div class="user">
+            <strong>{{ Auth::user()->nombre }}</strong><br>
+            <small>{{ Auth::user()->nombre_rol }}</small>
+
+            <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                @csrf
+                <button class="btn btn-sm btn-light w-100">Cerrar Sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- ====== FILTROS ====== -->
+    <div class="filter-card">
+        <form method="GET" action="#">
+            <div class="filter-grid">
+
+                <div class="form-group">
+                    <label class="form-label">Buscar</label>
+                    <input type="text" class="form-control" placeholder="ID, IP, tabla...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Acción</label>
+                    <select class="form-control">
+                        <option value="">Todas</option>
+                        <option value="INSERT">INSERT</option>
+                        <option value="UPDATE">UPDATE</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Tabla</label>
+                    <select class="form-control">
+                        <option value="">Todas</option>
+                        <option value="usuarios">usuarios</option>
+                        <option value="citas">citas</option>
+                        <option value="roles">roles</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Usuario</label>
+                    <select class="form-control">
+                        <option value="">Todos</option>
+                        <option value="1">Juan Pérez</option>
+                        <option value="2">Ana Torres</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Fecha Inicio</label>
+                    <input type="date" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Fecha Fin</label>
+                    <input type="date" class="form-control">
+                </div>
+
+            </div>
+
+            <div class="filter-actions">
+                <a href="#" class="btn btn-secondary">Limpiar</a>
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+                <a href="#" class="btn btn-success">Exportar CSV</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- ====== TABLA DE LOGS ====== -->
+    <div class="content-card">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Acción</th>
+                        <th>Tabla</th>
+                        <th>Registro ID</th>
+                        <th>IP</th>
+                        <th>Fecha</th>
+                        <th>Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td>#25</td>
+                        <td>Juan Pérez</td>
+                        <td><span class="badge badge-update">UPDATE</span></td>
+                        <td>usuarios</td>
+                        <td>12</td>
+                        <td style="font-family:monospace;">192.168.1.10</td>
+                        <td>19/01/2026 11:15:30</td>
+                        <td>
+                            <button class="details-btn" onclick="showDetails(25)">Ver Detalles</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>#24</td>
+                        <td>Sistema</td>
+                        <td><span class="badge badge-insert">INSERT</span></td>
+                        <td>citas</td>
+                        <td>45</td>
+                        <td>N/A</td>
+                        <td>19/01/2026 10:40:12</td>
+                        <td>
+                            <button class="details-btn" onclick="showDetails(24)">Ver Detalles</button>
+                        </td>
+                    </tr>
+
+                    <!-- Sin registros -->
+                    <!--
                 <tr>
-                    <th>ID</th>
-                    <th>Usuario</th>
-                    <th>Acción</th>
-                    <th>Tabla</th>
-                    <th>Registro ID</th>
-                    <th>IP</th>
-                    <th>Fecha</th>
-                    <th>Detalles</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($logs as $log)
-                <tr>
-                    <td>#{{ $log->id }}</td>
-                    <td>{{ $log->usuario->nombre ?? 'Sistema' }}</td>
-                    <td><span class="badge badge-{{ strtolower($log->accion) }}">{{ $log->accion }}</span></td>
-                    <td>{{ $log->tabla_afectada ?? 'N/A' }}</td>
-                    <td>{{ $log->registro_id ?? 'N/A' }}</td>
-                    <td style="font-family: monospace; font-size: 0.875rem;">{{ $log->ip_address ?? 'N/A' }}</td>
-                    <td>{{ $log->created_at->format('d/m/Y H:i:s') }}</td>
-                    <td>
-                        <button class="details-btn" onclick="showDetails({{ $log->id }})">Ver Detalles</button>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="8" style="text-align: center; color: var(--gray-text); padding: 2rem;">
+                    <td colspan="8" style="text-align:center; padding:2rem; color:#888;">
                         No se encontraron registros
                     </td>
                 </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+                -->
 
-    <!-- Paginación -->
-    <div class="pagination">
-        {{ $logs->links() }}
-    </div>
-</div>
-
-<!-- Modal de Detalles -->
-<div id="detailsModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="modal-title">Detalles del Log</h3>
-            <button class="close-btn" onclick="closeModal()">&times;</button>
+                </tbody>
+            </table>
         </div>
-        <div id="modalBody"></div>
+
+        <!-- ====== PAGINACIÓN ====== -->
+        <div class="pagination">
+            <a href="#" class="page-link">«</a>
+            <a href="#" class="page-link active">1</a>
+            <a href="#" class="page-link">2</a>
+            <a href="#" class="page-link">3</a>
+            <a href="#" class="page-link">»</a>
+        </div>
     </div>
-</div>
 
-@push('scripts')
-<script>
-    const logsData = @json($logs->items());
-    
-    function showDetails(logId) {
-        const log = logsData.find(l => l.id === logId);
-        if (!log) return;
+    <!-- ====== MODAL DE DETALLES ====== -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Detalles del Log</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
 
-        const modalBody = document.getElementById('modalBody');
-        modalBody.innerHTML = `
-                        <div class="detail-row">
-                            <div class="detail-label">ID:</div>
-                            <div class="detail-value">#${log.id}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Usuario:</div>
-                            <div class="detail-value">${log.usuario ? log.usuario.nombre : 'Sistema'}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Acción:</div>
-                            <div class="detail-value"><span class="badge badge-${log.accion.toLowerCase()}">${log.accion}</span></div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Tabla:</div>
-                            <div class="detail-value">${log.tabla_afectada || 'N/A'}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Registro ID:</div>
-                            <div class="detail-value">${log.registro_id || 'N/A'}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">IP:</div>
-                            <div class="detail-value">${log.ip_address || 'N/A'}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">User Agent:</div>
-                            <div class="detail-value" style="font-size: 0.75rem;">${log.user_agent || 'N/A'}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Fecha:</div>
-                            <div class="detail-value">${new Date(log.created_at).toLocaleString('es-ES')}</div>
-                        </div>
-                        ${log.valores_anteriores ? `
-                        <div style="margin-top: 1rem;">
-                            <div class="detail-label" style="margin-bottom: 0.5rem;">Valores Anteriores:</div>
-                            <pre>${JSON.stringify(log.valores_anteriores, null, 2)}</pre>
-                        </div>
-                        ` : ''}
-                        ${log.valores_nuevos ? `
-                        <div style="margin-top: 1rem;">
-                            <div class="detail-label" style="margin-bottom: 0.5rem;">Valores Nuevos:</div>
-                            <pre>${JSON.stringify(log.valores_nuevos, null, 2)}</pre>
-                        </div>
-                        ` : ''}
-                    `;
+    <!-- ====== SCRIPT ====== -->
+    <script>
+        const logsData = [{
+                id: 25,
+                usuario: {
+                    nombre: "Juan Pérez"
+                },
+                accion: "UPDATE",
+                tabla_afectada: "usuarios",
+                registro_id: 12,
+                ip_address: "192.168.1.10",
+                user_agent: "Chrome / Windows",
+                created_at: "2026-01-19T11:15:30",
+                valores_anteriores: {
+                    nombre: "Juan",
+                    estado: "inactivo"
+                },
+                valores_nuevos: {
+                    nombre: "Juan Pérez",
+                    estado: "activo"
+                }
+            },
+            {
+                id: 24,
+                usuario: null,
+                accion: "INSERT",
+                tabla_afectada: "citas",
+                registro_id: 45,
+                ip_address: null,
+                user_agent: null,
+                created_at: "2026-01-19T10:40:12"
+            }
+        ];
 
-        document.getElementById('detailsModal').classList.add('active');
-    }
+        function showDetails(logId) {
+            const log = logsData.find(l => l.id === logId);
+            if (!log) return;
 
-    function closeModal() {
-        document.getElementById('detailsModal').classList.remove('active');
-    }
+            const modalBody = document.getElementById('modalBody');
 
-    // Cerrar modal al hacer clic fuera
-    document.getElementById('detailsModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeModal();
+            modalBody.innerHTML = `
+            <div class="detail-row"><strong>ID:</strong> #${log.id}</div>
+            <div class="detail-row"><strong>Usuario:</strong> ${log.usuario ? log.usuario.nombre : 'Sistema'}</div>
+            <div class="detail-row"><strong>Acción:</strong>
+                <span class="badge badge-${log.accion.toLowerCase()}">${log.accion}</span>
+            </div>
+            <div class="detail-row"><strong>Tabla:</strong> ${log.tabla_afectada || 'N/A'}</div>
+            <div class="detail-row"><strong>Registro ID:</strong> ${log.registro_id || 'N/A'}</div>
+            <div class="detail-row"><strong>IP:</strong> ${log.ip_address || 'N/A'}</div>
+            <div class="detail-row"><strong>User Agent:</strong> ${log.user_agent || 'N/A'}</div>
+            <div class="detail-row"><strong>Fecha:</strong>
+                ${new Date(log.created_at).toLocaleString('es-ES')}
+            </div>
+
+            ${log.valores_anteriores ? `
+                    <h6 style="margin-top:1rem;">Valores Anteriores</h6>
+                    <pre>${JSON.stringify(log.valores_anteriores, null, 2)}</pre>
+                ` : ''}
+
+            ${log.valores_nuevos ? `
+                    <h6>Valores Nuevos</h6>
+                    <pre>${JSON.stringify(log.valores_nuevos, null, 2)}</pre>
+                ` : ''}
+        `;
+
+            document.getElementById('detailsModal').classList.add('active');
         }
-    });
-</script>
-@endpush
-@endsection
+
+        function closeModal() {
+            document.getElementById('detailsModal').classList.remove('active');
+        }
+
+        document.getElementById('detailsModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+
+</body>
+
+</html>

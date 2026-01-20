@@ -21,9 +21,9 @@
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('home') }}">👤 Mi Perfil</a>
-            <a href="{{ route('citas.create') }}">📅 Citas</a>
-            <a href="{{ route('pacientes.index') }}" class="active">👥 Pacientes</a>
+            <a href="{{ route('recepcionista.home') }}">👤 Mi Perfil</a>
+            <a href="{{ route('secretaria.citas.index') }}">📅 Citas</a>
+            <a href="{{ route('secretaria.pacientes.index') }}" class="active">👥 Pacientes</a>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
@@ -47,7 +47,7 @@
                     </small>
                 </div>
 
-                <a href="{{ route('pacientes.index', ['paciente' => $paciente->id]) }}"
+                <a href="{{ route('secretaria.pacientes.index', ['paciente' => $paciente->id]) }}"
                     class="btn btn-outline-secondary">
                     ⬅ Volver
                 </a>

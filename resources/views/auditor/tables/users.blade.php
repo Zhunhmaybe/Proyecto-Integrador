@@ -1,100 +1,161 @@
-@extends('layouts.auditor')
+<!DOCTYPE html>
+<html lang="es">
 
-@section('title', 'Usuarios')
-@section('page-title', 'Tabla de Usuarios')
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-@section('content')
-@push('styles')
-@vite('resources/css/auditor/tables.css')
-@endpush
+    <!-- CSS del auditor -->
+    <link rel="stylesheet" href="tables.css">
 
-<!-- Estadísticas -->
-<div class="stats-row">
-    <div class="stat-box">
-        <div class="stat-value">{{ number_format($users->total()) }}</div>
-        <div class="stat-label">Total de Usuarios</div>
-    </div>
-    @foreach($roles as $role)
-    <div class="stat-box">
-        <div class="stat-value">{{ number_format(\App\Models\User::where('rol', $role)->count()) }}</div>
-        <div class="stat-label">{{ ucfirst($role) }}s</div>
-    </div>
-    @endforeach
-</div>
+    <!-- Bootstrap (opcional) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    @vite(['resources/css/auditor/tables/users.css'])
+</head>
 
-<!-- Filtros -->
-<div class="filter-card">
-    <form method="GET" action="{{ route('auditor.tables.users') }}">
-        <div class="filter-grid">
-            <div class="form-group">
-                <label class="form-label">Buscar</label>
-                <input type="text" name="search" class="form-control" placeholder="Nombre, email..."
-                    value="{{ request('search') }}">
-            </div>
+<body>
 
-            <div class="form-group">
-                <label class="form-label">Rol</label>
-                <select name="rol" class="form-control">
-                    <option value="">Todos</option>
-                    @foreach($roles as $role)
-                    <option value="{{ $role }}" {{ request('rol') == $role ? 'selected' : '' }}>{{ ucfirst($role) }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="/images/logo-danny.png" alt="Logo Danny">
         </div>
 
-        <div class="filter-actions">
-            <a href="{{ route('auditor.tables.users') }}" class="btn btn-secondary">Limpiar</a>
-            <button type="submit" class="btn btn-primary">Filtrar</button>
-        </div>
-    </form>
-</div>
+        <a href="{{ route('auditor.dashboard') }}" >Mi perfil</a>
+        <a href="{{ route('auditor.logs.index') }}">LOGS</a>
+        <a href="{{ route('auditor.tables.citas') }}">Citas</a>
+        <a href="{{ route('auditor.tables.pacientes') }}">Pacientes</a>
+        <a href="{{ route('auditor.tables.users') }}" class="active">Usuarios</a>
 
-<!-- Tabla de Usuarios -->
-<div class="content-card">
-    <div class="table-container">
-        <table>
-            <thead>
+
+        <div class="user">
+            <strong>{{ Auth::user()->nombre }}</strong><br>
+            <small>{{ Auth::user()->nombre_rol }}</small>
+
+            <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                @csrf
+                <button class="btn btn-sm btn-light w-100">Cerrar Sesión</button>
+            </form>
+        </div>
+    </aside>
+    <!-- ====== ESTADÍSTICAS ====== -->
+    <div class="stats-row">
+        <div class="stat-box">
+            <div class="stat-value">120</div>
+            <div class="stat-label">Total de Usuarios</div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-value">10</div>
+            <div class="stat-label">Administradores</div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-value">25</div>
+            <div class="stat-label">Auditores</div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-value">85</div>
+            <div class="stat-label">Usuarios</div>
+        </div>
+    </div>
+
+    <!-- ====== FILTROS ====== -->
+    <div class="filter-card">
+        <form method="GET" action="#">
+            <div class="filter-grid">
+
+                <div class="form-group">
+                    <label class="form-label">Buscar</label>
+                    <input type="text" class="form-control" placeholder="Nombre, email...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Rol</label>
+                    <select class="form-control">
+                        <option value="">Todos</option>
+                        <option value="admin">Administrador</option>
+                        <option value="auditor">Auditor</option>
+                        <option value="usuario">Usuario</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="filter-actions">
+                <a href="#" class="btn btn-secondary">Limpiar</a>
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- ====== TABLA DE USUARIOS ====== -->
+    <div class="content-card">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Email Verificado</th>
+                        <th>Fecha de Registro</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td>#1</td>
+                        <td>Oskar Jurado</td>
+                        <td>oskar@email.com</td>
+                        <td><span class="badge badge-admin">Administrador</span></td>
+                        <td><span style="color:#10b981;">✓ Verificado</span></td>
+                        <td>10/01/2026 09:15</td>
+                    </tr>
+
+                    <tr>
+                        <td>#2</td>
+                        <td>Ana Torres</td>
+                        <td>ana@email.com</td>
+                        <td><span class="badge badge-auditor">Auditor</span></td>
+                        <td><span style="color:#ef4444;">✗ No verificado</span></td>
+                        <td>12/01/2026 14:40</td>
+                    </tr>
+
+                    <tr>
+                        <td>#3</td>
+                        <td>Juan Pérez</td>
+                        <td>juan@email.com</td>
+                        <td><span class="badge badge-usuario">Usuario</span></td>
+                        <td><span style="color:#10b981;">✓ Verificado</span></td>
+                        <td>15/01/2026 08:55</td>
+                    </tr>
+
+                    <!-- Sin usuarios -->
+                    <!--
                 <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Rol</th>
-                    <th>Email Verificado</th>
-                    <th>Fecha de Registro</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($users as $user)
-                <tr>
-                    <td>#{{ $user->id }}</td>
-                    <td>{{ $user->nombre }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td><span class="badge badge-{{ $user->rol }}">{{ ucfirst($user->rol) }}</span></td>
-                    <td>
-                        @if($user->email_verified_at)
-                        <span style="color: #10b981;">✓ Verificado</span>
-                        @else
-                        <span style="color: #ef4444;">✗ No verificado</span>
-                        @endif
-                    </td>
-                    <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="6" style="text-align: center; color: var(--gray-text); padding: 2rem;">
+                    <td colspan="6" style="text-align:center; padding:2rem; color:#888;">
                         No se encontraron usuarios
                     </td>
                 </tr>
-                @endforelse
-            </tbody>
-        </table>
+                -->
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ====== PAGINACIÓN ====== -->
+        <div class="pagination">
+            <a href="#" class="page-link">«</a>
+            <a href="#" class="page-link active">1</a>
+            <a href="#" class="page-link">2</a>
+            <a href="#" class="page-link">3</a>
+            <a href="#" class="page-link">»</a>
+        </div>
     </div>
 
-    <!-- Paginación -->
-    <div class="pagination">
-        {{ $users->links() }}
-    </div>
-</div>
-@endsection
+</body>
+
+</html>

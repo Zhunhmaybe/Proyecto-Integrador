@@ -10,6 +10,7 @@ use App\Http\Controllers\CitaController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\EspecialidadesController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\RecepcionistaController;
 
 
 Route::get('/', function () {
@@ -55,7 +56,7 @@ Route::middleware('auth')->group(function () {
             case 2:
                 return redirect()->route('auditor.dashboard');
             case 3:
-                return redirect()->route('recepcionista.edit');
+                return redirect()->route('recepcionista.dashboard');
             case 4:
                 return redirect()->route('usuario.dashboard');
             default:
@@ -78,10 +79,34 @@ Route::middleware('auth')->group(function () {
 });
 
 // Rutas con roles - DASHBOARDS
+//Doctor
 Route::middleware(['auth', 'role:0'])->group(function () {
     Route::get('/doctor', function () {
         return view('doctor.dashboard');
     })->name('doctor.dashboard');
+
+    //Perfil
+    Route::get('/perfil/Doctor/editar', [DoctorController::class, 'editProfile'])
+        ->name('perfil.edit');
+
+    Route::put('/perfil/Doctoractualizar', [DoctorController::class, 'updateProfile'])
+        ->name('perfil.update');
+
+    //Pacientes
+    Route::get('/doctor/pacientes', [DoctorController::class, 'pacientesIndex'])
+        ->name('doctor.pacientes.index');
+
+    Route::get('/doctor/pacientes/crear', [DoctorController::class, 'pacientesCreate'])
+        ->name('doctor.pacientes.create');
+
+    Route::post('/doctor/pacientes', [DoctorController::class, 'pacientesStore'])
+        ->name('doctor.pacientes.store');
+
+    Route::put('/doctor/pacientes/{paciente}', [DoctorController::class, 'pacientesUpdate'])
+        ->name('doctor.pacientes.update');
+
+    Route::get('/doctor/pacientes/{paciente}/citas', [DoctorController::class, 'pacientesCitas'])
+        ->name('doctor.pacientes.citas');
 });
 
 Route::middleware(['auth', 'role:1'])->group(function () {
@@ -91,10 +116,11 @@ Route::middleware(['auth', 'role:1'])->group(function () {
 
     //Perfil
     Route::get('/perfil/editar', [AdminController::class, 'editProfile'])
-        ->name('perfil.edit');
+        ->name('admin.perfil.edit');
 
     Route::put('/perfil/actualizar', [AdminController::class, 'updateProfile'])
         ->name('perfil.update');
+
     //Doctores
     Route::get('/doctores', [DoctorController::class, 'index'])
         ->name('admin.doctores.index');
@@ -170,32 +196,76 @@ Route::middleware(['auth', 'role:1'])->group(function () {
         ->name('admin.roles.index');
 });
 
+//Auditor
 Route::middleware(['auth', 'role:2'])->group(function () {
     Route::get('/auditor', function () {
         return view('auditor.dashboard');
+
+        //Solo son vistas!!
     })->name('auditor.dashboard');
+    Route::get('/auditoria/logs', function () {
+        return view('auditor.logs.index');
+    })->name('auditor.logs.index');
+    Route::get('/auditoria/citas', function () {
+        return view('auditor.tables.citas');
+    })->name('auditor.tables.citas');
+
+    Route::get('/auditoria/pacientes', function () {
+        return view('auditor.tables.pacientes');
+    })->name('auditor.logs.index');
+
+    Route::get('/auditoria/users', function () {
+        return view('auditor.tables.users');
+    })->name('auditor.tables.users  ');
 });
 
+//Recepcionista 
 Route::middleware(['auth', 'role:3'])->group(function () {
     Route::get('/secretaria', function () {
-        return view('recepcionista.'); // Asegúrate de tener esta vista creada
+        return view('recepcionista.dashboard'); // Asegúrate de tener esta vista creada
     })->name('recepcionista.home');
 
-    //Recepcionista 
-    Route::get('/pacientes', [PacienteController::class, 'index'])
-        ->name('pacientes.index');
+    //Perfil
+    Route::get('/perfil/secretaria/editar', [RecepcionistaController::class, 'editProfile'])
+        ->name('perfil.edit');
 
-    Route::get('/pacientes/crear', [PacienteController::class, 'create'])
-        ->name('pacientes.create');
+    Route::put('/perfil/secretaria/actualizar', [RecepcionistaController::class, 'updateProfile'])
+        ->name('perfil.update');
 
-    Route::post('/pacientes', [PacienteController::class, 'store'])
-        ->name('pacientes.store');
+    // 👥 Pacientes 
+    Route::get('/secretaria/pacientes', [RecepcionistaController::class, 'pacientesIndex'])
+        ->name('secretaria.pacientes.index');
 
-    Route::put('/pacientes/{paciente}', [PacienteController::class, 'update'])
-        ->name('pacientes.update');
+    Route::get('/secretaria/pacientes/crear', [RecepcionistaController::class, 'pacientesCreate'])
+        ->name('secretaria.pacientes.create');
 
-    Route::get('/pacientes/{paciente}/citas', [PacienteController::class, 'citas'])
-        ->name('pacientes.citas');
+    Route::post('/secretaria/pacientes', [RecepcionistaController::class, 'pacientesStore'])
+        ->name('secretaria.pacientes.store');
+
+    Route::put('/secretaria/pacientes/{paciente}', [RecepcionistaController::class, 'pacientesUpdate'])
+        ->name('secretaria.pacientes.update');
+
+    Route::get('/secretaria/pacientes/{paciente}/citas', [RecepcionistaController::class, 'pacientesCitas'])
+        ->name('secretaria.pacientes.citas');
+        
+    //Citas
+    Route::get('/secretaria/citas', [RecepcionistaController::class, 'citasIndex'])
+        ->name('secretaria.citas.index');
+
+    Route::post('/secretaria/citas', [RecepcionistaController::class, 'Adminstore'])
+        ->name('secretaria.citas.store');
+
+    Route::get('/secretaria/citas/{cita}/editar', [RecepcionistaController::class, 'citasEdit'])
+        ->name('secretaria.citas.edit');
+
+    Route::put('/secretaria/citas/{cita}', [RecepcionistaController::class, 'citasUpdate'])
+        ->name('secretaria.citas.update');
+
+    Route::get('/secretaria /citas/create', [RecepcionistaController::class, 'Admincreate'])
+        ->name('secretaria.citas.create');
+    //Roles
+
+
 });
 
 //consentimiento informado

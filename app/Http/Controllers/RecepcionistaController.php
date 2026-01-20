@@ -2,27 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Paciente;
 use App\Models\Citas;
+use App\Models\Especialidades;
 
-class DoctorController extends Controller
+class RecepcionistaController extends Controller
 {
-    // LISTAR DOCTORES
-    public function index()
-    {
-        $doctores = User::where('rol', 0)->orderBy('nombre')->get();
-        return view('admin.doctores.index', compact('doctores'));
-    }
     //Perfil
     public function editProfile()
     {
         $user = Auth::user();
-        return view('doctor.edit', compact('user'));
+        return view('recepcionista.edit', compact('user'));
     }
 
     public function updateProfile(Request $request)
@@ -42,7 +36,7 @@ class DoctorController extends Controller
         ]);
 
         return redirect()
-            ->route('doctor.dashboard')
+            ->route('recepcionista.home')
             ->with('success', 'Perfil actualizado correctamente');
     }
 
@@ -56,7 +50,7 @@ class DoctorController extends Controller
             $pacienteSeleccionado = Paciente::find($request->paciente);
         }
 
-        return view('doctor.paciente.index', compact(
+        return view('recepcionista.paciente.index', compact(
             'pacientes',
             'pacienteSeleccionado'
         ));
@@ -64,7 +58,7 @@ class DoctorController extends Controller
 
     public function pacientesCreate()
     {
-        return view('doctor.paciente.create');
+        return view('recepcionista.paciente.create');
     }
 
     public function pacientesStore(Request $request)
@@ -93,7 +87,7 @@ class DoctorController extends Controller
         ]);
 
         return redirect()
-            ->route('doctor.pacientes.index')
+            ->route('recepcionista.pacientes.index')
             ->with('success', 'Paciente registrado correctamente');
     }
 
@@ -112,7 +106,7 @@ class DoctorController extends Controller
         ]);
 
         return redirect()
-            ->route('doctor.pacientes.index')
+            ->route('secretaria.pacientes.index')
             ->with('success', 'Paciente actualizado correctamente');
     }
 
@@ -123,59 +117,60 @@ class DoctorController extends Controller
             'citas.doctor'
         ]);
 
-        return view('doctor.paciente.citas', compact('paciente'));
+        return view('recepcionista.paciente.citas', compact('paciente'));
     }
+    //Citas
 
-    // FORM CREAR
-    public function create()
+    public function Admincreate(Request $request)
     {
-        return view('admin.doctores.create');
+        $paciente = null;
+
+        // Si hay una cédula en la petición (búsqueda GET)
+        if ($request->has('cedula') && $request->cedula != null) {
+            $paciente = Paciente::where('cedula', $request->cedula)->first();
+
+            if (!$paciente) {
+                // Si buscó pero no encontró, enviamos mensaje de error
+                session()->flash('paciente_no_encontrado', $request->cedula);
+            }
+        }
+
+        return view('recepcionista.citas.create', [
+            'paciente'      => $paciente,
+            'doctores'      => User::where('rol', 0)->get(),
+            'especialidades' => Especialidades::all()
+        ]);
     }
 
-    // GUARDAR
-    public function store(Request $request)
+    public function citasIndex()
+    {
+        $citas = Citas::with(['paciente', 'doctor', 'especialidad'])
+            ->orderBy('fecha_inicio', 'desc')
+            ->get();
+
+        return view('recepcionista.citas.create', compact('citas'));
+    }
+    public function Adminstore(Request $request)
     {
         $request->validate([
-            'nombre' => 'required|string|max:100',
-            'email' => 'required|email|unique:usuarios,email',
-            'tel' => 'nullable|string|max:20',
-            'password' => 'required|min:6',
+            'paciente_id' => 'required|exists:pacientes,id',
+            'doctor_id' => 'required|exists:usuarios,id',
+            'especialidad_id' => 'required|exists:especialidades,id',
+            'fecha_inicio' => 'required|date',
+            'motivo' => 'nullable|string|max:255',
         ]);
 
-        User::create([
-            'nombre' => $request->nombre,
-            'email' => $request->email,
-            'tel' => $request->tel,
-            'password' => Hash::make($request->password),
-            'rol' => 20, // 👈 DOCTOR
-            'estado' => 1,
-            'two_factor_enabled' => false,
+        Citas::create([
+            'paciente_id' => $request->paciente_id,
+            'doctor_id' => $request->doctor_id,
+            'especialidad_id' => $request->especialidad_id,
+            'fecha_inicio' => $request->fecha_inicio,
+            'estado' => 'pendiente',
+            'motivo' => $request->motivo
         ]);
 
         return redirect()
-            ->route('admin.doctores.index')
-            ->with('success', 'Doctor creado correctamente');
-    }
-
-    // FORM EDITAR
-    public function edit(User $doctor)
-    {
-        return view('admin.doctores.edit', compact('doctor'));
-    }
-
-    // ACTUALIZAR
-    public function update(Request $request, User $doctor)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:100',
-            'email' => 'required|email|unique:usuarios,email,' . $doctor->id,
-            'tel' => 'nullable|string|max:20',
-        ]);
-
-        $doctor->update($request->only('nombre', 'email', 'tel'));
-
-        return redirect()
-            ->route('admin.doctores.index')
-            ->with('success', 'Doctor actualizado correctamente');
+            ->route('recepcionista.citas.create')
+            ->with('success', 'Cita agendada correctamente');
     }
 }
