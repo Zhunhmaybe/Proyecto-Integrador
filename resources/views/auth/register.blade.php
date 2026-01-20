@@ -180,6 +180,7 @@
                     <label class="form-label">Teléfono (opcional)</label>
                     <input type="text"
                         name="tel"
+                        maxlength="10"
                         value="{{ old('tel') }}"
                         class="form-control @error('tel') is-invalid @enderror">
                     @error('tel') <div class="invalid-feedback">{{ $message }}</div> @enderror

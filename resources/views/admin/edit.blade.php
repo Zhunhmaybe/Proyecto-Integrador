@@ -22,9 +22,13 @@
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('home') }}" class="active">👤 Mi Perfil</a>
+            <a href="{{ route('admin.dashboard') }}" class="active">Mi perfil</a>
+            <a href="{{ route('admin.pacientes.index') }}" >Pacientes</a>
+            <a href="{{ route('admin.doctores.index') }}" >👤 Doctores</a>
+            <a href="{{ route('admin.especialidades.index') }}" >Especialidades</a>
+            <a href="{{ route('admin.dashboard') }}" >Usuarios</a>
             <a href="{{ route('citas.create') }}">📅 Citas</a>
-            <a href="{{ route('pacientes.index') }}">👥 Pacientes</a>
+            <a href="{{ route('pacientes.index') }}">Roles</a>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>

@@ -22,9 +22,13 @@
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ url('home') }}">👤 Mi Perfil</a>
-            <a href="{{ route('citas.create') }}">📅 Citas</a>
-            <a href="{{ route('pacientes.index') }}" class="active">👥 Pacientes</a>
+            <a href="{{ route('admin.dashboard') }}">Mi perfil</a>
+            <a href="{{ route('admin.pacientes.index') }}" class="active">Pacientes</a>
+            <a href="{{ route('admin.doctores.index') }}" >👤 Doctores</a>
+            <a href="{{ route('admin.especialidades.index') }}">Especialidades</a>
+            <a href="{{ route('admin.usuarios.index') }}" >Usuarios</a>
+            <a href="{{ route('admin.citas.create') }}">📅 Citas</a>
+            <a href="{{ route('admin.roles.index') }}">Roles</a>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
@@ -63,10 +67,10 @@
 
                 <div class="panel-header">
                     <h5>Formulario de Registro</h5>
-                    <a href="{{ route('pacientes.index') }}" class="btn-link-soft">Volver al directorio</a>
+                    <a href="{{ route('admin.pacientes.index') }}" class="btn-link-soft">Volver al directorio</a>
                 </div>
 
-                <form method="POST" action="{{ route('pacientes.store') }}">
+                <form method="POST" action="{{ route('admin.pacientes.store') }}">
                     @csrf
 
                     <div class="form-grid">
@@ -193,7 +197,7 @@
                     </div>
 
                     <div class="actions">
-                        <a href="{{ route('pacientes.index') }}" class="btn-link-soft">Cancelar</a>
+                        <a href="{{ route('admin.pacientes.index') }}" class="btn-link-soft">Cancelar</a>
 
                         <button type="submit" class="btn-gold">
                             Guardar Paciente

@@ -206,6 +206,8 @@ class AuthController extends Controller
             return redirect()->route('admin.dashboard');
         } elseif ($user->rol == 2) {
             return redirect()->route('auditor.dashboard');
+        } elseif ($user->rol == 2) {
+            return redirect()->route('recepcionista.home');
         }
 
         return redirect()->intended('/home');

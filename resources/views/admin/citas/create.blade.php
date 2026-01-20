@@ -114,9 +114,13 @@
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('home') }}">👤 Mi Perfil</a>
-            <a href="{{ route('citas.create') }}" class="active">📅 Citas</a>
-            <a href="{{ route('pacientes.index') }}">👥 Pacientes</a>
+            <a href="{{ route('admin.dashboard') }}">Mi perfil</a>
+            <a href="{{ route('admin.pacientes.index') }}" >Pacientes</a>
+            <a href="{{ route('admin.doctores.index') }}" >👤 Doctores</a>
+            <a href="{{ route('admin.especialidades.index') }}" >Especialidades</a>
+            <a href="{{ route('admin.usuarios.index') }}" >Usuarios</a>
+            <a href="{{ route('admin.citas.create') }}" class="active">📅 Citas</a>
+            <a href="{{ route('admin.roles.index') }}">Roles</a>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
@@ -146,7 +150,7 @@
             <div class="panel mb-4">
                 <h5 class="fw-bold mb-3">Buscar Cliente</h5>
 
-                <form method="GET" action="{{ route('citas.create') }}" class="row g-3">
+                <form method="GET" action="{{ route('admin.citas.create') }}" class="row g-3">
 
                     <div class="col-md-8">
                         <input type="text"
@@ -163,7 +167,7 @@
                     </div>
 
                     <div class="col-md-2">
-                        <a href="{{ route('pacientes.create') }}"
+                        <a href="{{ route('admin.pacientes.create') }}"
                             class="btn btn-outline-secondary w-100">
                             Crear
                         </a>
@@ -176,7 +180,7 @@
                         <strong>{{ session('paciente_no_encontrado') }}</strong>
                     </div>
 
-                    <a href="{{ route('pacientes.create', ['cedula' => session('paciente_no_encontrado')]) }}"
+                    <a href="{{ route('admin.pacientes.create', ['cedula' => session('paciente_no_encontrado')]) }}"
                         class="btn btn-gold">
                         Crear Paciente
                     </a>
@@ -189,7 +193,7 @@
             
             <div class="panel">
 
-                <form method="POST" action="{{ route('citas.store') }}">
+                <form method="POST" action="{{ route('admin.citas.store') }}">
                     @csrf
 
                     <div class="row g-4">
@@ -271,7 +275,7 @@
                     </div>
 
                     <div class="text-end mt-4">
-                        <a href="{{ route('citas.create') }}" class="btn btn-light">
+                        <a href="{{ route('admin.citas.create') }}" class="btn btn-light">
                             Cancelar
                         </a>
 
