@@ -6,7 +6,7 @@
     <title>Registrar nueva cita</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -108,16 +108,17 @@
 
     <div class="wrapper">
 
-        
+
         <aside class="sidebar">
             <div class="logo">
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('doctor.dashboard') }}" class="active">Mi perfil</a>
-            <a href="{{ route('doctor.pacientes.index') }}">Pacientes</a>
-            <a href="{{ route('doctor.citas.index') }}">📅 Citas</a>
-            <a href="{{ route('doctor.historia.index') }}">Historial Clinico</a>
+            <a href="{{ route('doctor.dashboard') }}">🧑⚕️Mi perfil</a>
+            <a href="{{ route('doctor.pacientes.index') }}">🧑Pacientes</a>
+            <a href="{{ route('doctor.citas.index') }}" class="active">📅 Citas</a>
+            <a href="{{ route('doctor.historia.index') }}">📋Historial Clinico</a>
+            <a href="{{ route('profile.2fa') }}">🔐 Seguridad 2FA</a>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
@@ -130,7 +131,7 @@
             </div>
         </aside>
 
-        
+
         <main class="content">
 
             <h4 class="fw-bold mb-2">Registrar nueva cita</h4>
@@ -143,7 +144,7 @@
             @endif
 
 
-            
+
             <div class="panel mb-4">
                 <h5 class="fw-bold mb-3">Buscar Cliente</h5>
 
@@ -187,7 +188,7 @@
 
             </div>
 
-            
+
             <div class="panel">
 
                 <form method="POST" action="{{ route('doctor.citas.store') }}">
@@ -195,7 +196,7 @@
 
                     <div class="row g-4">
 
-                        
+
                         <div class="col-md-6">
                             <span class="section-title">1. Datos del Paciente</span>
 
@@ -231,7 +232,7 @@
                             </div>
                         </div>
 
-                        
+
                         <div class="col-md-6">
                             <span class="section-title">2. Detalles de la Cita</span>
 

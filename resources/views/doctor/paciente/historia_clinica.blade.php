@@ -22,10 +22,13 @@
             <div class="logo">
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
-            <a href="{{ route('doctor.dashboard') }}" class="active">Mi perfil</a>
-            <a href="{{ route('doctor.pacientes.index') }}">Pacientes</a>
+            
+            <a href="{{ route('doctor.dashboard') }}" >🧑⚕️Mi perfil</a>
+            <a href="{{ route('doctor.pacientes.index') }}" class="active">🧑Pacientes</a>
             <a href="{{ route('doctor.citas.index') }}">📅 Citas</a>
-            <a href="{{ route('doctor.historia.index') }}">Historial Clinico</a>
+            <a href="{{ route('doctor.historia.index') }}">📋Historial Clinico</a>
+            <a href="{{ route('profile.2fa') }}">🔐 Seguridad 2FA</a>
+
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
                 <small>{{ Auth::user()->nombre_rol }}</small>

@@ -9,7 +9,15 @@ class ProfileController extends Controller
 {
     public function show2FA()
     {
-        return view('profile.two-factor');
+        $role = Auth::user()->rol;
+
+        return match ($role) {
+            0 => view('doctor.2fa'),
+            1 => view('admin.2fa'),
+            2 => view('auditor.2fa'),
+            3 => view('recepcionista.2fa'),
+            default => redirect()->back()
+        };
     }
 
     public function enable2FA(Request $request)

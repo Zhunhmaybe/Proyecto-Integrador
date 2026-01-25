@@ -22,10 +22,11 @@
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('doctor.dashboard') }}" class="active">Mi perfil</a>
-            <a href="{{ route('doctor.pacientes.index') }}">Pacientes</a>
+            <a href="{{ route('doctor.dashboard') }}" class="active">🧑⚕️Mi perfil</a>
+            <a href="{{ route('doctor.pacientes.index') }}">🧑Pacientes</a>
             <a href="{{ route('doctor.citas.index') }}">📅 Citas</a>
-            <a href="{{ route('doctor.historia.index') }}">Historial Clinico</a>
+            <a href="{{ route('doctor.historia.index') }}">📋Historial Clinico</a>
+            <a href="{{ route('profile.2fa') }}">🔐 Seguridad 2FA</a>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
@@ -103,31 +104,31 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @if (session('session_expired'))
-        <div class="modal fade show session-modal-overlay" id="sessionExpiredModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+    <div class="modal fade show session-modal-overlay" id="sessionExpiredModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
 
-                    <div class="modal-header bg-danger text-white">
-                        <h5 class="modal-title">Sesión cerrada</h5>
-                    </div>
-
-                    <div class="modal-body text-center">
-                        <p>
-                            Tu sesión se cerró automáticamente por
-                            <strong>inactividad de 2 minutos</strong>.
-                        </p>
-                    </div>
-
-                    <div class="modal-footer justify-content-center">
-                        <button type="button" class="btn btn-danger"
-                            onclick="window.location.href='{{ route('login') }}'">
-                            Aceptar
-                        </button>
-                    </div>
-
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Sesión cerrada</h5>
                 </div>
+
+                <div class="modal-body text-center">
+                    <p>
+                        Tu sesión se cerró automáticamente por
+                        <strong>inactividad de 2 minutos</strong>.
+                    </p>
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-danger"
+                        onclick="window.location.href='{{ route('login') }}'">
+                        Aceptar
+                    </button>
+                </div>
+
             </div>
         </div>
+    </div>
     @endif
 
 </body>

@@ -25,6 +25,7 @@
             <a href="{{ route('recepcionista.home') }}" class="active">👤 Mi Perfil</a>
             <a href="{{ route('secretaria.citas.index') }}">📅 Citas</a>
             <a href="{{ route('secretaria.pacientes.index') }}">👥 Pacientes</a>
+            <a href="{{ route('profile.2fa') }}">🔐 Seguridad 2FA</a>
 
 
             <div class="user">

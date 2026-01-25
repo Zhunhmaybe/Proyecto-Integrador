@@ -19,13 +19,14 @@
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('admin.dashboard') }}">Mi perfil</a>
-            <a href="{{ route('admin.pacientes.index') }}">Pacientes</a>
-            <a href="{{ route('admin.doctores.index') }}">Doctores</a>
-            <a href="{{ route('admin.especialidades.index') }}">Especialidades</a>
-            <a href="{{ route('admin.usuarios.index') }}">Usuarios</a>
-            <a href="{{ route('admin.citas.create') }}">📅 Citas</a>
-            <a href="{{ route('admin.roles.index') }}" class="active">Roles</a>
+            <a href="{{ route('admin.dashboard') }}" >🧑‍💼Mi perfil</a>
+            <a href="{{ route('admin.pacientes.index') }}" >🧑‍🦳Pacientes</a>
+            <a href="{{ route('admin.doctores.index') }}" >🧑Doctores</a>
+            <a href="{{ route('admin.especialidades.index') }}" >⚕️Especialidades</a>
+            <a href="{{ route('admin.usuarios.index') }}" >👥Usuarios</a>
+            <a href="{{ route('admin.citas.create') }}">📅Citas</a>
+            <a href="{{ route('admin.roles.index') }}" class="active">🛡️Roles</a>
+            <a href="{{ route('profile.2fa') }}">🔐Seguridad 2FA</a>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>

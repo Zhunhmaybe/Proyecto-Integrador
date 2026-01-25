@@ -21,10 +21,12 @@
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('doctor.dashboard') }}" class="active">Mi perfil</a>
-            <a href="{{ route('doctor.pacientes.index') }}">Pacientes</a>
+            <a href="{{ route('doctor.dashboard') }}">🧑⚕️Mi perfil</a>
+            <a href="{{ route('doctor.pacientes.index') }}" class="active">🧑Pacientes</a>
             <a href="{{ route('doctor.citas.index') }}">📅 Citas</a>
-            <a href="{{ route('doctor.historia.index') }}">Historial Clinico</a>
+            <a href="{{ route('doctor.historia.index') }}">📋Historial Clinico</a>
+            <a href="{{ route('profile.2fa') }}">🔐 Seguridad 2FA</a>
+
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
                 <small>{{ Auth::user()->nombre_rol }}</small>
@@ -56,39 +58,39 @@
             <div class="panel">
 
                 @if ($paciente->citas->isEmpty())
-                    <div class="text-center text-muted py-5">
-                        Este paciente no tiene citas registradas.
-                    </div>
+                <div class="text-center text-muted py-5">
+                    Este paciente no tiene citas registradas.
+                </div>
                 @else
-                    @foreach ($paciente->citas as $cita)
-                        <div class="cita-card">
+                @foreach ($paciente->citas as $cita)
+                <div class="cita-card">
 
-                            <div class="d-flex justify-content-between mb-2">
-                                <strong>{{ $cita->especialidad->nombre }}</strong>
-                                <span class="badge-estado">
-                                    {{ ucfirst($cita->estado) }}
-                                </span>
-                            </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <strong>{{ $cita->especialidad->nombre }}</strong>
+                        <span class="badge-estado">
+                            {{ ucfirst($cita->estado) }}
+                        </span>
+                    </div>
 
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <small class="text-muted">Doctor</small><br>
-                                    {{ $cita->doctor->nombre }}
-                                </div>
-
-                                <div class="col-md-4">
-                                    <small class="text-muted">Inicio</small><br>
-                                    {{ \Carbon\Carbon::parse($cita->fecha_inicio)->format('d/m/Y H:i') }}
-                                </div>
-                            </div>
-
-                            <div class="mt-3">
-                                <small class="text-muted">Motivo</small><br>
-                                {{ $cita->motivo ?? '—' }}
-                            </div>
-
+                    <div class="row">
+                        <div class="col-md-4">
+                            <small class="text-muted">Doctor</small><br>
+                            {{ $cita->doctor->nombre }}
                         </div>
-                    @endforeach
+
+                        <div class="col-md-4">
+                            <small class="text-muted">Inicio</small><br>
+                            {{ \Carbon\Carbon::parse($cita->fecha_inicio)->format('d/m/Y H:i') }}
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <small class="text-muted">Motivo</small><br>
+                        {{ $cita->motivo ?? '—' }}
+                    </div>
+
+                </div>
+                @endforeach
                 @endif
 
             </div>
