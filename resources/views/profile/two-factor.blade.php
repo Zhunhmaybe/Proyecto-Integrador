@@ -24,7 +24,7 @@
 
             <a href="{{ route('home') }}" class="active">👤 Mi Perfil</a>
             <a href="#">📅 Citas</a>
-            <a href="{{ route('pacientes.index') }}">👥 Pacientes</a>
+            <a href="{{ route('secretaria.pacientes.index') }}">👥 Pacientes</a>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>

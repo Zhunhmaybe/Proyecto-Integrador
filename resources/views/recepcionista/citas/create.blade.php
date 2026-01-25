@@ -192,28 +192,28 @@
                         <div class="col-md-6">
                             <span class="section-title">1. Datos del Paciente</span>
 
-                            <input type="hidden" name="paciente_id" value="{{ optional($paciente)->id }}">
+                            <input type="hidden" name="paciente_id" value="{{ optional($paciente ?? null)->id }}">
 
                             <div class="mt-3">
                                 <label>Cédula / DNI</label>
-                                <input class="form-control" value="{{ optional($paciente)->cedula }}" disabled>
+                                <input class="form-control" value="{{ optional($paciente ?? null)->cedula }}" disabled>
                             </div>
 
                             <div class="mt-3">
                                 <label>Nombre y Apellido</label>
                                 <input class="form-control"
-                                    value="{{ optional($paciente)->nombres }} {{ optional($paciente)->apellidos }}"
+                                    value="{{ optional($paciente ?? null)->nombres }} {{ optional($paciente ?? null)->apellidos }}"
                                     disabled>
                             </div>
 
                             <div class="mt-3">
                                 <label>Teléfono</label>
-                                <input class="form-control" value="{{ optional($paciente)->telefono }}" disabled>
+                                <input class="form-control" value="{{ optional($paciente ?? null)->telefono }}" disabled>
                             </div>
 
                             <div class="mt-3">
                                 <label>Correo Electrónico</label>
-                                <input class="form-control" value="{{ optional($paciente)->email }}" disabled>
+                                <input class="form-control" value="{{ optional($paciente ?? null)->email }}" disabled>
                             </div>
                         </div>
 
@@ -224,7 +224,7 @@
                             <div class="mt-3">
                                 <label>Especialidad</label>
                                 <select class="form-select" name="especialidad_id" required>
-                                    @foreach ($especialidades as $e)
+                                    @foreach ($especialidades ?? [] as $e)
                                         <option value="{{ $e->id }}">{{ $e->nombre }}</option>
                                     @endforeach
                                 </select>
@@ -233,7 +233,7 @@
                             <div class="mt-3">
                                 <label>Doctor Asignado</label>
                                 <select class="form-select" name="doctor_id" required>
-                                    @foreach ($doctores as $d)
+                                    @foreach ($doctores ?? [] as $d)
                                         <option value="{{ $d->id }}">{{ $d->nombre }}</option>
                                     @endforeach
                                 </select>
