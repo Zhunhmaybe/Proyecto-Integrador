@@ -28,7 +28,11 @@ class AuditLog extends Model
         'created_at' => 'datetime',
     ];
 
-    public $timestamps = false;
+    // Cambiar a true ya que la tabla tiene created_at
+    public $timestamps = true;
+    
+    // Solo usamos created_at, no updated_at
+    const UPDATED_AT = null;
 
     /**
      * Relación con el usuario que realizó la acción
@@ -68,5 +72,33 @@ class AuditLog extends Model
     public function scopeDateRange($query, $startDate, $endDate)
     {
         return $query->whereBetween('created_at', [$startDate, $endDate]);
+    }
+
+    /**
+     * Scope para logs de hoy
+     */
+    public function scopeToday($query)
+    {
+        return $query->whereDate('created_at', today());
+    }
+
+    /**
+     * Scope para logs de esta semana
+     */
+    public function scopeThisWeek($query)
+    {
+        return $query->whereBetween('created_at', [
+            now()->startOfWeek(),
+            now()->endOfWeek()
+        ]);
+    }
+
+    /**
+     * Scope para logs de este mes
+     */
+    public function scopeThisMonth($query)
+    {
+        return $query->whereMonth('created_at', now()->month)
+                     ->whereYear('created_at', now()->year);
     }
 }

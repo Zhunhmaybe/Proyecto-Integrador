@@ -11,6 +11,8 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\EspecialidadesController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RecepcionistaController;
+use App\Http\Controllers\Auditor\AuditorDashboardController;
+use App\Http\Controllers\Auditor\AuditorController;
 
 
 Route::get('/', function () {
@@ -233,26 +235,31 @@ Route::middleware(['auth', 'role:1'])->group(function () {
 });
 
 //Auditor
-Route::middleware(['auth', 'role:2'])->group(function () {
-    Route::get('/auditor', function () {
-        return view('auditor.dashboard');
+Route::middleware(['auth', 'role:2'])->prefix('auditor')->name('auditor.')->group(function () {
+    
+    Route::get('/', [AuditorDashboardController::class, 'index'])
+        ->name('dashboard');
 
-        //Solo son vistas!!
-    })->name('auditor.dashboard');
-    Route::get('/auditoria/logs', function () {
-        return view('auditor.logs.index');
-    })->name('auditor.logs.index');
-    Route::get('/auditoria/citas', function () {
-        return view('auditor.tables.citas');
-    })->name('auditor.tables.citas');
+    Route::get('/logs', [AuditorController::class, 'logs'])
+        ->name('logs.index');
 
-    Route::get('/auditoria/pacientes', function () {
-        return view('auditor.tables.pacientes');
-    })->name('auditor.logs.index');
+    Route::get('/logs/{id}', [AuditorController::class, 'logDetail'])
+        ->name('logs.detail');
 
-    Route::get('/auditoria/users', function () {
-        return view('auditor.tables.users');
-    })->name('auditor.tables.users  ');
+    Route::get('/logs/export/csv', [AuditorController::class, 'exportLogs'])
+        ->name('logs.export');
+
+    Route::get('/citas', [AuditorDashboardController::class, 'citas'])
+        ->name('tables.citas');
+
+    Route::get('/pacientes', [AuditorDashboardController::class, 'pacientes'])
+        ->name('tables.pacientes');
+
+    Route::get('/users', [AuditorDashboardController::class, 'users'])
+        ->name('tables.users');
+
+    Route::get('/api/stats/realtime', [AuditorDashboardController::class, 'getRealtimeStats'])
+        ->name('api.stats.realtime');
 });
 
 //Recepcionista 
