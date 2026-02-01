@@ -26,7 +26,7 @@
             <a href="{{ route('doctor.dashboard') }}" >🧑⚕️Mi perfil</a>
             <a href="{{ route('doctor.pacientes.index') }}" class="active">🧑Pacientes</a>
             <a href="{{ route('doctor.citas.index') }}">📅 Citas</a>
-            <a href="{{ route('doctor.historia.index') }}">📋Historial Clinico</a>
+            <a href="{{ route('historia_clinica.index') }}">📋Historial Clinico</a>
             <a href="{{ route('profile.2fa') }}">🔐 Seguridad 2FA</a>
 
             <div class="user">

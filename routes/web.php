@@ -13,6 +13,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RecepcionistaController;
 use App\Http\Controllers\Auditor\AuditorDashboardController;
 use App\Http\Controllers\Auditor\AuditorController;
+use App\Http\Controllers\Historial\HistoriaClinicaController;
 
 
 Route::get('/', function () {
@@ -126,25 +127,47 @@ Route::middleware(['auth', 'role:0'])->group(function () {
     Route::get('/doctor/citas/create', [DoctorController::class, 'Admincreate'])
         ->name('doctor.citas.create');
 
-    //Historial Clinico
-    Route::get(
-        '/doctor/historia/create',
-        [DoctorController::class, 'historiaCreate']
-    )->name('doctor.historia.create');
+    // 1. Listado
+    Route::get('/doctor/historia', [HistoriaClinicaController::class, 'index'])
+        ->name('historia_clinica.index'); // Cambié el nombre para coincidir con tu sidebar anterior
 
-    Route::get(
-        '/doctor/historia',
-        [DoctorController::class, 'historiaIndex']
-    )->name('doctor.historia.index');
+    // 2. Crear (Texto)
+    Route::get('/doctor/historia/create', [HistoriaClinicaController::class, 'create'])
+        ->name('historia_clinica.create'); // Antes historia_clinica.create
 
-    Route::post(
-        '/doctor/historia/store',
-        [DoctorController::class, 'historiaStore']
-    )->name('doctor.historia.store');
-    Route::get(
-        'pacientes/{paciente}/historia',
-        [DoctorController::class, 'pacienteHistorias']
-    )->name('doctor.pacientes.historia');
+    // 3. Guardar (Texto)
+    Route::post('/doctor/historia', [HistoriaClinicaController::class, 'store'])
+        ->name('historia_clinica.store'); // Este name se usa en el form create.blade.php
+
+    // 4. Ver Resumen
+    Route::get('/doctor/historia/{id}', [HistoriaClinicaController::class, 'show'])
+        ->name('historia_clinica.show');
+
+    // 5. Ver Odontograma
+    Route::get('/doctor/historia/{id}/odontograma', [HistoriaClinicaController::class, 'editarOdontograma'])
+        ->name('historia_clinica.odontograma');
+
+    // 6. Guardar Odontograma (API JSON)
+    Route::post('/doctor/historia/{id}/odontograma', [HistoriaClinicaController::class, 'guardarOdontograma'])
+        ->name('historia_clinica.guardar_odontograma');
+
+    // 7. API Cargar Datos
+    Route::get('/api/historia/{id}/odontograma', [HistoriaClinicaController::class, 'obtenerOdontogramaJSON'])
+        ->name('api.odontograma.get');
+
+    // 8. PDF
+    Route::get('/doctor/historia/{id}/pdf', [HistoriaClinicaController::class, 'generarPDF'])
+        ->name('historia_clinica.pdf');
+
+    // 9. Modales
+    Route::post('/doctor/historia/{id}/diagnostico', [HistoriaClinicaController::class, 'agregarDiagnostico'])
+        ->name('historia_clinica.agregar_diagnostico');
+    Route::post('/doctor/historia/{id}/tratamiento', [HistoriaClinicaController::class, 'agregarTratamiento'])
+        ->name('historia_clinica.agregar_tratamiento');
+
+    // Acceso desde perfil paciente
+    Route::get('pacientes/{paciente}/historia', [DoctorController::class, 'pacienteHistorias'])
+        ->name('doctor.pacientes.historia');
 });
 
 Route::middleware(['auth', 'role:1'])->group(function () {
@@ -236,7 +259,7 @@ Route::middleware(['auth', 'role:1'])->group(function () {
 
 //Auditor
 Route::middleware(['auth', 'role:2'])->prefix('auditor')->name('auditor.')->group(function () {
-    
+
     Route::get('/', [AuditorDashboardController::class, 'index'])
         ->name('dashboard');
 

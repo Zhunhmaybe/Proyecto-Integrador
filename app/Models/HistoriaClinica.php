@@ -4,6 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Historial_Clinico\Odontograma;
+use App\Models\Historial_Clinico\IndicesSaludBucal;
+use App\Models\Diagnostico;
+use App\Models\Tratamiento;
+use App\Models\historial_clinico\ExamenComplementario;
 
 class HistoriaClinica extends Model
 {
@@ -69,9 +74,25 @@ class HistoriaClinica extends Model
     ];
 
     // 🔗 Relaciones
-    public function paciente()
+public function paciente()
     {
         return $this->belongsTo(Paciente::class, 'paciente_id');
+    }
+
+    // ESTA ES LA QUE FALTABA Y CAUSABA EL ERROR
+    public function profesional()
+    {
+        return $this->belongsTo(User::class, 'profesional_id');
+    }
+
+    public function odontograma()
+    {
+        return $this->hasMany(Odontograma::class, 'historia_id');
+    }
+
+    public function indicesSaludBucal()
+    {
+        return $this->hasOne(IndicesSaludBucal::class, 'historia_id');
     }
 
     public function diagnosticos()
@@ -82,6 +103,16 @@ class HistoriaClinica extends Model
     public function tratamientos()
     {
         return $this->hasMany(Tratamiento::class, 'historia_id');
+    }
+    
+    public function examenesComplementarios()
+    {
+        return $this->hasMany(ExamenComplementario::class, 'historia_id');
+    }
+
+    public function tieneOdontograma()
+    {
+        return $this->odontograma()->exists();
     }
 
 }

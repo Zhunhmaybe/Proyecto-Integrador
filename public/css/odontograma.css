@@ -1,0 +1,411 @@
+/**
+ * Estilos para Odontograma Interactivo
+ * Basado en plantilla oficial SNS-MSP
+ */
+
+/* ========== CONTENEDOR PRINCIPAL ========== */
+.odontograma-section {
+    padding: 20px;
+    background: #ffffff;
+    border: 2px solid #333;
+}
+
+/* ========== DIENTES PERMANENTES ========== */
+.dientes-permanentes {
+    margin: 15px 0;
+}
+
+.dientes-row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.diente-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.numero-pieza {
+    font-weight: bold;
+    font-size: 12px;
+    color: #333;
+}
+
+.diente-permanente {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.diente-permanente:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 5px rgba(0, 0, 255, 0.5));
+}
+
+.diente-permanente .diente-fondo {
+    fill: white;
+    stroke: #000;
+    stroke-width: 2;
+}
+
+.diente-permanente .superficie-oclusal,
+.diente-permanente .superficie-mesial,
+.diente-permanente .superficie-distal,
+.diente-permanente .superficie-vestibular,
+.diente-permanente .superficie-palatina,
+.diente-permanente .superficie-lingual {
+    fill: white;
+    stroke: #000;
+    stroke-width: 1;
+    transition: fill 0.3s ease;
+}
+
+.diente-permanente .superficie-oclusal:hover,
+.diente-permanente .superficie-mesial:hover,
+.diente-permanente .superficie-distal:hover,
+.diente-permanente .superficie-vestibular:hover,
+.diente-permanente .superficie-palatina:hover,
+.diente-permanente .superficie-lingual:hover {
+    fill: #ffeb3b !important;
+    opacity: 0.7;
+}
+
+/* ========== DIENTES TEMPORALES ========== */
+.dientes-temporales {
+    margin: 10px 0;
+}
+
+.diente-container-temporal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    margin: 0 10px;
+}
+
+.numero-pieza-temporal {
+    font-weight: bold;
+    font-size: 11px;
+    color: #666;
+}
+
+.diente-temporal-circulo {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid #000;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.diente-temporal-circulo::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 1px solid #666;
+}
+
+.diente-temporal-circulo:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
+}
+
+/* ========== MOVILIDAD Y RECESIÓN ========== */
+.movilidad-recesion-row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin: 5px 0;
+    align-items: center;
+}
+
+.label-lateral {
+    font-size: 10px;
+    font-weight: bold;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding: 5px;
+    background: #e9ecef;
+    border: 1px solid #ddd;
+}
+
+.dato-adicional {
+    width: 50px;
+    text-align: center;
+}
+
+.dato-adicional input {
+    width: 100%;
+    height: 30px;
+    text-align: center;
+    font-size: 11px;
+    border: 1px solid #999;
+}
+
+.dato-adicional input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* ========== CUADRANTES ========== */
+.cuadrante-superior,
+.cuadrante-inferior {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* ========== PANEL DE CONTROL ========== */
+.panel-control {
+    position: sticky;
+    top: 20px;
+    background: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.panel-control h5 {
+    margin-bottom: 15px;
+    color: #495057;
+    font-weight: bold;
+}
+
+.simbologia-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 8px;
+    background: white;
+    border-radius: 4px;
+}
+
+.color-box {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #333;
+    border-radius: 4px;
+}
+
+.btn-modo {
+    width: 100%;
+    margin-bottom: 8px;
+    text-align: left;
+    padding: 10px;
+    border: 2px solid transparent;
+}
+
+.btn-modo.active {
+    border-color: #007bff;
+    background-color: #e7f3ff;
+    font-weight: bold;
+}
+
+.btn-modo:hover {
+    background-color: #f0f0f0;
+}
+
+/* ========== ÍNDICES DE SALUD BUCAL ========== */
+.indices-container {
+    background: #ffffff;
+    padding: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.indices-container h5 {
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.indice-grupo {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.indice-grupo label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+.indice-grupo input,
+.indice-grupo select {
+    margin-bottom: 10px;
+}
+
+.indice-total {
+    background: #007bff;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+/* ========== ESTADOS VISUALES ========== */
+.estado-sano {
+    fill: #ffffff !important;
+}
+
+.estado-caries {
+    fill: #ff0000 !important;
+}
+
+.estado-obturado {
+    fill: #0000ff !important;
+}
+
+.estado-perdido {
+    fill: #808080 !important;
+}
+
+.estado-protesis {
+    fill: #00ff00 !important;
+}
+
+.estado-extraccion {
+    fill: #ff0000 !important;
+    stroke: #ff0000 !important;
+    stroke-width: 3 !important;
+}
+
+/* ========== MODAL PIEZA DENTAL ========== */
+.modal-pieza .modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.modal-pieza .form-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.modal-pieza .form-select,
+.modal-pieza .form-control {
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+}
+
+.modal-pieza .form-select:focus,
+.modal-pieza .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1200px) {
+    .dientes-row {
+        gap: 3px;
+    }
+    
+    .diente-permanente {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .diente-temporal-circulo {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dientes-row {
+        gap: 2px;
+    }
+    
+    .diente-permanente {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .numero-pieza {
+        font-size: 10px;
+    }
+    
+    .dato-adicional {
+        width: 35px;
+    }
+    
+    .dato-adicional input {
+        height: 25px;
+        font-size: 10px;
+    }
+}
+
+/* ========== ANIMACIONES ========== */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.diente-seleccionado {
+    animation: pulse 1s infinite;
+}
+
+/* ========== TOOLTIPS ========== */
+.tooltip-pieza {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 1000;
+    white-space: nowrap;
+}
+
+/* ========== LOADING INDICATOR ========== */
+.loading-odontograma {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.loading-odontograma .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3rem;
+}
+
+/* ========== PRINT STYLES ========== */
+@media print {
+    .panel-control,
+    .btn,
+    .no-print {
+        display: none !important;
+    }
+    
+    .odontograma-section {
+        border: 2px solid #000;
+        page-break-inside: avoid;
+    }
+    
+    .diente-permanente,
+    .diente-temporal-circulo {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}

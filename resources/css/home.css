@@ -10,6 +10,24 @@ body {
     min-height: 100vh;
 }
 
+.content {
+    margin-left: 260px;
+    /* Mismo ancho que el sidebar */
+    padding: 30px 40px;
+    width: calc(90%);
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+
+/* Ajuste para pantallas pequeñas (Móvil) */
+@media (max-width: 900px) {
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+    }
+}
+
 .sidebar {
     width: 260px;
     background: #0b4f79;
@@ -142,10 +160,21 @@ body {
     height: 24px;
 }
 
-.stat-icon.blue { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
-.stat-icon.green { background: linear-gradient(135deg, #10b981, #059669); }
-.stat-icon.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-.stat-icon.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.stat-icon.blue {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+.stat-icon.green {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.stat-icon.purple {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.stat-icon.orange {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
 
 .chart-container {
     display: grid;
@@ -205,9 +234,17 @@ body {
     letter-spacing: 0.5px;
 }
 
-.badge-insert { background: linear-gradient(135deg, #10b981, #059669); }
-.badge-update { background: linear-gradient(135deg, #f59e0b, #d97706); }
-.badge-delete { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.badge-insert {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.badge-update {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.badge-delete {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
 
 .content-card {
     background: white;
@@ -275,6 +312,7 @@ tbody tr:hover {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
