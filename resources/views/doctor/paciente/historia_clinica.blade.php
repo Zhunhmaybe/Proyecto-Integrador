@@ -59,17 +59,14 @@
 
             <div class="panel">
 
-                {{-- ================= SIN HISTORIAS ================= --}}
                 @if ($paciente->historiasClinicas->isEmpty())
                     <div class="text-center text-muted py-5">
                         Este paciente no tiene historias clínicas registradas.
                     </div>
                 @else
-                    {{-- ================= LISTADO HISTORIAS ================= --}}
                     @foreach ($paciente->historiasClinicas as $historia)
                         <div class="cita-card">
 
-                            {{-- CABECERA --}}
                             <div class="d-flex justify-content-between mb-2">
                                 <strong>
                                     Historia #{{ $historia->numero_historia }}
@@ -81,7 +78,6 @@
                                 </span>
                             </div>
 
-                            {{-- DATOS GENERALES --}}
                             <div class="row mb-2">
                                 <div class="col-md-4">
                                     <small class="text-muted">Fecha Atención</small><br>
@@ -94,19 +90,14 @@
                                 </div>
                             </div>
 
-                            {{-- MOTIVO --}}
                             <div class="mt-2">
                                 <small class="text-muted">Motivo de Consulta</small><br>
                                 {{ $historia->motivo_consulta ?? '—' }}
                             </div>
-
-                            {{-- ENFERMEDAD ACTUAL --}}
                             <div class="mt-2">
                                 <small class="text-muted">Enfermedad Actual</small><br>
                                 {{ $historia->enfermedad_actual ?? '—' }}
                             </div>
-
-                            {{-- CONSTANTES --}}
                             <div class="mt-3">
                                 <small class="text-muted">Constantes Vitales</small>
                                 <div class="row">
@@ -117,7 +108,6 @@
                                 </div>
                             </div>
 
-                            {{-- OBSERVACIONES --}}
                             <div class="mt-3">
                                 <small class="text-muted">Observaciones</small><br>
                                 {{ $historia->observaciones ?? '—' }}

@@ -250,7 +250,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body d-flex justify-content-between">
-                        <a href="{{ route('doctor.historia.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('doctor.pacientes.index') }}" class="btn btn-secondary">
                             <i class="fas fa-times"></i> Cancelar
                         </a>
                         <button type="submit" class="btn btn-primary btn-lg">
