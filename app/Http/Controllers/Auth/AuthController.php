@@ -210,6 +210,8 @@ class AuthController extends Controller
             return redirect()->route('auditor.dashboard');
         } elseif ($user->rol == 3) {
             return redirect()->route('recepcionista.home');
+        } elseif ($user->rol == 4) {
+            return redirect()->route('usuario.home');
         }
 
         return redirect()->intended('/home');
@@ -273,7 +275,7 @@ class AuthController extends Controller
             'tel' => $request->tel,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'rol' => 3, // FORZADO A RECEPCIONISTA (3)
+            'rol' => 4, // FORZADO A Usuario
             'estado' => 1,
             'two_factor_enabled' => false, // 2FA deshabilitado por defecto
         ]);

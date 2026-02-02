@@ -61,7 +61,7 @@ Route::middleware('auth')->group(function () {
             case 3:
                 return redirect()->route('recepcionista.home');
             case 4:
-                return redirect()->route('usuario.dashboard');
+                return redirect()->route('usuario.home');
             default:
                 return view('home'); // Fallback
         }
@@ -82,6 +82,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Rutas con roles - DASHBOARDS
+
 //Doctor
 Route::middleware(['auth', 'role:0'])->group(function () {
     Route::get('/doctor', function () {
@@ -333,6 +334,20 @@ Route::middleware(['auth', 'role:3'])->group(function () {
     //Roles
 
 
+});
+
+//Usuario
+Route::middleware(['auth', 'role:4'])->group(function () {
+    Route::get('/usuario', function () {
+        return view('usuario.dashboard'); // Asegúrate de tener esta vista creada
+    })->name('usuario.home');
+
+    //Perfil
+    Route::get('/perfil/Usuario/editar', [RecepcionistaController::class, 'editProfile'])
+        ->name('usuario.edit');
+
+    Route::put('/perfil/Usuario/actualizar', [RecepcionistaController::class, 'updateProfile'])
+        ->name('perfil.update');
 });
 
 //consentimiento informado
