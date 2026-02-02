@@ -59,7 +59,7 @@ Route::middleware('auth')->group(function () {
             case 2:
                 return redirect()->route('auditor.dashboard');
             case 3:
-                return redirect()->route('recepcionista.dashboard');
+                return redirect()->route('recepcionista.home');
             case 4:
                 return redirect()->route('usuario.dashboard');
             default:
@@ -170,6 +170,7 @@ Route::middleware(['auth', 'role:0'])->group(function () {
         ->name('doctor.pacientes.historia');
 });
 
+//Admin
 Route::middleware(['auth', 'role:1'])->group(function () {
     Route::get('/admin', function () {
         return view('admin.dashboard');
