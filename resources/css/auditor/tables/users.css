@@ -165,10 +165,6 @@ body {
     color: #fff;
 }
 
-.badge-admin { background: #ef4444; }
-.badge-auditor { background: #f59e0b; }
-.badge-usuario { background: #10b981; }
-
 .table-container { overflow-x: auto; }
 
 table {
@@ -202,3 +198,10 @@ td {
         flex-direction: column;
     }
 }
+
+.badge-doctor { background:#0ea5e9; color:#fff; }
+.badge-admin { background:#ef4444; color:#fff; }
+.badge-auditor { background:#f59e0b; color:#fff; }
+.badge-recepcion { background:#8b5cf6; color:#fff; }
+.badge-usuario { background:#10b981; color:#fff; }
+

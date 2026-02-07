@@ -19,7 +19,7 @@ class AuditorDashboardController extends Controller
     public function index()
     {
         // ===== ESTADÍSTICAS PRINCIPALES =====
-        
+
         // Total de logs
         $totalLogs = AuditLog::count();
 
@@ -75,7 +75,7 @@ class AuditorDashboardController extends Controller
             'total_logs' => $totalLogs,
             'logs_today' => $logsHoy,
             'logs_week' => AuditLog::whereBetween('created_at', [
-                now()->startOfWeek(), 
+                now()->startOfWeek(),
                 now()->endOfWeek()
             ])->count(),
             'logs_month' => AuditLog::whereMonth('created_at', now()->month)
@@ -102,9 +102,9 @@ class AuditorDashboardController extends Controller
         // Compatible con PostgreSQL usando EXTRACT
         try {
             $actividadPorHora = AuditLog::select(
-                    DB::raw('EXTRACT(HOUR FROM created_at)::integer as hora'),
-                    DB::raw('count(*) as total')
-                )
+                DB::raw('EXTRACT(HOUR FROM created_at)::integer as hora'),
+                DB::raw('count(*) as total')
+            )
                 ->where('created_at', '>=', now()->subHours(24))
                 ->groupBy(DB::raw('EXTRACT(HOUR FROM created_at)'))
                 ->orderBy('hora')
@@ -120,17 +120,17 @@ class AuditorDashboardController extends Controller
             'logsHoy',
             'totalUsuarios',
             'totalCitas',
-            
+
             // Datos para gráficos
             'accionesPorTipo',
             'tablasMasAfectadas',
             'ultimasAcciones',
             'usuariosMasActivos',
-            
+
             // Máximos para barras de progreso
             'maxAcciones',
             'maxTablas',
-            
+
             // Estadísticas adicionales
             'stats',
             'loginsHoy',
@@ -190,7 +190,7 @@ class AuditorDashboardController extends Controller
     public function logDetail($id)
     {
         $log = AuditLog::with('usuario')->findOrFail($id);
-        
+
         return view('auditor.logs.detail', compact('log'));
     }
 
@@ -199,21 +199,35 @@ class AuditorDashboardController extends Controller
      */
     public function citas(Request $request)
     {
-        $query = Citas::with(['paciente', 'doctor']);
+        $query = Citas::query();
 
-        // Filtros básicos
-        if ($request->filled('estado')) {
+        // Filtros
+        if ($request->estado) {
             $query->where('estado', $request->estado);
         }
 
-        if ($request->filled('fecha')) {
-            $query->whereDate('fecha', $request->fecha);
+        if ($request->fecha) {
+            $query->whereDate('fecha_inicio', $request->fecha);
         }
 
-        $citas = $query->orderBy('created_at', 'desc')->paginate(50);
+        // Listado
+        $citas = $query->paginate(10);
 
-        return view('auditor.tables.citas', compact('citas'));
+        // 🔴 ESTADÍSTICAS (UNA POR UNA)
+        $totalCitas = Citas::count();
+        $citasPendientes = Citas::where('estado', 'Pendiente')->count();
+        $citasConfirmadas = Citas::where('estado', 'Confirmada')->count();
+        $citasCanceladas = Citas::where('estado', 'Cancelada')->count();
+
+        return view('auditor.tables.citas', compact(
+            'citas',
+            'totalCitas',
+            'citasPendientes',
+            'citasConfirmadas',
+            'citasCanceladas'
+        ));
     }
+
 
     /**
      * Muestra la tabla de pacientes con búsqueda
@@ -225,10 +239,10 @@ class AuditorDashboardController extends Controller
         // Búsqueda por nombre o cédula
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('nombre', 'like', '%' . $search . '%')
-                  ->orWhere('cedula', 'like', '%' . $search . '%')
-                  ->orWhere('email', 'like', '%' . $search . '%');
+                    ->orWhere('cedula', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
             });
         }
 
@@ -252,9 +266,9 @@ class AuditorDashboardController extends Controller
         // Búsqueda por nombre o email
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('nombre', 'like', '%' . $search . '%')
-                  ->orWhere('email', 'like', '%' . $search . '%');
+                    ->orWhere('email', 'like', '%' . $search . '%');
             });
         }
 
@@ -287,18 +301,18 @@ class AuditorDashboardController extends Controller
         $logs = $query->orderBy('created_at', 'desc')->get();
 
         $filename = 'audit_logs_' . date('Y-m-d_His') . '.csv';
-        
+
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"$filename\"",
         ];
 
-        $callback = function() use ($logs) {
+        $callback = function () use ($logs) {
             $file = fopen('php://output', 'w');
-            
+
             // Encabezados
             fputcsv($file, ['ID', 'Usuario', 'Acción', 'Tabla', 'Registro ID', 'IP', 'Fecha']);
-            
+
             // Datos
             foreach ($logs as $log) {
                 fputcsv($file, [
@@ -311,7 +325,7 @@ class AuditorDashboardController extends Controller
                     $log->created_at->format('Y-m-d H:i:s')
                 ]);
             }
-            
+
             fclose($file);
         };
 

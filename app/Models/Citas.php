@@ -9,7 +9,6 @@ class Citas extends Model
 {
     use HasFactory;
 
-    // 👇 Campos asignables (MUY IMPORTANTE para evitar errores de mass assignment)
     protected $fillable = [
         'paciente_id',
         'doctor_id',

@@ -12,79 +12,115 @@ use Illuminate\Support\Facades\DB;
 class TableViewController extends Controller
 {
     public function users(Request $request)
-    {
-        $query = User::query();
+{
+    $query = User::query();
 
-        // Búsqueda
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('nombre', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('rol', 'like', "%{$search}%");
-            });
-        }
-
-        // Filtro por rol
-        if ($request->filled('rol')) {
-            $query->where('rol', $request->rol);
-        }
-
-        $users = $query->orderBy('created_at', 'desc')->paginate(20)->appends(request()->query());
-        $roles = User::select('rol')->distinct()->pluck('rol');
-
-        return view('auditor.tables.users', compact('users', 'roles'));
+    // 🔎 Buscar
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('nombre', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%");
+        });
     }
 
+    // 🎯 Filtro por rol (IMPORTANTE: usar filled + !== null)
+    if ($request->has('rol') && $request->rol !== '') {
+        $query->where('rol', (int)$request->rol);
+    }
+
+    $users = $query->orderBy('created_at', 'desc')
+                   ->paginate(20)
+                   ->appends(request()->query());
+
+    // 📊 Estadísticas (según tus roles reales)
+    $stats = [
+        'total' => User::count(),
+        'doctor' => User::where('rol', 0)->count(),
+        'admin' => User::where('rol', 1)->count(),
+        'auditor' => User::where('rol', 2)->count(),
+        'recepcion' => User::where('rol', 3)->count(),
+        'usuario' => User::where('rol', 4)->count(),
+    ];
+
+    return view('auditor.tables.users', compact('users', 'stats'));
+}
+
+    //Citas
     public function citas(Request $request)
     {
         $query = Citas::with(['paciente', 'especialidad']);
 
-        // Búsqueda
         if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('motivo', 'like', "%{$search}%")
-                    ->orWhere('estado', 'like', "%{$search}%");
-            });
+            $query->where('motivo', 'like', "%{$request->search}%")
+                ->orWhere('estado', 'like', "%{$request->search}%");
         }
 
-        // Filtro por estado
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado);
         }
 
-        // Filtro por fecha
         if ($request->filled('fecha_inicio')) {
             $query->whereDate('fecha_inicio', '>=', $request->fecha_inicio);
         }
 
+        $citas = $query->orderBy('fecha_inicio', 'desc')
+            ->paginate(20)
+            ->appends(request()->query());
 
-        $citas = $query->orderBy('fecha_inicio', 'desc')->paginate(20)->appends(request()->query());
+        // ✅ ESTADÍSTICAS (SIMPLES)
+        $totalCitas = Citas::count();
+        $citasPendientes = Citas::where('estado', 'pendiente')->count();
+        $citasConfirmadas = Citas::where('estado', 'confirmada')->count();
+        $citasCanceladas = Citas::where('estado', 'cancelada')->count();
+
         $estados = Citas::select('estado')->distinct()->pluck('estado');
 
-        return view('auditor.tables.citas', compact('citas', 'estados'));
+        return view('auditor.tables.citas', compact(
+            'citas',
+            'estados',
+            'totalCitas',
+            'citasPendientes',
+            'citasConfirmadas',
+            'citasCanceladas'
+        ));
     }
 
     public function pacientes(Request $request)
     {
         $query = Paciente::query();
 
-        // Búsqueda
+        // 🔎 Búsqueda
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('nombre', 'like', "%{$search}%")
-                    ->orWhere('apellido', 'like', "%{$search}%")
+                $q->where('nombres', 'like', "%{$search}%")
+                    ->orWhere('apellidos', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
                     ->orWhere('telefono', 'like', "%{$search}%");
             });
         }
 
-        $pacientes = $query->orderBy('created_at', 'desc')->paginate(20)->appends(request()->query());
+        $pacientes = $query
+            ->orderBy('created_at', 'desc')
+            ->paginate(20)
+            ->appends(request()->query());
 
-        return view('auditor.tables.pacientes', compact('pacientes'));
+        // ✅ ESTADÍSTICAS
+        $totalPacientes = Paciente::count();
+        $pacientesHoy = Paciente::whereDate('created_at', now())->count();
+        $pacientesMes = Paciente::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+
+        return view('auditor.tables.pacientes', compact(
+            'pacientes',
+            'totalPacientes',
+            'pacientesHoy',
+            'pacientesMes'
+        ));
     }
+
 
     public function customQuery(Request $request)
     {

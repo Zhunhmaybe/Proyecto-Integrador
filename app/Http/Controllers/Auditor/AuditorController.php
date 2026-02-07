@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\User;
 use App\Models\Cita;
+use App\Models\Citas;
 use App\Models\Paciente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -111,7 +112,7 @@ class AuditorController extends Controller
     public function logDetail($id)
     {
         $log = AuditLog::with('usuario')->findOrFail($id);
-        
+
         return response()->json([
             'id' => $log->id,
             'usuario' => $log->usuario ? [
@@ -169,7 +170,7 @@ class AuditorController extends Controller
         $logs = $query->orderBy('created_at', 'desc')->get();
 
         $filename = 'logs_auditoria_' . now()->format('Y-m-d_His') . '.csv';
-        
+
         $headers = [
             'Content-Type' => 'text/csv; charset=UTF-8',
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
@@ -178,12 +179,12 @@ class AuditorController extends Controller
             'Expires' => '0'
         ];
 
-        $callback = function() use ($logs) {
+        $callback = function () use ($logs) {
             $file = fopen('php://output', 'w');
-            
+
             // BOM para UTF-8
-            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
-            
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
             // Encabezados
             fputcsv($file, [
                 'ID',
@@ -219,13 +220,56 @@ class AuditorController extends Controller
     /**
      * Mostrar tabla de citas
      */
-    public function citas()
-    {
-        $citas = Cita::with(['paciente', 'medico'])
-            ->orderBy('fecha', 'desc')
-            ->paginate(15);
 
-        return view('auditor.tables.citas', compact('citas'));
+    public function citas(Request $request)
+    {
+        $query = Citas::with(['paciente', 'doctor', 'especialidad']);
+
+        // 🔍 Buscar
+        if ($request->filled('search')) {
+            $query->where('motivo', 'like', "%{$request->search}%");
+        }
+
+        // 📌 Filtro por estado
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        // 📅 Fechas
+        if ($request->filled('fecha_inicio')) {
+            $query->whereDate('fecha_inicio', '>=', $request->fecha_inicio);
+        }
+
+        if ($request->filled('fecha_fin')) {
+            $query->whereDate('fecha_inicio', '<=', $request->fecha_fin);
+        }
+
+        // 📄 Listado
+        $citas = $query->orderBy('fecha_inicio', 'desc')->paginate(15);
+
+        /* ======================
+       📊 ESTADÍSTICAS (UNA POR UNA)
+       ====================== */
+
+        // TOTAL
+        $totalCitas = Citas::count();
+
+        // PENDIENTES
+        $citasPendientes = Citas::where('estado', 'Pendiente')->count();
+
+        // CONFIRMADAS
+        $citasConfirmadas = Citas::where('estado', 'Confirmada')->count();
+
+        // CANCELADAS
+        $citasCanceladas = Citas::where('estado', 'Cancelada')->count();
+
+        return view('auditor.tables.citas', compact(
+            'citas',
+            'totalCitas',   
+            'citasPendientes',
+            'citasConfirmadas',
+            'citasCanceladas'
+        ));
     }
 
     /**
