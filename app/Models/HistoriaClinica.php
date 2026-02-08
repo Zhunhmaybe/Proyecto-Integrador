@@ -23,28 +23,31 @@ class HistoriaClinica extends Model
         'estado_historia',
         'motivo_consulta',
         'enfermedad_actual',
+        'profesional_id',
 
-        // Antecedentes personales
+        // Campos booleanos antiguos (mantener compatibilidad)
         'alergias',
         'cardiopatias',
         'diabetes',
         'hipertension',
         'tuberculosis',
-        'antecedentes_otros',
-
-        // Antecedentes familiares
         'fam_diabetes',
         'fam_hipertension',
         'fam_cancer',
         'fam_tuberculosis',
+        'antecedentes_otros',
+        'observaciones',
 
-        // Constantes vitales
+        // NUEVOS CAMPOS JSON
+        'patologias_personales',
+        'alergias_lista',
+        'patologias_familiares',
+
+        // Vitales y Examen físico
         'temperatura',
         'presion_arterial',
         'pulso',
         'frecuencia_respiratoria',
-
-        // Examen clínico
         'labios',
         'lengua',
         'paladar',
@@ -53,12 +56,6 @@ class HistoriaClinica extends Model
         'carrillos',
         'orofaringe',
         'atm',
-
-        // Observaciones
-        'observaciones',
-
-        // Auditoría
-        'profesional_id'
     ];
 
     protected $casts = [
@@ -71,10 +68,14 @@ class HistoriaClinica extends Model
         'fam_hipertension' => 'boolean',
         'fam_cancer' => 'boolean',
         'fam_tuberculosis' => 'boolean',
+        // Casts para los nuevos campos
+        'patologias_personales' => 'array',
+        'alergias_lista' => 'array',
+        'patologias_familiares' => 'array',
     ];
 
     // 🔗 Relaciones
-public function paciente()
+    public function paciente()
     {
         return $this->belongsTo(Paciente::class, 'paciente_id');
     }
@@ -104,7 +105,7 @@ public function paciente()
     {
         return $this->hasMany(Tratamiento::class, 'historia_id');
     }
-    
+
     public function examenesComplementarios()
     {
         return $this->hasMany(ExamenComplementario::class, 'historia_id');
@@ -114,5 +115,4 @@ public function paciente()
     {
         return $this->odontograma()->exists();
     }
-
 }

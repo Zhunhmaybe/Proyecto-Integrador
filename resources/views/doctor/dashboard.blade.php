@@ -6,27 +6,47 @@
     <title>Mi Perfil</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    @vite(['resources/css/home.css'])
+    @vite(['resources/css/doctor/home.css'])
 </head>
 
 <body>
 
     <div class="wrapper">
 
-
         <aside class="sidebar">
             <div class="logo">
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('doctor.dashboard') }}" class="active">🧑⚕️Mi perfil</a>
-            <a href="{{ route('doctor.pacientes.index') }}">🧑Pacientes</a>
-            <a href="{{ route('doctor.citas.index') }}">📅 Citas</a>
-            <a href="{{ route('historia_clinica.index') }}">📋Historial Clinico</a>
-            <a href="{{ route('profile.2fa') }}">🔐 Seguridad 2FA</a>
+            <nav>
+                <a href="{{ route('doctor.dashboard') }}"
+                    class="nav-link {{ request()->routeIs('doctor.dashboard') ? 'active' : '' }}">
+                    <i class="fas fa-user-md"></i> Mi Perfil
+                </a>
+
+                <a href="{{ route('doctor.pacientes.index') }}"
+                    class="nav-link {{ request()->routeIs('doctor.pacientes.*') ? 'active' : '' }}">
+                    <i class="fas fa-users"></i> Pacientes
+                </a>
+
+                <a href="{{ route('doctor.citas.index') }}"
+                    class="nav-link {{ request()->routeIs('doctor.citas.*') ? 'active' : '' }}">
+                    <i class="fas fa-calendar-alt"></i> Citas
+                </a>
+
+                <a href="{{ route('historia_clinica.index') }}"
+                    class="nav-link {{ request()->routeIs('historia_clinica.*') ? 'active' : '' }}">
+                    <i class="fas fa-file-medical"></i> Historial Clínico
+                </a>
+
+                <a href="{{ route('profile.2fa') }}"
+                    class="nav-link {{ request()->routeIs('profile.2fa') ? 'active' : '' }}">
+                    <i class="fas fa-shield-alt"></i> Seguridad 2FA
+                </a>
+            </nav>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
@@ -34,11 +54,12 @@
 
                 <form method="POST" action="{{ route('logout') }}" class="mt-2">
                     @csrf
-                    <button class="btn btn-sm btn-light w-100">Cerrar Sesión</button>
+                    <button class="btn btn-sm btn-outline-light w-100 border-0 text-start ps-0">
+                        <i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión
+                    </button>
                 </form>
             </div>
         </aside>
-
 
         <main class="content">
             <h3 class="fw-bold mb-4">Mi perfil</h3>
@@ -71,61 +92,50 @@
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <label class="form-label">Teléfono:</label>
-                            <input type="text" class="form-control"
-                                value="{{ Auth::user()->tel ?? 'No registrado' }}" disabled>
+                            <input type="text" class="form-control" value="{{ Auth::user()->tel ?? 'No registrado' }}" disabled>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Estado:</label>
-                            <input type="text" class="form-control"
-                                value="{{ Auth::user()->nombre_estado ?? 'No registrada' }}" disabled>
+                            <input type="text" class="form-control" value="{{ Auth::user()->nombre_estado ?? 'No registrada' }}" disabled>
                         </div>
                     </div>
 
                     <div class="text-center">
-
                         <div class="action-buttons">
                             <a href="{{ route('perfil.edit') }}" class="btn btn-gold">
                                 Editar
                             </a>
 
-
                             <a href="{{ route('profile.2fa') }}" class="btn-2fa" title="Seguridad 2FA">
-                                🔐2FA
+                                🔐 2FA
                             </a>
                         </div>
-
-
                     </div>
 
                 </div>
+            </div>
         </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    {{-- Modal de Sesión Expirada --}}
     @if (session('session_expired'))
     <div class="modal fade show session-modal-overlay" id="sessionExpiredModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title">Sesión cerrada</h5>
                 </div>
-
                 <div class="modal-body text-center">
-                    <p>
-                        Tu sesión se cerró automáticamente por
-                        <strong>inactividad de 2 minutos</strong>.
-                    </p>
+                    <p>Tu sesión se cerró automáticamente por <strong>inactividad de 2 minutos</strong>.</p>
                 </div>
-
                 <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-danger"
-                        onclick="window.location.href='{{ route('login') }}'">
+                    <button type="button" class="btn btn-danger" onclick="window.location.href='{{ route('login') }}'">
                         Aceptar
                     </button>
                 </div>
-
             </div>
         </div>
     </div>

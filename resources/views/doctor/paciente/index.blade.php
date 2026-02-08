@@ -15,7 +15,6 @@
 
     <div class="wrapper">
 
-
         <aside class="sidebar">
             <div class="logo">
                 <img src="/images/logo-danny.png" alt="Logo Danny">
@@ -38,12 +37,10 @@
             </div>
         </aside>
 
-
         <main class="content">
             <h4 class="fw-bold mb-3">Directorio de Pacientes</h4>
 
             <div class="row g-4">
-
 
                 <div class="col-md-4">
                     <div class="panel">

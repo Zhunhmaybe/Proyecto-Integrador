@@ -2,6 +2,10 @@
 
 @section('title', 'Historial Clínico')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/historia_clinica/index.css') }}">
+@endpush
+
 @section('content')
 <div class="container-fluid py-4">
 
@@ -12,7 +16,7 @@
             </h3>
             <p class="text-muted mb-0">Listado general de atenciones y expedientes.</p>
         </div>
-        
+
         <a href="{{ route('doctor.pacientes.index') }}" class="btn btn-primary">
             <i class="fas fa-plus"></i> Nueva Historia (Desde Pacientes)
         </a>
@@ -21,7 +25,7 @@
     {{-- Tarjeta Principal --}}
     <div class="card shadow-sm border-0">
         <div class="card-body">
-            
+
             {{-- Buscador y Filtros (Visual) --}}
             <div class="row mb-3">
                 <div class="col-md-4">
@@ -49,80 +53,80 @@
                     </thead>
                     <tbody>
                         @forelse ($historias as $historia)
-                            <tr>
-                                {{-- N° Historia --}}
-                                <td>
-                                    <span class="fw-bold text-dark">#{{ $historia->numero_historia }}</span>
-                                </td>
+                        <tr>
+                            {{-- N° Historia --}}
+                            <td>
+                                <span class="fw-bold text-dark">#{{ $historia->numero_historia }}</span>
+                            </td>
 
-                                {{-- Paciente --}}
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar-circle me-2 bg-secondary text-white d-flex align-items-center justify-content-center rounded-circle" style="width: 35px; height: 35px; font-size: 14px;">
-                                            {{ strtoupper(substr($historia->paciente->nombres, 0, 1)) }}
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold">{{ $historia->paciente->nombres }} {{ $historia->paciente->apellidos }}</div>
-                                            <small class="text-muted">{{ $historia->paciente->cedula }}</small>
-                                        </div>
+                            {{-- Paciente --}}
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle me-2 bg-secondary text-white d-flex align-items-center justify-content-center rounded-circle" style="width: 35px; height: 35px; font-size: 14px;">
+                                        {{ strtoupper(substr($historia->paciente->nombres, 0, 1)) }}
                                     </div>
-                                </td>
-
-                                {{-- Fecha --}}
-                                <td>
-                                    <i class="far fa-calendar-alt text-muted me-1"></i>
-                                    {{ $historia->fecha_atencion->format('d/m/Y') }}
-                                </td>
-
-                                {{-- Motivo (Truncado) --}}
-                                <td>
-                                    <span class="text-truncate d-inline-block" style="max-width: 200px;" title="{{ $historia->motivo_consulta }}">
-                                        {{ Str::limit($historia->motivo_consulta, 30) }}
-                                    </span>
-                                </td>
-
-                                {{-- Estado --}}
-                                <td>
-                                    @if($historia->estado_historia === 'abierta')
-                                        <span class="badge bg-success bg-opacity-10 text-success border border-success">
-                                            Abierta
-                                        </span>
-                                    @else
-                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary">
-                                            Cerrada
-                                        </span>
-                                    @endif
-                                </td>
-
-                                {{-- Acciones --}}
-                                <td class="text-end">
-                                    <div class="btn-group" role="group">
-                                        {{-- Ver Resumen --}}
-                                        <a href="{{ route('historia_clinica.show', $historia->id) }}" class="btn btn-sm btn-outline-primary" title="Ver Detalle">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-
-                                        {{-- Editar Odontograma --}}
-                                        <a href="{{ route('historia_clinica.odontograma', $historia->id) }}" class="btn btn-sm btn-outline-warning" title="Editar Odontograma">
-                                            <i class="fas fa-tooth"></i>
-                                        </a>
-
-                                        {{-- PDF --}}
-                                        <a href="{{ route('historia_clinica.pdf', $historia->id) }}" class="btn btn-sm btn-outline-danger" title="Generar PDF" target="_blank">
-                                            <i class="fas fa-file-pdf"></i>
-                                        </a>
+                                    <div>
+                                        <div class="fw-bold">{{ $historia->paciente->nombres }} {{ $historia->paciente->apellidos }}</div>
+                                        <small class="text-muted">{{ $historia->paciente->cedula }}</small>
                                     </div>
-                                </td>
-                            </tr>
+                                </div>
+                            </td>
+
+                            {{-- Fecha --}}
+                            <td>
+                                <i class="far fa-calendar-alt text-muted me-1"></i>
+                                {{ $historia->fecha_atencion->format('d/m/Y') }}
+                            </td>
+
+                            {{-- Motivo (Truncado) --}}
+                            <td>
+                                <span class="text-truncate d-inline-block" style="max-width: 200px;" title="{{ $historia->motivo_consulta }}">
+                                    {{ Str::limit($historia->motivo_consulta, 30) }}
+                                </span>
+                            </td>
+
+                            {{-- Estado --}}
+                            <td>
+                                @if($historia->estado_historia === 'abierta')
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success">
+                                    Abierta
+                                </span>
+                                @else
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary">
+                                    Cerrada
+                                </span>
+                                @endif
+                            </td>
+
+                            {{-- Acciones --}}
+                            <td class="text-end">
+                                <div class="btn-group" role="group">
+                                    {{-- Ver Resumen --}}
+                                    <a href="{{ route('historia_clinica.show', $historia->id) }}" class="btn btn-sm btn-outline-primary" title="Ver Detalle">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+
+                                    {{-- Editar Odontograma --}}
+                                    <a href="{{ route('historia_clinica.odontograma', $historia->id) }}" class="btn btn-sm btn-outline-warning" title="Editar Odontograma">
+                                        <i class="fas fa-tooth"></i>
+                                    </a>
+
+                                    {{-- PDF --}}
+                                    <a href="{{ route('historia_clinica.pdf', $historia->id) }}" class="btn btn-sm btn-outline-danger" title="Generar PDF" target="_blank">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
                         @empty
-                            <tr>
-                                <td colspan="6" class="text-center py-5">
-                                    <div class="text-muted">
-                                        <i class="fas fa-folder-open fa-3x mb-3"></i>
-                                        <p class="mb-0">No se encontraron historias clínicas registradas.</p>
-                                    </div>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="6" class="text-center py-5">
+                                <div class="text-muted">
+                                    <i class="fas fa-folder-open fa-3x mb-3"></i>
+                                    <p class="mb-0">No se encontraron historias clínicas registradas.</p>
+                                </div>
+                            </td>
+                        </tr>
                         @endforelse
                     </tbody>
                 </table>

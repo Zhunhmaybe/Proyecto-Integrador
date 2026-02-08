@@ -54,19 +54,23 @@ return new class extends Migration
             $table->text('carrillos')->nullable();
             $table->text('orofaringe')->nullable();
             $table->text('atm')->nullable();
+            $table->json('patologias_personales')->nullable()->after('tuberculosis');
+            $table->json('alergias_lista')->nullable()->after('alergias');
+            $table->json('patologias_familiares')->nullable()->after('fam_tuberculosis');
 
             // Observaciones
             $table->text('observaciones')->nullable();
 
             // Auditoría
             $table->unsignedBigInteger('profesional_id')->nullable();
-
             $table->timestamps();
         });
     }
 
-    public function down(): void
+public function down(): void
     {
-        Schema::dropIfExists('historias_clinicas');
+        Schema::table('historias_clinicas', function (Blueprint $table) {
+            $table->dropColumn(['patologias_personales', 'alergias_lista', 'patologias_familiares']);
+        });
     }
 };

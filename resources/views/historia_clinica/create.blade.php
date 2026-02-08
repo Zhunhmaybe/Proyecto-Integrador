@@ -2,9 +2,13 @@
 
 @section('title', 'Nueva Historia Clínica')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/historia_clinica/historia_clinica.css') }}">
+@endpush
+
 @section('content')
 <div class="container py-4">
-    
+
     {{-- Header --}}
     <div class="row mb-4">
         <div class="col-12">
@@ -12,7 +16,7 @@
                 <div class="card-body">
                     <h2 class="mb-0">
                         <i class="fas fa-file-medical text-primary"></i>
-                        Nueva Historia Clínica Odontológica
+                        Nueva Historia Clínica Odontológicass
                     </h2>
                     <p class="text-muted mb-0">Formulario basado en SNS-MSP/HCU-FORM.033/2021</p>
                 </div>
@@ -21,14 +25,14 @@
     </div>
 
     @if($errors->any())
-        <div class="alert alert-danger">
-            <strong>¡Error!</strong> Por favor corrija los siguientes errores:
-            <ul class="mb-0 mt-2">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+    <div class="alert alert-danger">
+        <strong>¡Error!</strong> Por favor corrija los siguientes errores:
+        <ul class="mb-0 mt-2">
+            @foreach($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
     @endif
 
     <form action="{{ route('historia_clinica.store') }}" method="POST">
@@ -41,7 +45,7 @@
             </div>
             <div class="card-body">
                 <input type="hidden" name="paciente_id" value="{{ $paciente->id }}">
-                
+
                 <div class="row">
                     <div class="col-md-6">
                         <p><strong>Nombres:</strong> {{ $paciente->nombres }}</p>

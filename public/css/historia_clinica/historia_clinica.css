@@ -1,0 +1,486 @@
+
+:root {
+    --color-seccion-a: #5b7c99;
+    --color-seccion-a-light: #7a9ab8;
+
+    --color-seccion-b: #4a9396;
+    --color-seccion-b-light: #68b0b3;
+
+    --color-seccion-d: #6b7a8f;
+    --color-seccion-d-light: #8794a8;
+
+    --color-seccion-f: #5d9c8c;
+    --color-seccion-f-light: #7bb3a5;
+
+    --color-seccion-g: #7d6e8f;
+    --color-seccion-g-light: #9b8ca8;
+
+    --color-observaciones: #4a5568;
+    --color-observaciones-light: #687082;
+
+    --color-diagnostico: #8e5d6f;
+    --color-tratamiento: #5d8c75;
+    --color-header: #54678f;
+    --color-info: #5a8fa3;
+    --color-warning: #9b7e6f;
+}
+
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+.header-banner {
+    background: linear-gradient(135deg, var(--color-header) 0%, #465a7a 100%);
+    border-radius: 20px;
+    padding: 30px;
+    color: white;
+    box-shadow: 0 10px 40px rgba(84, 103, 143, 0.3);
+    margin-bottom: 30px;
+}
+
+.header-banner h2 {
+    font-weight: 700;
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 25px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.info-card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 25px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: white;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.info-card:hover,
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* === ANIMACIONES === */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.info-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.info-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.info-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.info-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+/* === HEADERS DE SECCIONES === */
+.card-header {
+    padding: 20px 25px;
+    font-weight: 700;
+    color: white;
+    font-size: 18px;
+}
+
+.card-header-custom {
+    padding: 20px 25px;
+    font-weight: 700;
+    color: white;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Sección A: Datos del Paciente */
+.bg-primary,
+.card-header-primary {
+    background: linear-gradient(135deg, var(--color-seccion-a) 0%, var(--color-seccion-a-light) 100%) !important;
+}
+
+/* Sección B/C: Motivo de Consulta y Enfermedad Actual */
+.bg-info,
+.card-header-info {
+    background: linear-gradient(135deg, var(--color-seccion-b) 0%, var(--color-seccion-b-light) 100%) !important;
+}
+
+/* Sección D/E: Antecedentes */
+.bg-warning,
+.card-header-warning {
+    background: linear-gradient(135deg, var(--color-seccion-d) 0%, var(--color-seccion-d-light) 100%) !important;
+    color: white !important;
+}
+
+/* Sección F: Constantes Vitales */
+.bg-success,
+.card-header-success {
+    background: linear-gradient(135deg, var(--color-seccion-f) 0%, var(--color-seccion-f-light) 100%) !important;
+}
+
+/* Sección G: Examen Estomatognático */
+.bg-secondary {
+    background: linear-gradient(135deg, var(--color-seccion-g) 0%, var(--color-seccion-g-light) 100%) !important;
+}
+
+/* Observaciones */
+.bg-dark,
+.card-header-dark {
+    background: linear-gradient(135deg, var(--color-observaciones) 0%, var(--color-observaciones-light) 100%) !important;
+}
+
+/* Diagnósticos (show.blade.php) */
+.card-header-danger {
+    background: linear-gradient(135deg, var(--color-diagnostico) 0%, #a57484 100%) !important;
+}
+
+/* === BADGES === */
+.badge {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+/* === INFO BOXES === */
+.info-box {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s ease;
+}
+
+.info-box:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.info-box-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.icon-primary {
+    background: linear-gradient(135deg, var(--color-seccion-a) 0%, var(--color-seccion-a-light) 100%);
+}
+
+.icon-info {
+    background: linear-gradient(135deg, var(--color-seccion-b) 0%, var(--color-seccion-b-light) 100%);
+}
+
+.icon-success {
+    background: linear-gradient(135deg, var(--color-seccion-f) 0%, var(--color-seccion-f-light) 100%);
+}
+
+.icon-warning {
+    background: linear-gradient(135deg, var(--color-seccion-d) 0%, var(--color-seccion-d-light) 100%);
+}
+
+.icon-danger {
+    background: linear-gradient(135deg, var(--color-diagnostico) 0%, #a57484 100%);
+}
+
+.info-box-content small {
+    display: block;
+    color: #6c757d;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.info-box-content strong {
+    font-size: 18px;
+    color: #2d3748;
+}
+
+/* === CONSTANTES VITALES === */
+.vital-stat {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.vital-stat:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.vital-stat i {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.vital-stat .value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2d3748;
+}
+
+.vital-stat .label {
+    font-size: 12px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 8px;
+}
+
+/* === PATOLOGÍA BADGES === */
+.patologia-badge {
+    background: linear-gradient(135deg, var(--color-diagnostico) 0%, #a57484 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px;
+    font-weight: 600;
+    font-size: 13px;
+    box-shadow: 0 2px 8px rgba(142, 93, 111, 0.3);
+}
+
+.patologia-badge i {
+    font-size: 14px;
+}
+
+/* === TABLAS === */
+.table-custom {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table-custom thead {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.table-custom thead th {
+    border: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    padding: 16px;
+}
+
+.table-custom tbody tr {
+    transition: all 0.2s ease;
+}
+
+.table-custom tbody tr:hover {
+    background: #f8f9fa;
+    transform: translateX(3px);
+}
+
+.table-custom tbody td {
+    padding: 16px;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+/* === TRATAMIENTOS === */
+.treatment-item {
+    background: white;
+    border-left: 4px solid var(--color-tratamiento);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.treatment-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.treatment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.treatment-header h6 {
+    margin: 0;
+    font-weight: 700;
+    color: #2d3748;
+}
+
+.treatment-header small {
+    color: #6c757d;
+    font-size: 12px;
+}
+
+/* === RESUMEN ODONTOGRAMA === */
+.odontograma-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.odontograma-stat:last-child {
+    border-bottom: none;
+    padding-top: 16px;
+    margin-top: 8px;
+    border-top: 2px solid var(--color-seccion-a);
+}
+
+.odontograma-stat span {
+    font-size: 15px;
+    color: #4a5568;
+}
+
+.odontograma-stat strong {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* === BOTONES DE ACCIÓN === */
+.btn-action {
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn-gradient-primary {
+    background: linear-gradient(135deg, var(--color-seccion-a) 0%, var(--color-seccion-a-light) 100%);
+    color: white;
+}
+
+.btn-gradient-danger {
+    background: linear-gradient(135deg, var(--color-diagnostico) 0%, #a57484 100%);
+    color: white;
+}
+
+.btn-gradient-warning {
+    background: linear-gradient(135deg, var(--color-seccion-d) 0%, var(--color-seccion-d-light) 100%);
+    color: white;
+}
+
+.btn-gradient-success {
+    background: linear-gradient(135deg, var(--color-tratamiento) 0%, #7aa58f 100%);
+    color: white;
+}
+
+/* === FORMS === */
+.form-label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #4a5568;
+}
+
+.form-control,
+.form-select {
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    padding: 10px 14px;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--color-seccion-a);
+    box-shadow: 0 0 0 3px rgba(91, 124, 153, 0.15);
+}
+
+.form-check-input:checked {
+    background-color: var(--color-seccion-a);
+    border-color: var(--color-seccion-a);
+}
+
+/* === CARDS BODY === */
+.card-body {
+    padding: 30px;
+}
+
+.info-card .card-body {
+    padding: 30px;
+}
+
+/* === ALERTS === */
+.alert {
+    border-radius: 12px;
+    border: none;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    .header-banner {
+        padding: 20px;
+    }
+
+    .header-banner h2 {
+        font-size: 24px;
+    }
+
+    .card-header,
+    .card-header-custom {
+        font-size: 16px;
+        padding: 15px 20px;
+    }
+
+    .info-box {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .btn-action {
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+}

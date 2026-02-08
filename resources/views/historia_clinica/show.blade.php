@@ -2,137 +2,165 @@
 
 @section('title', 'Historia Clínica - ' . $historia->paciente->nombres)
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/historia_clinica/historia_clinica.css') }}">
+@endpush
+
 @section('content')
 <div class="container-fluid py-4">
-    
-    {{-- Header con acciones --}}
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h2 class="mb-1">
-                                <i class="fas fa-file-medical-alt text-primary"></i>
-                                Historia Clínica Odontológica
-                            </h2>
-                            <p class="text-muted mb-0">
-                                <span class="badge bg-primary">{{ $historia->numero_historia }}</span>
-                                <span class="badge bg-{{ $historia->estado_historia === 'abierta' ? 'success' : 'secondary' }}">
-                                    {{ ucfirst($historia->estado_historia) }}
-                                </span>
-                            </p>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <a href="{{ route('historia_clinica.index') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Volver
-                            </a>
-                            <a href="{{ route('historia_clinica.odontograma', $historia->id) }}" class="btn btn-warning">
-                                <i class="fas fa-tooth"></i> Odontograma
-                            </a>
-                            <a href="{{ route('historia_clinica.pdf', $historia->id) }}" class="btn btn-danger" target="_blank">
-                                <i class="fas fa-file-pdf"></i> Generar PDF
-                            </a>
-                        </div>
-                    </div>
+
+    <div class="header-banner">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h2>
+                    <i class="fas fa-file-medical-alt"></i>
+                    Historia Clínica Odontológica
+                </h2>
+                <div class="d-flex gap-2 mb-2">
+                    <span class="badge bg-light text-dark">{{ $historia->numero_historia }}</span>
+                    <span class="badge bg-{{ $historia->estado_historia === 'abierta' ? 'success' : 'secondary' }}">
+                        {{ ucfirst($historia->estado_historia) }}
+                    </span>
                 </div>
+                <p class="mb-0 opacity-90">
+                    <i class="fas fa-user-md me-2"></i>
+                    Dr. {{ $historia->profesional->nombre ?? 'No asignado' }} |
+                    <i class="fas fa-calendar me-2 ms-3"></i>
+                    {{ $historia->fecha_atencion->format('d/m/Y') }}
+                </p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ route('historia_clinica.index') }}" class="btn btn-light btn-action">
+                    <i class="fas fa-arrow-left me-2"></i> Volver
+                </a>
+                <a href="{{ route('historia_clinica.odontograma', $historia->id) }}" class="btn btn-action btn-gradient-warning">
+                    <i class="fas fa-tooth me-2"></i> Odontograma
+                </a>
+                <a href="{{ route('historia_clinica.pdf', $historia->id) }}" class="btn btn-action btn-gradient-danger" target="_blank">
+                    <i class="fas fa-file-pdf me-2"></i> PDF
+                </a>
             </div>
         </div>
     </div>
 
     <div class="row">
-        {{-- Columna Principal --}}
-        <div class="col-md-8">
-            
-            {{-- Datos del Paciente --}}
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">👤 DATOS DEL PACIENTE</h5>
+        <div class="col-lg-8">
+            <div class="info-card">
+                <div class="card-header-custom card-header-primary">
+                    <i class="fas fa-user-circle"></i>
+                    <span>DATOS DEL PACIENTE</span>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">
-                            <p><strong>Nombres:</strong> {{ $historia->paciente->nombres }}</p>
-                            <p><strong>Apellidos:</strong> {{ $historia->paciente->apellidos }}</p>
-                            <p><strong>Cédula:</strong> {{ $historia->paciente->cedula }}</p>
+                        <div class="col-md-4 mb-3">
+                            <div class="info-box">
+                                <div class="info-box-icon icon-primary">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="info-box-content">
+                                    <small>Paciente</small>
+                                    <strong>{{ $historia->paciente->nombres }} {{ $historia->paciente->apellidos }}</strong>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <p><strong>Fecha de Nacimiento:</strong> {{ $historia->paciente->fecha_nacimiento->format('d/m/Y') }}</p>
-                            <p><strong>Edad:</strong> {{ $historia->paciente->fecha_nacimiento->age }} años</p>
-                            <p><strong>Teléfono:</strong> {{ $historia->paciente->telefono }}</p>
+                        <div class="col-md-4 mb-3">
+                            <div class="info-box">
+                                <div class="info-box-icon icon-info">
+                                    <i class="fas fa-id-card"></i>
+                                </div>
+                                <div class="info-box-content">
+                                    <small>Cédula</small>
+                                    <strong>{{ $historia->paciente->cedula }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="info-box">
+                                <div class="info-box-icon icon-success">
+                                    <i class="fas fa-birthday-cake"></i>
+                                </div>
+                                <div class="info-box-content">
+                                    <small>Edad</small>
+                                    <strong>{{ $historia->paciente->fecha_nacimiento->age }} años</strong>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12">
-                            <p><strong>Dirección:</strong> {{ $historia->paciente->direccion ?? 'No registrada' }}</p>
-                            <p><strong>Email:</strong> {{ $historia->paciente->email ?? 'No registrado' }}</p>
+                        <div class="col-md-6 mb-3">
+                            <div class="info-box">
+                                <div class="info-box-icon icon-warning">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="info-box-content">
+                                    <small>Teléfono</small>
+                                    <strong>{{ $historia->paciente->telefono }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="info-box">
+                                <div class="info-box-icon icon-danger">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="info-box-content">
+                                    <small>Email</small>
+                                    <strong>{{ $historia->paciente->email ?? 'No registrado' }}</strong>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- Motivo de Consulta y Enfermedad Actual --}}
-            <div class="card mb-4">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">📋 CONSULTA</h5>
+            <div class="info-card">
+                <div class="card-header-custom card-header-info">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>MOTIVO DE CONSULTA</span>
                 </div>
                 <div class="card-body">
-                    <div class="mb-3">
-                        <h6 class="fw-bold">Motivo de Consulta:</h6>
-                        <p>{{ $historia->motivo_consulta }}</p>
-                    </div>
+                    <p class="mb-3 fs-6">{{ $historia->motivo_consulta }}</p>
+
                     @if($historia->enfermedad_actual)
-                    <div>
-                        <h6 class="fw-bold">Enfermedad Actual:</h6>
-                        <p>{{ $historia->enfermedad_actual }}</p>
-                    </div>
+                    <hr>
+                    <h6 class="fw-bold mb-2"><i class="fas fa-notes-medical me-2 text-primary"></i>Enfermedad Actual:</h6>
+                    <p class="mb-0">{{ $historia->enfermedad_actual }}</p>
                     @endif
-                    <div class="mt-3">
-                        <small class="text-muted">
-                            <strong>Fecha de Atención:</strong> {{ $historia->fecha_atencion->format('d/m/Y') }} |
-                            <strong>Profesional:</strong> {{ $historia->profesional->nombre ?? 'No asignado' }}
-                        </small>
-                    </div>
                 </div>
             </div>
 
-            {{-- Antecedentes --}}
-            <div class="card mb-4">
-                <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0">🩺 ANTECEDENTES</h5>
+            <div class="info-card">
+                <div class="card-header-custom card-header-warning">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>ANTECEDENTES MÉDICOS</span>
                 </div>
                 <div class="card-body">
-                    <h6 class="fw-bold mb-3">Antecedentes Personales:</h6>
-                    <div class="row mb-3">
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" disabled {{ $historia->cardiopatias ? 'checked' : '' }}>
-                                <label>Cardiopatías</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" disabled {{ $historia->diabetes ? 'checked' : '' }}>
-                                <label>Diabetes</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" disabled {{ $historia->hipertension ? 'checked' : '' }}>
-                                <label>Hipertensión</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" disabled {{ $historia->tuberculosis ? 'checked' : '' }}>
-                                <label>Tuberculosis</label>
-                            </div>
-                        </div>
+
+                    <h6 class="fw-bold mb-3"><i class="fas fa-disease me-2 text-danger"></i>Antecedentes Personales:</h6>
+
+                    {{-- Patologías como badges --}}
+                    <div class="mb-3">
+                        @if($historia->cardiopatias)
+                        <span class="patologia-badge"><i class="fas fa-heartbeat"></i> Cardiopatías</span>
+                        @endif
+                        @if($historia->diabetes)
+                        <span class="patologia-badge"><i class="fas fa-syringe"></i> Diabetes</span>
+                        @endif
+                        @if($historia->hipertension)
+                        <span class="patologia-badge"><i class="fas fa-tachometer-alt"></i> Hipertensión</span>
+                        @endif
+                        @if($historia->tuberculosis)
+                        <span class="patologia-badge"><i class="fas fa-lungs"></i> Tuberculosis</span>
+                        @endif
+
+                        @if(!$historia->cardiopatias && !$historia->diabetes && !$historia->hipertension && !$historia->tuberculosis)
+                        <p class="text-muted mb-0"><i class="fas fa-check-circle text-success me-2"></i>Sin patologías registradas</p>
+                        @endif
                     </div>
-                    
+
                     @if($historia->alergias)
-                    <div class="alert alert-danger">
-                        <strong>⚠️ Alergias:</strong> {{ $historia->alergias }}
+                    <div class="alert alert-danger border-0 rounded-3">
+                        <strong><i class="fas fa-exclamation-triangle me-2"></i>Alergias:</strong> {{ $historia->alergias }}
                     </div>
                     @endif
 
@@ -140,238 +168,236 @@
                     <p><strong>Otros:</strong> {{ $historia->antecedentes_otros }}</p>
                     @endif
 
-                    <hr>
+                    <hr class="my-4">
 
-                    <h6 class="fw-bold mb-3">Antecedentes Familiares:</h6>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" disabled {{ $historia->fam_diabetes ? 'checked' : '' }}>
-                                <label>Diabetes</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" disabled {{ $historia->fam_hipertension ? 'checked' : '' }}>
-                                <label>Hipertensión</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" disabled {{ $historia->fam_cancer ? 'checked' : '' }}>
-                                <label>Cáncer</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" disabled {{ $historia->fam_tuberculosis ? 'checked' : '' }}>
-                                <label>Tuberculosis</label>
-                            </div>
-                        </div>
+                    <h6 class="fw-bold mb-3"><i class="fas fa-users me-2 text-info"></i>Antecedentes Familiares:</h6>
+                    <div>
+                        @if($historia->fam_diabetes)
+                        <span class="patologia-badge" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"><i class="fas fa-dna"></i> Diabetes</span>
+                        @endif
+                        @if($historia->fam_hipertension)
+                        <span class="patologia-badge" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"><i class="fas fa-dna"></i> Hipertensión</span>
+                        @endif
+                        @if($historia->fam_cancer)
+                        <span class="patologia-badge" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"><i class="fas fa-dna"></i> Cáncer</span>
+                        @endif
+                        @if($historia->fam_tuberculosis)
+                        <span class="patologia-badge" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"><i class="fas fa-dna"></i> Tuberculosis</span>
+                        @endif
+
+                        @if(!$historia->fam_diabetes && !$historia->fam_hipertension && !$historia->fam_cancer && !$historia->fam_tuberculosis)
+                        <p class="text-muted mb-0"><i class="fas fa-check-circle text-success me-2"></i>Sin antecedentes familiares registrados</p>
+                        @endif
                     </div>
                 </div>
             </div>
 
-            {{-- Examen Clínico --}}
-            <div class="card mb-4">
-                <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0">🔍 EXAMEN DEL SISTEMA ESTOMATOGNÁTICO</h5>
+            <div class="info-card">
+                <div class="card-header-custom" style="background: linear-gradient(135deg, #8e44ad 0%);">
+                    <i class="fas fa-tooth"></i>
+                    <span>EXAMEN ESTOMATOGNÁTICO</span>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3 mb-2">
-                            <strong>Labios:</strong> {{ $historia->labios ?? 'No evaluado' }}
+                        @foreach([
+                        ['label' => 'Labios', 'field' => 'labios', 'icon' => 'fa-lips'],
+                        ['label' => 'Lengua', 'field' => 'lengua', 'icon' => 'fa-tongue'],
+                        ['label' => 'Paladar', 'field' => 'paladar', 'icon' => 'fa-head-side-mask'],
+                        ['label' => 'Piso de Boca', 'field' => 'piso_boca', 'icon' => 'fa-tooth'],
+                        ['label' => 'Encías', 'field' => 'encias', 'icon' => 'fa-teeth'],
+                        ['label' => 'Carrillos', 'field' => 'carrillos', 'icon' => 'fa-smile'],
+                        ['label' => 'Orofaringe', 'field' => 'orofaringe', 'icon' => 'fa-throat'],
+                        ['label' => 'ATM', 'field' => 'atm', 'icon' => 'fa-jaw-open']
+                        ] as $item)
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="p-3 bg-light rounded-3 text-center">
+                                <i class="fas {{ $item['icon'] }} text-primary fs-4 mb-2"></i>
+                                <div class="small text-muted text-uppercase fw-bold mb-1">{{ $item['label'] }}</div>
+                                <div class="fw-bold">{{ $historia->{$item['field']} ?? 'No evaluado' }}</div>
+                            </div>
                         </div>
-                        <div class="col-md-3 mb-2">
-                            <strong>Lengua:</strong> {{ $historia->lengua ?? 'No evaluado' }}
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <strong>Paladar:</strong> {{ $historia->paladar ?? 'No evaluado' }}
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <strong>Piso de Boca:</strong> {{ $historia->piso_boca ?? 'No evaluado' }}
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <strong>Encías:</strong> {{ $historia->encias ?? 'No evaluado' }}
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <strong>Carrillos:</strong> {{ $historia->carrillos ?? 'No evaluado' }}
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <strong>Orofaringe:</strong> {{ $historia->orofaringe ?? 'No evaluado' }}
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <strong>ATM:</strong> {{ $historia->atm ?? 'No evaluado' }}
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
 
-            {{-- Diagnósticos --}}
-            <div class="card mb-4">
-                <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">🎯 DIAGNÓSTICOS</h5>
+            <div class="info-card">
+                <div class="card-header-custom card-header-danger d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-diagnoses"></i>
+                        <span>DIAGNÓSTICOS</span>
+                    </div>
                     <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#modalNuevoDiagnostico">
-                        <i class="fas fa-plus"></i> Agregar
+                        <i class="fas fa-plus me-1"></i> Agregar
                     </button>
                 </div>
                 <div class="card-body">
                     @if($historia->diagnosticos->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>Tipo</th>
-                                        <th>Descripción</th>
-                                        <th>Fecha</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($historia->diagnosticos as $diagnostico)
-                                    <tr>
-                                        <td>
-                                            <span class="badge bg-{{ $diagnostico->tipo === 'presuntivo' ? 'warning' : 'success' }}">
-                                                {{ ucfirst($diagnostico->tipo) }}
-                                            </span>
-                                        </td>
-                                        <td>{{ $diagnostico->descripcion }}</td>
-                                        <td>{{ $diagnostico->created_at->format('d/m/Y') }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table table-custom mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Descripción</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($historia->diagnosticos as $diagnostico)
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-{{ $diagnostico->tipo === 'presuntivo' ? 'warning' : 'success' }}">
+                                            {{ ucfirst($diagnostico->tipo) }}
+                                        </span>
+                                    </td>
+                                    <td>{{ $diagnostico->descripcion }}</td>
+                                    <td>{{ $diagnostico->created_at->format('d/m/Y') }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                     @else
-                        <p class="text-muted text-center mb-0">No hay diagnósticos registrados</p>
+                    <p class="text-muted text-center mb-0">
+                        <i class="fas fa-info-circle me-2"></i>No hay diagnósticos registrados
+                    </p>
                     @endif
                 </div>
             </div>
 
-            {{-- Tratamientos --}}
-            <div class="card mb-4">
-                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">💊 TRATAMIENTOS Y PROCEDIMIENTOS</h5>
+            <div class="info-card">
+                <div class="card-header-custom card-header-success d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-pills"></i>
+                        <span>TRATAMIENTOS Y PROCEDIMIENTOS</span>
+                    </div>
                     <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#modalNuevoTratamiento">
-                        <i class="fas fa-plus"></i> Agregar
+                        <i class="fas fa-plus me-1"></i> Agregar
                     </button>
                 </div>
                 <div class="card-body">
                     @if($historia->tratamientos->count() > 0)
-                        @foreach($historia->tratamientos as $tratamiento)
-                        <div class="mb-3 p-3 border rounded">
-                            <div class="d-flex justify-content-between">
-                                <h6 class="mb-2">Sesión {{ $loop->iteration }} - {{ $tratamiento->fecha->format('d/m/Y') }}</h6>
-                                <small class="text-muted">{{ $tratamiento->firma_profesional }}</small>
-                            </div>
-                            <p class="mb-1"><strong>Procedimiento:</strong> {{ $tratamiento->procedimiento }}</p>
-                            @if($tratamiento->prescripcion)
-                            <p class="mb-0"><strong>Prescripción:</strong> {{ $tratamiento->prescripcion }}</p>
-                            @endif
+                    @foreach($historia->tratamientos as $tratamiento)
+                    <div class="treatment-item">
+                        <div class="treatment-header">
+                            <h6><i class="fas fa-calendar-check me-2 text-primary"></i>Sesión {{ $loop->iteration }} - {{ $tratamiento->fecha->format('d/m/Y') }}</h6>
+                            <small><i class="fas fa-user-md me-1"></i>{{ $tratamiento->firma_profesional }}</small>
                         </div>
-                        @endforeach
+                        <p class="mb-1"><strong>Procedimiento:</strong> {{ $tratamiento->procedimiento }}</p>
+                        @if($tratamiento->prescripcion)
+                        <p class="mb-0 text-muted"><strong>Prescripción:</strong> {{ $tratamiento->prescripcion }}</p>
+                        @endif
+                    </div>
+                    @endforeach
                     @else
-                        <p class="text-muted text-center mb-0">No hay tratamientos registrados</p>
+                    <p class="text-muted text-center mb-0">
+                        <i class="fas fa-info-circle me-2"></i>No hay tratamientos registrados
+                    </p>
                     @endif
                 </div>
             </div>
 
         </div>
 
-        {{-- Columna Lateral --}}
-        <div class="col-md-4">
-            
-            {{-- Constantes Vitales --}}
-            <div class="card mb-4">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">❤️ CONSTANTES VITALES</h5>
+        <div class="col-lg-4">
+
+            <div class="info-card">
+                <div class="card-header-custom card-header-success">
+                    <i class="fas fa-stethoscope"></i>
+                    <span>CONSTANTES VITALES</span>
                 </div>
                 <div class="card-body">
-                    <div class="mb-2">
+                    <div class="vital-stat">
                         <i class="fas fa-thermometer-half text-danger"></i>
-                        <strong>Temperatura:</strong> {{ $historia->temperatura ?? '-' }} °C
+                        <div class="value">{{ $historia->temperatura ?? '-' }} °C</div>
+                        <div class="label">Temperatura</div>
                     </div>
-                    <div class="mb-2">
+                    <div class="vital-stat">
                         <i class="fas fa-heartbeat text-danger"></i>
-                        <strong>Presión Arterial:</strong> {{ $historia->presion_arterial ?? '-' }} mmHg
+                        <div class="value">{{ $historia->presion_arterial ?? '-' }}</div>
+                        <div class="label">Presión Arterial (mmHg)</div>
                     </div>
-                    <div class="mb-2">
+                    <div class="vital-stat">
                         <i class="fas fa-heart text-danger"></i>
-                        <strong>Pulso:</strong> {{ $historia->pulso ?? '-' }} lpm
+                        <div class="value">{{ $historia->pulso ?? '-' }}</div>
+                        <div class="label">Pulso (lpm)</div>
                     </div>
-                    <div class="mb-0">
+                    <div class="vital-stat">
                         <i class="fas fa-lungs text-info"></i>
-                        <strong>Frec. Respiratoria:</strong> {{ $historia->frecuencia_respiratoria ?? '-' }} rpm
+                        <div class="value">{{ $historia->frecuencia_respiratoria ?? '-' }}</div>
+                        <div class="label">Frecuencia Respiratoria (rpm)</div>
                     </div>
                 </div>
             </div>
 
-            {{-- Resumen Odontograma --}}
             @if($historia->tieneOdontograma())
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">🦷 RESUMEN ODONTOGRAMA</h5>
+            <div class="info-card">
+                <div class="card-header-custom card-header-primary">
+                    <i class="fas fa-tooth"></i>
+                    <span>RESUMEN ODONTOGRAMA</span>
                 </div>
                 <div class="card-body">
                     @php
-                        $cariados = $historia->odontograma->where('estado', 'caries')->count();
-                        $obturados = $historia->odontograma->where('estado', 'obturado')->count();
-                        $perdidos = $historia->odontograma->whereIn('estado', ['perdido_caries', 'perdido_otra'])->count();
+                    $cariados = $historia->odontograma->where('estado', 'caries')->count();
+                    $obturados = $historia->odontograma->where('estado', 'obturado')->count();
+                    $perdidos = $historia->odontograma->whereIn('estado', ['perdido_caries', 'perdido_otra'])->count();
                     @endphp
-                    
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>🔴 Cariados:</span>
-                        <strong>{{ $cariados }}</strong>
+
+                    <div class="odontograma-stat">
+                        <span><i class="fas fa-circle text-danger me-2"></i>Cariados</span>
+                        <strong class="text-danger">{{ $cariados }}</strong>
                     </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>🔵 Obturados:</span>
-                        <strong>{{ $obturados }}</strong>
+                    <div class="odontograma-stat">
+                        <span><i class="fas fa-circle text-primary me-2"></i>Obturados</span>
+                        <strong class="text-primary">{{ $obturados }}</strong>
                     </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>❌ Perdidos:</span>
-                        <strong>{{ $perdidos }}</strong>
+                    <div class="odontograma-stat">
+                        <span><i class="fas fa-circle text-dark me-2"></i>Perdidos</span>
+                        <strong class="text-dark">{{ $perdidos }}</strong>
                     </div>
-                    <hr>
-                    <div class="d-flex justify-content-between">
-                        <span class="fw-bold">Total CPO:</span>
-                        <strong class="text-primary">{{ $cariados + $obturados + $perdidos }}</strong>
+                    <div class="odontograma-stat">
+                        <span class="fw-bold text-primary">TOTAL CPO</span>
+                        <strong class="text-primary fs-3">{{ $cariados + $obturados + $perdidos }}</strong>
                     </div>
-                    
-                    <a href="{{ route('historia_clinica.odontograma', $historia->id) }}" class="btn btn-sm btn-primary w-100 mt-3">
-                        <i class="fas fa-tooth"></i> Ver Odontograma Completo
+
+                    <a href="{{ route('historia_clinica.odontograma', $historia->id) }}" class="btn btn-action btn-gradient-primary w-100 mt-3">
+                        <i class="fas fa-tooth me-2"></i> Ver Odontograma Completo
                     </a>
                 </div>
             </div>
             @endif
 
-            {{-- Exámenes Complementarios --}}
-            <div class="card mb-4">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">🔬 EXÁMENES COMPLEMENTARIOS</h5>
+            <div class="info-card">
+                <div class="card-header-custom card-header-info">
+                    <i class="fas fa-microscope"></i>
+                    <span>EXÁMENES</span>
                 </div>
                 <div class="card-body">
                     @if($historia->examenesComplementarios->count() > 0)
-                        @foreach($historia->examenesComplementarios as $examen)
-                        <div class="mb-2 pb-2 border-bottom">
-                            <div class="d-flex justify-content-between">
-                                <strong>{{ $examen->nombre_examen }}</strong>
-                                <span class="badge bg-{{ $examen->estado === 'completado' ? 'success' : 'warning' }}">
-                                    {{ ucfirst($examen->estado) }}
-                                </span>
-                            </div>
-                            <small class="text-muted">{{ $examen->fecha_solicitud->format('d/m/Y') }}</small>
+                    @foreach($historia->examenesComplementarios as $examen)
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                        <div class="flex-grow-1">
+                            <div class="fw-bold">{{ $examen->nombre_examen }}</div>
+                            <small class="text-muted"><i class="fas fa-calendar me-1"></i>{{ $examen->fecha_solicitud->format('d/m/Y') }}</small>
                         </div>
-                        @endforeach
+                        <span class="badge bg-{{ $examen->estado === 'completado' ? 'success' : 'warning' }}">
+                            {{ ucfirst($examen->estado) }}
+                        </span>
+                    </div>
+                    @endforeach
                     @else
-                        <p class="text-muted text-center mb-0 small">Sin exámenes</p>
+                    <p class="text-muted text-center mb-0 small">
+                        <i class="fas fa-info-circle me-2"></i>Sin exámenes registrados
+                    </p>
                     @endif
                 </div>
             </div>
 
-            {{-- Observaciones --}}
             @if($historia->observaciones)
-            <div class="card mb-4">
-                <div class="card-header bg-dark text-white">
-                    <h5 class="mb-0">📝 OBSERVACIONES</h5>
+            <div class="info-card">
+                <div class="card-header-custom card-header-dark">
+                    <i class="fas fa-comment-medical"></i>
+                    <span>OBSERVACIONES</span>
                 </div>
                 <div class="card-body">
                     <p class="mb-0">{{ $historia->observaciones }}</p>
@@ -384,12 +410,11 @@
 
 </div>
 
-{{-- Modal Nuevo Diagnóstico --}}
 <div class="modal fade" id="modalNuevoDiagnostico" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Agregar Diagnóstico</h5>
+                <h5 class="modal-title"><i class="fas fa-diagnoses me-2"></i>Agregar Diagnóstico</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form action="{{ route('historia_clinica.agregar_diagnostico', $historia->id) }}" method="POST">
@@ -409,19 +434,18 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-action btn-gradient-primary">Guardar</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-{{-- Modal Nuevo Tratamiento --}}
 <div class="modal fade" id="modalNuevoTratamiento" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Agregar Tratamiento</h5>
+                <h5 class="modal-title"><i class="fas fa-pills me-2"></i>Agregar Tratamiento</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form action="{{ route('historia_clinica.agregar_tratamiento', $historia->id) }}" method="POST">
@@ -442,7 +466,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-action btn-gradient-success">Guardar</button>
                 </div>
             </form>
         </div>
