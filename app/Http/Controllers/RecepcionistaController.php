@@ -93,7 +93,6 @@ class RecepcionistaController extends Controller
             return redirect()
                 ->route('secretaria.pacientes.index')
                 ->with('success', 'Paciente registrado correctamente');
-
         } catch (QueryException $e) {
             $errorMessage = $e->errorInfo[2] ?? 'Error desconocido';
 
@@ -102,7 +101,7 @@ class RecepcionistaController extends Controller
                     ->withErrors(['fecha_nacimiento' => 'El paciente debe tener al menos 1 año de edad.'])
                     ->withInput();
             }
-            
+
             if (str_contains($errorMessage, 'fecha de nacimiento no puede ser futura')) {
                 return back()
                     ->withErrors(['fecha_nacimiento' => 'La fecha no puede ser futura.'])
@@ -133,15 +132,40 @@ class RecepcionistaController extends Controller
             'direccion' => 'nullable|string',
         ]);
 
-        $paciente->update([
-            'telefono' => $request->telefono,
-            'email' => $request->email,
-            'direccion' => $request->direccion,
-        ]);
+        try {
+            $paciente->update([
+                'telefono' => $request->telefono,
+                'email' => $request->email,
+                'direccion' => $request->direccion,
+            ]);
 
-        return redirect()
-            ->route('secretaria.pacientes.index')
-            ->with('success', 'Paciente actualizado correctamente');
+            return redirect()
+                ->route('secretaria.pacientes.index')
+                ->with('success', 'Paciente actualizado correctamente');
+        } catch (QueryException $e) {
+            $errorMessage = $e->errorInfo[2] ?? 'Error desconocido';
+
+            // Validaciones de trigger
+            if (str_contains($errorMessage, 'no cumple la edad mínima')) {
+                return back()
+                    ->withErrors(['fecha_nacimiento' => 'El paciente debe tener al menos 1 año de edad.'])
+                    ->withInput();
+            }
+
+            if (str_contains($errorMessage, 'fecha de nacimiento no puede ser futura')) {
+                return back()
+                    ->withErrors(['fecha_nacimiento' => 'La fecha no puede ser futura.'])
+                    ->withInput();
+            }
+
+            if (str_contains($errorMessage, 'El correo electrónico') && str_contains($errorMessage, 'ya está registrado')) {
+                return back()
+                    ->withErrors(['email' => 'Este correo ya está registrado por otro paciente.'])
+                    ->withInput();
+            }
+
+            return back()->with('error', 'Error al actualizar: ' . $errorMessage)->withInput();
+        }
     }
 
     public function pacientesCitas(Paciente $paciente)
