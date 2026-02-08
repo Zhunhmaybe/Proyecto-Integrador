@@ -26,12 +26,14 @@ class DoctorController extends Controller
     //Perfil
     public function editProfile()
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         return view('doctor.edit', compact('user'));
     }
 
     public function updateProfile(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         $request->validate([
