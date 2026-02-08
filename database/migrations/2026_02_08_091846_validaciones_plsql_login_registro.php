@@ -7,34 +7,24 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // 1. FUNCIÓN PARA VALIDAR CONTRASEÑA ROBUSTA
-        // CORRECCIÓN: Se eliminó el símbolo '%' del mensaje de error final para evitar conflicto de sintaxis.
         DB::unprepared("
             CREATE OR REPLACE FUNCTION validar_fuerza_password(password_texto TEXT)
             RETURNS BOOLEAN AS $$
             BEGIN
-                -- Regla 1: Mínimo 10 caracteres
                 IF length(password_texto) < 10 THEN
                     RAISE EXCEPTION 'PL/pgSQL: La contraseña debe tener al menos 10 caracteres.';
                 END IF;
 
-                -- Regla 2: Al menos una Mayúscula
                 IF password_texto !~ '[A-Z]' THEN
                     RAISE EXCEPTION 'PL/pgSQL: La contraseña debe contener al menos una letra mayúscula.';
                 END IF;
-
-                -- Regla 3: Al menos una Minúscula
                 IF password_texto !~ '[a-z]' THEN
                     RAISE EXCEPTION 'PL/pgSQL: La contraseña debe contener al menos una letra minúscula.';
                 END IF;
 
-                -- Regla 4: Al menos un Número
                 IF password_texto !~ '[0-9]' THEN
                     RAISE EXCEPTION 'PL/pgSQL: La contraseña debe contener al menos un número.';
                 END IF;
-
-                -- Regla 5: Al menos un Carácter Especial
-                -- NOTA: Se quitó el símbolo '%' de los ejemplos visuales para evitar error de parámetros en RAISE
                 IF password_texto !~ '[^a-zA-Z0-9]' THEN
                     RAISE EXCEPTION 'PL/pgSQL: La contraseña debe contener al menos un carácter especial (Ej: @, #, $, &).';
                 END IF;
@@ -44,8 +34,6 @@ return new class extends Migration
             $$ LANGUAGE plpgsql;
         ");
 
-        // 2. FUNCIÓN PARA VALIDAR EMAIL
-        // Aquí SÍ usamos % porque estamos pasando NEW.email como parámetro al final
         DB::unprepared("
             CREATE OR REPLACE FUNCTION validar_formato_email_func()
             RETURNS TRIGGER AS $$
@@ -59,7 +47,6 @@ return new class extends Migration
             $$ LANGUAGE plpgsql;
         ");
 
-        // 3. TRIGGER PARA EMAIL
         DB::unprepared("
             DROP TRIGGER IF EXISTS trg_validar_email_usuarios ON usuarios;
             CREATE TRIGGER trg_validar_email_usuarios

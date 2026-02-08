@@ -10,6 +10,7 @@ use App\Models\Paciente;
 use App\Models\Citas;
 use App\Models\Especialidades;
 use App\Rules\ValidarCedulaEcuatoriana;
+use Illuminate\Database\QueryException;
 
 class RecepcionistaController extends Controller
 {
@@ -66,35 +67,62 @@ class RecepcionistaController extends Controller
     public function pacientesStore(Request $request)
     {
         $request->validate([
-            // Validación de cédula (la que ya tenías)
-            'cedula' => ['required', 'string', 'max:20', 'unique:pacientes,cedula', new ValidarCedulaEcuatoriana],
+            'cedula' => ['required', 'string', 'max:20', new ValidarCedulaEcuatoriana],
             'nombres' => 'required|string|max:100',
             'apellidos' => 'required|string|max:100',
-            'email' => 'nullable|email|unique:pacientes,email',
+            'email' => 'nullable|email',
             'telefono' => 'required|string|max:20',
-            'fecha_nacimiento' => 'required|date|before:-1 year',
+            'fecha_nacimiento' => 'required|date',
             'direccion' => 'nullable|string',
             'consentimiento_lopdp' => 'required|accepted',
-        ], [
-            'email.unique' => 'Este correo electrónico ya está registrado con otro paciente.',
-            'fecha_nacimiento.before' => 'El paciente debe tener al menos 1 año de edad.',
         ]);
 
-        Paciente::create([
-            'cedula' => $request->cedula,
-            'nombres' => $request->nombres,
-            'apellidos' => $request->apellidos,
-            'email' => $request->email,
-            'telefono' => $request->telefono,
-            'fecha_nacimiento' => $request->fecha_nacimiento,
-            'direccion' => $request->direccion,
-            'consentimiento_lopdp' => true,
-            'fecha_firma_lopdp' => now(),
-        ]);
+        try {
+            Paciente::create([
+                'cedula' => $request->cedula,
+                'nombres' => $request->nombres,
+                'apellidos' => $request->apellidos,
+                'email' => $request->email,
+                'telefono' => $request->telefono,
+                'fecha_nacimiento' => $request->fecha_nacimiento,
+                'direccion' => $request->direccion,
+                'consentimiento_lopdp' => true,
+                'fecha_firma_lopdp' => now(),
+            ]);
 
-        return redirect()
-            ->route('secretaria.pacientes.index')
-            ->with('success', 'Paciente registrado correctamente');
+            return redirect()
+                ->route('secretaria.pacientes.index')
+                ->with('success', 'Paciente registrado correctamente');
+
+        } catch (QueryException $e) {
+            $errorMessage = $e->errorInfo[2] ?? 'Error desconocido';
+
+            if (str_contains($errorMessage, 'no cumple la edad mínima')) {
+                return back()
+                    ->withErrors(['fecha_nacimiento' => 'El paciente debe tener al menos 1 año de edad.'])
+                    ->withInput();
+            }
+            
+            if (str_contains($errorMessage, 'fecha de nacimiento no puede ser futura')) {
+                return back()
+                    ->withErrors(['fecha_nacimiento' => 'La fecha no puede ser futura.'])
+                    ->withInput();
+            }
+
+            if (str_contains($errorMessage, 'El correo electrónico') && str_contains($errorMessage, 'ya está registrado')) {
+                return back()
+                    ->withErrors(['email' => 'Este correo ya está registrado en el sistema.'])
+                    ->withInput();
+            }
+
+            if (str_contains($errorMessage, 'pacientes_cedula_unique') || str_contains($errorMessage, 'cedula')) {
+                return back()
+                    ->withErrors(['cedula' => 'Esta cédula ya está registrada.'])
+                    ->withInput();
+            }
+
+            return back()->with('error', 'Error de base de datos: ' . $errorMessage)->withInput();
+        }
     }
 
     public function pacientesUpdate(Request $request, Paciente $paciente)
