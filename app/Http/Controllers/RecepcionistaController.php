@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Paciente;
 use App\Models\Citas;
 use App\Models\Especialidades;
+use App\Rules\ValidarCedulaEcuatoriana;
 
 class RecepcionistaController extends Controller
 {
@@ -65,14 +66,18 @@ class RecepcionistaController extends Controller
     public function pacientesStore(Request $request)
     {
         $request->validate([
-            'cedula' => 'required|string|max:20|unique:pacientes,cedula',
+            // Validación de cédula (la que ya tenías)
+            'cedula' => ['required', 'string', 'max:20', 'unique:pacientes,cedula', new ValidarCedulaEcuatoriana],
             'nombres' => 'required|string|max:100',
             'apellidos' => 'required|string|max:100',
-            'email' => 'nullable|email',
+            'email' => 'nullable|email|unique:pacientes,email',
             'telefono' => 'required|string|max:20',
-            'fecha_nacimiento' => 'required|date',
+            'fecha_nacimiento' => 'required|date|before:-1 year',
             'direccion' => 'nullable|string',
             'consentimiento_lopdp' => 'required|accepted',
+        ], [
+            'email.unique' => 'Este correo electrónico ya está registrado con otro paciente.',
+            'fecha_nacimiento.before' => 'El paciente debe tener al menos 1 año de edad.',
         ]);
 
         Paciente::create([
@@ -88,7 +93,7 @@ class RecepcionistaController extends Controller
         ]);
 
         return redirect()
-            ->route('recepcionista.pacientes.index')
+            ->route('secretaria.pacientes.index')
             ->with('success', 'Paciente registrado correctamente');
     }
 
@@ -171,7 +176,7 @@ class RecepcionistaController extends Controller
         ]);
 
         return redirect()
-            ->route('recepcionista.citas.create')
+            ->route('secretaria.citas.create')
             ->with('success', 'Cita agendada correctamente');
     }
 }
