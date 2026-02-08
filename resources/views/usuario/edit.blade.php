@@ -8,6 +8,7 @@
 
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     @vite(['resources/css/recepcionista/edit.css'])
 </head>
@@ -16,17 +17,19 @@
 
     <div class="wrapper">
 
-
         <aside class="sidebar">
             <div class="logo">
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('usuario.home') }}" class="active">👤 Mi Perfil</a>
+                        <a href="{{ route('usuario.home') }}"
+                class="nav-link {{ request()->routeIs('usuario.home') ? 'active' : '' }}">
+                <i class="fas fa-user-md"></i> Mi Perfil
+            </a>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
-                <small>{{ Auth::user()->nombre_rol }}</small>
+                <small>{{Auth::user()->nombre_rol}}</small>
 
                 <form method="POST" action="{{ route('logout') }}" class="mt-2">
                     @csrf
@@ -34,7 +37,6 @@
                 </form>
             </div>
         </aside>
-
 
         <main class="content">
             <h3 class="fw-bold mb-4">Editar Perfil</h3>

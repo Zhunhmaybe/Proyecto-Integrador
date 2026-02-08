@@ -1,0 +1,179 @@
+/* ===============================
+   GLOBAL
+================================= */
+body {
+    background: #f4f7fb;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ===============================
+   SIDEBAR (MISMO QUE ANTES)
+================================= */
+.sidebar {
+    width: 260px;
+    background: #0b4f79;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1000;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar .logo {
+    text-align: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar .logo img {
+    width: 110px;
+}
+
+.sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-link i {
+    font-size: 18px;
+    width: 22px;
+    text-align: center;
+}
+
+.sidebar .nav-link:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    transform: translateX(4px);
+}
+
+.sidebar .nav-link.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar .user {
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 15px;
+    font-size: 13px;
+}
+
+/* ===============================
+   CONTENT (MISMA SEPARACIÓN)
+================================= */
+.content {
+    margin-left: 260px;
+    padding: 30px;
+    width: 100%;
+}
+
+/* ===============================
+   PANEL PRINCIPAL
+================================= */
+.panel {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    padding: 25px;
+}
+
+/* ===============================
+   TARJETAS HISTORIA CLÍNICA
+================================= */
+.cita-card {
+    background: #f9fbff;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 18px;
+    border: 1px solid #e6edf5;
+    transition: all 0.25s ease;
+}
+
+.cita-card:hover {
+    background: #f1f6ff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* ===============================
+   BADGES ESTADO
+================================= */
+.badge-abierta {
+    background: #28a745;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.badge-cerrada {
+    background: #6c757d;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+/* ===============================
+   TEXTOS Y ESPACIADOS
+================================= */
+small.text-muted {
+    font-size: 12px;
+}
+
+.cita-card .row {
+    margin-top: 8px;
+}
+
+.cita-card .mt-2 {
+    margin-top: 10px !important;
+}
+
+.cita-card .mt-3 {
+    margin-top: 15px !important;
+}
+
+/* ===============================
+   BOTONES
+================================= */
+.btn-outline-secondary {
+    border-radius: 25px;
+    padding: 6px 18px;
+}
+
+/* ===============================
+   RESPONSIVE
+================================= */
+@media (max-width: 768px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 20px;
+    }
+}

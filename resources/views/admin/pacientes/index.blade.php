@@ -16,23 +16,49 @@
     <div class="wrapper">
 
 
+        
         <aside class="sidebar">
             <div class="logo">
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('admin.dashboard') }}" >🧑‍💼Mi perfil</a>
-            <a href="{{ route('admin.pacientes.index') }}" class="active">🧑‍🦳Pacientes</a>
-            <a href="{{ route('admin.doctores.index') }}" >🧑Doctores</a>
-            <a href="{{ route('admin.especialidades.index') }}" >⚕️Especialidades</a>
-            <a href="{{ route('admin.usuarios.index') }}" >👥Usuarios</a>
-            <a href="{{ route('admin.citas.create') }}">📅Citas</a>
-            <a href="{{ route('admin.roles.index') }}">🛡️Roles</a>
-            <a href="{{ route('profile.2fa') }}">🔐Seguridad 2FA</a>
+            <nav>
+                <a href="{{ route('admin.dashboard') }}" class="nav-link icon-profile">
+                    Mi perfil
+                </a>
+
+                <a href="{{ route('admin.pacientes.index') }}" class="nav-link icon-pacientes active">
+                    Pacientes
+                </a>
+
+                <a href="{{ route('admin.doctores.index') }}" class="nav-link icon-doctores">
+                    Doctores
+                </a>
+
+                <a href="{{ route('admin.especialidades.index') }}" class="nav-link icon-especialidades">
+                    Especialidades
+                </a>
+
+                <a href="{{ route('admin.usuarios.index') }}" class="nav-link icon-users">
+                    Usuarios
+                </a>
+
+                <a href="{{ route('admin.citas.create') }}" class="nav-link icon-citas">
+                    Citas
+                </a>
+
+                <a href="{{ route('admin.roles.index') }}" class="nav-link icon-roles">
+                    Roles
+                </a>
+
+                <a href="{{ route('profile.2fa') }}" class="nav-link icon-seguridad">
+                    Seguridad 2FA
+                </a>
+            </nav>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
-                <small>{{Auth::user()->nombre_rol}}</small>
+                <small>{{ Auth::user()->nombre_rol }}</small>
 
                 <form method="POST" action="{{ route('logout') }}" class="mt-2">
                     @csrf
@@ -40,7 +66,6 @@
                 </form>
             </div>
         </aside>
-
 
         <main class="content">
             <h4 class="fw-bold mb-3">Directorio de Pacientes</h4>

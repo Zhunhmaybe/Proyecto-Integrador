@@ -12,7 +12,7 @@ class UsuarioController extends Controller
     public function editProfile()
     {
         $user = Auth::user();
-        return view('recepcionista.edit', compact('user'));
+        return view('usuario.edit', compact('user'));
     }
 
     public function updateProfile(Request $request)
@@ -33,7 +33,7 @@ class UsuarioController extends Controller
         ]);
 
         return redirect()
-            ->route('recepcionista.home')
+            ->route('usuario.home')
             ->with('success', 'Perfil actualizado correctamente');
     }
 }

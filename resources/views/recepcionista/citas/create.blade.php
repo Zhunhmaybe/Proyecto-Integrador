@@ -8,116 +8,35 @@
 
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <style>
-        body {
-            background: #f4f7fb;
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-        }
-
-        .wrapper {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            width: 260px;
-            background: #0b4f79;
-            color: white;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar .logo {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .sidebar .logo img {
-            width: 110px;
-        }
-
-        .sidebar a {
-            color: #cfe6f5;
-            text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 6px;
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .sidebar a.active,
-        .sidebar a:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-        }
-
-        .sidebar .user {
-            margin-top: auto;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            padding-top: 15px;
-            font-size: 13px;
-        }
-
-        /* ===== CONTENT ===== */
-        .content {
-            flex: 1;
-            padding: 30px 40px;
-        }
-
-        .panel {
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
-            padding: 30px;
-        }
-
-        .section-title {
-            font-weight: bold;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #e0b23f;
-            display: inline-block;
-            padding-bottom: 5px;
-        }
-
-        .btn-gold {
-            background: #e0b23f;
-            color: #fff;
-            border-radius: 25px;
-            border: none;
-            padding: 10px 35px;
-        }
-
-        .btn-gold:hover {
-            background: #c89b2d;
-        }
-
-        input,
-        textarea,
-        select {
-            border-radius: 10px !important;
-        }
-    </style>
+    @vite(['resources/css/recepcionista/citas/create.css'])
 </head>
 
 <body>
 
     <div class="wrapper">
 
-
         <aside class="sidebar">
             <div class="logo">
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
-
-            <a href="{{ route('recepcionista.home') }}">👤 Mi Perfil</a>
-            <a href="{{ route('secretaria.citas.index') }}" class="active">📅 Citas</a>
-            <a href="{{ route('secretaria.pacientes.index') }}">👥 Pacientes</a>
-            <a href="{{ route('profile.2fa') }}">🔐 Seguridad 2FA</a>
+            <a href="{{ route('recepcionista.home') }}"
+                class="nav-link {{ request()->routeIs('recepcionista.home') ? 'active' : '' }}">
+                <i class="fas fa-user-md"></i> Mi Perfil
+            </a>
+            <a href="{{ route('secretaria.citas.index') }}"
+                class="nav-link {{ request()->routeIs('recpcionista.citas.*') ? 'active' : '' }}">
+                <i class="fas fa-calendar-alt"></i> Citas
+            </a>
+            <a href="{{ route('secretaria.pacientes.index') }}"
+                class="nav-link {{ request()->routeIs('secretaria.pacientes.*') ? 'active' : '' }}">
+                <i class="fas fa-users"></i> Pacientes
+            </a>
+            <a href="{{ route('profile.2fa') }}"
+                class="nav-link {{ request()->routeIs('profile.2fa') ? 'active' : '' }}">
+                <i class="fas fa-shield-alt"></i> Seguridad 2FA
+            </a>
 
 
             <div class="user">
@@ -130,7 +49,6 @@
                 </form>
             </div>
         </aside>
-
 
         <main class="content">
 
@@ -210,7 +128,8 @@
 
                             <div class="mt-3">
                                 <label>Teléfono</label>
-                                <input class="form-control" value="{{ optional($paciente ?? null)->telefono }}" disabled>
+                                <input class="form-control" value="{{ optional($paciente ?? null)->telefono }}"
+                                    disabled>
                             </div>
 
                             <div class="mt-3">

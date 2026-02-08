@@ -373,7 +373,7 @@ class DoctorController extends Controller
             'email' => $request->email,
             'tel' => $request->tel,
             'password' => Hash::make($request->password),
-            'rol' => 20, // 👈 DOCTOR
+            'rol' => 0, // 👈 DOCTOR
             'estado' => 1,
             'two_factor_enabled' => false,
         ]);

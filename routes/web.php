@@ -14,7 +14,7 @@ use App\Http\Controllers\RecepcionistaController;
 use App\Http\Controllers\Auditor\AuditorDashboardController;
 use App\Http\Controllers\Auditor\AuditorController;
 use App\Http\Controllers\Historial\HistoriaClinicaController;
-
+use App\Http\Controllers\UsuarioController;
 
 Route::get('/', function () {
     return redirect()->route('inicial');
@@ -90,11 +90,12 @@ Route::middleware(['auth', 'role:0'])->group(function () {
     })->name('doctor.dashboard');
 
     //Perfil
+    
     Route::get('/perfil/Doctor/editar', [DoctorController::class, 'editProfile'])
-        ->name('perfil.edit');
+        ->name('doctor.perfil.edit');
 
     Route::put('/perfil/Doctoractualizar', [DoctorController::class, 'updateProfile'])
-        ->name('perfil.update');
+        ->name('doctor.perfil.update');
 
     //Pacientes
     Route::get('/doctor/pacientes', [DoctorController::class, 'pacientesIndex'])
@@ -343,10 +344,10 @@ Route::middleware(['auth', 'role:4'])->group(function () {
     })->name('usuario.home');
 
     //Perfil
-    Route::get('/perfil/Usuario/editar', [RecepcionistaController::class, 'editProfile'])
+    Route::get('/perfil/Usuario/editar', [UsuarioController::class, 'editProfile'])
         ->name('usuario.edit');
 
-    Route::put('/perfil/Usuario/actualizar', [RecepcionistaController::class, 'updateProfile'])
+    Route::put('/perfil/Usuario/actualizar', [UsuarioController::class, 'updateProfile'])
         ->name('perfil.update');
 });
 

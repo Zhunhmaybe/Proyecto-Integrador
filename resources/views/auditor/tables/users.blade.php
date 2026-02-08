@@ -21,7 +21,7 @@
             </div>
 
             <nav>
-                <a href="{{ route('auditor.dashboard') }}" class="nav-link icon-profile">Mi perfil</a>
+                <a href="{{ route('auditor.dashboard') }}" class="nav-link icon-profile">Mi Perfil</a>
                 <a href="{{ route('auditor.logs.index') }}" class="nav-link icon-logs">Logs</a>
                 <a href="{{ route('auditor.tables.citas') }}" class="nav-link icon-citas">Citas</a>
                 <a href="{{ route('auditor.tables.pacientes') }}" class="nav-link icon-pacientes">Pacientes</a>

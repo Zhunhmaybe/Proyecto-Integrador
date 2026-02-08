@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     @vite(['resources/css/recepcionista/paciente/citas.css'])
 </head>
@@ -20,10 +21,23 @@
             <div class="logo">
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
+            <a href="{{ route('recepcionista.home') }}"
+                class="nav-link {{ request()->routeIs('recepcionista.home') ? 'active' : '' }}">
+                <i class="fas fa-user-md"></i> Mi Perfil
+            </a>
+            <a href="{{ route('secretaria.citas.index') }}"
+                class="nav-link {{ request()->routeIs('recpcionista.citas.*') ? 'active' : '' }}">
+                <i class="fas fa-calendar-alt"></i> Citas
+            </a>
+            <a href="{{ route('secretaria.pacientes.index') }}"
+                class="nav-link {{ request()->routeIs('secretaria.pacientes.*') ? 'active' : '' }}">
+                <i class="fas fa-users"></i> Pacientes
+            </a>
+            <a href="{{ route('profile.2fa') }}"
+                class="nav-link {{ request()->routeIs('profile.2fa') ? 'active' : '' }}">
+                <i class="fas fa-shield-alt"></i> Seguridad 2FA
+            </a>
 
-            <a href="{{ route('recepcionista.home') }}">👤 Mi Perfil</a>
-            <a href="{{ route('secretaria.citas.index') }}">📅 Citas</a>
-            <a href="{{ route('secretaria.pacientes.index') }}" class="active">👥 Pacientes</a>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>

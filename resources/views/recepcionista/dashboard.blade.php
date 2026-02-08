@@ -8,8 +8,9 @@
 
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    @vite(['resources/css/home.css'])
+    @vite(['resources/css/recepcionista/home.css'])
 </head>
 
 <body>
@@ -21,16 +22,27 @@
             <div class="logo">
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
-
-            <a href="{{ route('recepcionista.home') }}" class="active">👤 Mi Perfil</a>
-            <a href="{{ route('secretaria.citas.index') }}">📅 Citas</a>
-            <a href="{{ route('secretaria.pacientes.index') }}">👥 Pacientes</a>
-            <a href="{{ route('profile.2fa') }}">🔐 Seguridad 2FA</a>
+            <a href="{{ route('recepcionista.home') }}"
+                class="nav-link {{ request()->routeIs('recepcionista.home') ? 'active' : '' }}">
+                <i class="fas fa-user-md"></i> Mi Perfil
+            </a>
+            <a href="{{ route('secretaria.citas.index') }}"
+                class="nav-link {{ request()->routeIs('recpcionista.citas.*') ? 'active' : '' }}">
+                <i class="fas fa-calendar-alt"></i> Citas
+            </a>
+            <a href="{{ route('secretaria.pacientes.index') }}"
+                class="nav-link {{ request()->routeIs('secretaria.pacientes.*') ? 'active' : '' }}">
+                <i class="fas fa-users"></i> Pacientes
+            </a>
+            <a href="{{ route('profile.2fa') }}"
+                class="nav-link {{ request()->routeIs('profile.2fa') ? 'active' : '' }}">
+                <i class="fas fa-shield-alt"></i> Seguridad 2FA
+            </a>
 
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
-                <small>{{Auth::user()->nombre_rol}}</small>
+                <small>{{ Auth::user()->nombre_rol }}</small>
 
                 <form method="POST" action="{{ route('logout') }}" class="mt-2">
                     @csrf
@@ -49,7 +61,7 @@
                     <div class="avatar"></div>
                     <div>
                         <h4>{{ Auth::user()->nombre }}</h4>
-                        <small>{{Auth::user()->nombre_rol}}</small>
+                        <small>{{ Auth::user()->nombre_rol }}</small>
                     </div>
                 </div>
 
@@ -71,8 +83,8 @@
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <label class="form-label">Teléfono:</label>
-                            <input type="text" class="form-control" value="{{ Auth::user()->tel ?? 'No registrado' }}"
-                                disabled>
+                            <input type="text" class="form-control"
+                                value="{{ Auth::user()->tel ?? 'No registrado' }}" disabled>
                         </div>
 
                         <div class="col-md-6">
@@ -90,9 +102,7 @@
                             </a>
 
 
-                            <a href="{{ route('profile.2fa') }}"
-                                class="btn-2fa"
-                                title="Seguridad 2FA">
+                            <a href="{{ route('profile.2fa') }}" class="btn-2fa" title="Seguridad 2FA">
                                 🔐2FA
                             </a>
                         </div>
@@ -106,33 +116,31 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @if (session('session_expired'))
-    <div class="modal fade show session-modal-overlay" id="sessionExpiredModal"
-        tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+        <div class="modal fade show session-modal-overlay" id="sessionExpiredModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
 
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title">Sesión cerrada</h5>
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">Sesión cerrada</h5>
+                    </div>
+
+                    <div class="modal-body text-center">
+                        <p>
+                            Tu sesión se cerró automáticamente por
+                            <strong>inactividad de 2 minutos</strong>.
+                        </p>
+                    </div>
+
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-danger"
+                            onclick="window.location.href='{{ route('login') }}'">
+                            Aceptar
+                        </button>
+                    </div>
+
                 </div>
-
-                <div class="modal-body text-center">
-                    <p>
-                        Tu sesión se cerró automáticamente por
-                        <strong>inactividad de 2 minutos</strong>.
-                    </p>
-                </div>
-
-                <div class="modal-footer justify-content-center">
-                    <button type="button"
-                        class="btn btn-danger"
-                        onclick="window.location.href='{{ route('login') }}'">
-                        Aceptar
-                    </button>
-                </div>
-
             </div>
         </div>
-    </div>
     @endif
 
 </body>
