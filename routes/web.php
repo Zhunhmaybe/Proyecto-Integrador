@@ -336,7 +336,7 @@ Route::middleware(['auth', 'role:3'])->group(function () {
     Route::put('/secretaria/citas/{cita}', [RecepcionistaController::class, 'citasUpdate'])
         ->name('secretaria.citas.update');
 
-    Route::get('/secretaria /citas/create', [RecepcionistaController::class, 'Admincreate'])
+    Route::get('/secretaria/citas/create', [RecepcionistaController::class, 'Admincreate'])
         ->name('secretaria.citas.create');
     //Roles
 

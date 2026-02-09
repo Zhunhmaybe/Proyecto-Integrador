@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Editar Doctor</title>
@@ -15,131 +16,110 @@
 
 <div class="wrapper">
 
-        <aside class="sidebar">
-            <div class="logo">
-                <img src="/images/logo-danny.png" alt="Logo Danny">
-            </div>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="/images/logo-danny.png" alt="Logo Danny">
+        </div>
 
-            <nav>
-                <a href="{{ route('admin.dashboard') }}" class="nav-link icon-profile ">
-                    Mi perfil
-                </a>
+        <nav>
+            <a href="{{ route('admin.dashboard') }}" class="nav-link icon-profile">Mi perfil</a>
+            <a href="{{ route('admin.pacientes.index') }}" class="nav-link icon-pacientes">Pacientes</a>
+            <a href="{{ route('admin.doctores.index') }}" class="nav-link icon-doctores active">Doctores</a>
+            <a href="{{ route('admin.especialidades.index') }}" class="nav-link icon-especialidades">Especialidades</a>
+            <a href="{{ route('admin.usuarios.index') }}" class="nav-link icon-users">Usuarios</a>
+            <a href="{{ route('admin.citas.create') }}" class="nav-link icon-citas">Citas</a>
+            <a href="{{ route('admin.roles.index') }}" class="nav-link icon-roles">Roles</a>
+            <a href="{{ route('profile.2fa') }}" class="nav-link icon-seguridad">Seguridad 2FA</a>
+        </nav>
 
-                <a href="{{ route('admin.pacientes.index') }}" class="nav-link icon-pacientes">
-                    Pacientes
-                </a>
+        <div class="user">
+            <strong>{{ Auth::user()->nombre }}</strong><br>
+            <small>{{ Auth::user()->nombre_rol }}</small>
 
-                <a href="{{ route('admin.doctores.index') }}" class="nav-link icon-doctores active">
-                    Doctores
-                </a>
-
-                <a href="{{ route('admin.especialidades.index') }}" class="nav-link icon-especialidades">
-                    Especialidades
-                </a>
-
-                <a href="{{ route('admin.usuarios.index') }}" class="nav-link icon-users">
-                    Usuarios
-                </a>
-
-                <a href="{{ route('admin.citas.create') }}" class="nav-link icon-citas">
-                    Citas
-                </a>
-
-                <a href="{{ route('admin.roles.index') }}" class="nav-link icon-roles">
-                    Roles
-                </a>
-
-                <a href="{{ route('profile.2fa') }}" class="nav-link icon-seguridad">
-                    Seguridad 2FA
-                </a>
-            </nav>
-
-            <div class="user">
-                <strong>{{ Auth::user()->nombre }}</strong><br>
-                <small>{{ Auth::user()->nombre_rol }}</small>
-
-                <form method="POST" action="{{ route('logout') }}" class="mt-2">
-                    @csrf
-                    <button class="btn btn-sm btn-light w-100">Cerrar Sesión</button>
-                </form>
-            </div>
-        </aside>
+            <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                @csrf
+                <button class="btn btn-sm btn-light w-100">Cerrar Sesión</button>
+            </form>
+        </div>
+    </aside>
 
     <!-- CONTENT -->
     <main class="content">
 
-        <div class="panel">
+        <div class="profile-card">
 
-            <h4 class="section-title">✏️ Editar Doctor</h4>
-
-            {{-- ERRORES --}}
-            @if ($errors->any())
-                <div class="alert alert-danger mt-3">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+            <!-- HEADER -->
+            <div class="profile-header">
+                <div>
+                    <h4>✏️ Editar Doctor</h4>
+                    <small>Actualizar información del doctor</small>
                 </div>
-            @endif
+            </div>
 
-            <form method="POST" action="{{ route('admin.doctores.update', $doctor->id) }}" class="mt-4">
-                @csrf
-                @method('PUT')
+            <!-- BODY -->
+            <div class="profile-body">
 
-                <div class="mb-3">
-                    <label class="form-label">Nombre</label>
-                    <input
-                        name="nombre"
-                        class="form-control"
-                        value="{{ $doctor->nombre }}"
-                        required>
-                </div>
+                {{-- ERRORES --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input
-                        type="email"
-                        name="email"
-                        class="form-control"
-                        value="{{ $doctor->email }}"
-                        required>
-                </div>
+                <form method="POST" action="{{ route('admin.doctores.update', $doctor->id) }}">
+                    @csrf
+                    @method('PUT')
 
-                <div class="mb-3">
-                    <label class="form-label">Teléfono</label>
-                    <input
-                        type="text"
-                        name="tel"
-                        class="form-control"
-                        value="{{ $doctor->tel }}"
-                        required
-                        maxlength="10"
-                        inputmode="numeric"
-                        pattern="[0-9]{10}"
-                        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                        title="Debe contener exactamente 10 números">
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input name="nombre" class="form-control"
+                               value="{{ $doctor->nombre }}" required>
+                    </div>
 
-                <div class="mb-4">
-                    <label class="form-label">Estado</label>
-                    <select name="estado" class="form-select">
-                        <option value="1" {{ $doctor->estado ? 'selected' : '' }}>Activo</option>
-                        <option value="0" {{ !$doctor->estado ? 'selected' : '' }}>Inactivo</option>
-                    </select>
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control"
+                               value="{{ $doctor->email }}" required>
+                    </div>
 
-                <div class="text-end">
-                    <a href="{{ route('admin.doctores.index') }}" class="btn btn-light">
-                        Volver
-                    </a>
-                    <button class="btn btn-gold ms-2">
-                        Guardar Cambios
-                    </button>
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label">Teléfono</label>
+                        <input type="text" name="tel" class="form-control"
+                               value="{{ $doctor->tel }}"
+                               maxlength="10"
+                               inputmode="numeric"
+                               pattern="[0-9]{10}"
+                               oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+                               required>
+                    </div>
 
-            </form>
+                    <div class="mb-4">
+                        <label class="form-label">Estado</label>
+                        <select name="estado" class="form-select">
+                            <option value="1" {{ $doctor->estado ? 'selected' : '' }}>Activo</option>
+                            <option value="0" {{ !$doctor->estado ? 'selected' : '' }}>Inactivo</option>
+                        </select>
+                    </div>
 
+                    <!-- BOTONES -->
+                    <div class="action-buttons">
+                        <a href="{{ route('admin.doctores.index') }}" class="btn btn-light">
+                            Volver
+                        </a>
+
+                        <button type="submit" class="btn-edit">
+                            Guardar Cambios
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
         </div>
 
     </main>

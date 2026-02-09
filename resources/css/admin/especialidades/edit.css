@@ -4,12 +4,13 @@
             margin: 0;
         }
 
+        /* ===== LAYOUT ===== */
         .wrapper {
             display: flex;
             min-height: 100vh;
         }
 
-        /* SIDEBAR */
+        /* ===== SIDEBAR ===== */
         .sidebar {
             width: 260px;
             background: #0b4f79;
@@ -51,32 +52,60 @@
             font-size: 13px;
         }
 
-        /* CONTENT */
+        /* ===== CONTENT ===== */
         .content {
             flex: 1;
-            padding: 40px;
+            padding: 30px 40px;
+
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            /* 🔑 evita que crezca vertical */
+            flex-direction: column;
+            align-items: center;
         }
 
 
-        /* CARD */
+        /* ===== PROFILE CARD ===== */
         .profile-card {
             background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, .12);
-            max-width: 520px;
-            /* 🔽 antes 700px */
-            width: 100%;
+            border-radius: 14px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
             overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            /* 👈 ocupa el ancho permitido */
         }
+
 
         .profile-header {
             background: #b7d8ee;
-            padding: 16px 22px;
-            /* 🔽 menos alto */
+            padding: 22px 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #ddd;
+            border: 3px solid #f2b705;
+            position: relative;
+        }
+
+        .avatar::after {
+            content: "+";
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #0b4f79;
+            color: #fff;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .profile-header h4 {
@@ -85,31 +114,153 @@
         }
 
         .profile-header small {
-            font-size: 13px;
-            
-            
+            color: #555;
         }
 
         .profile-body {
-            padding: 22px;
-            /* 🔽 antes 30px */
-            font-weight: bold;
+            padding: 30px;
         }
 
+        .profile-body h5 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .btn-edit {
+            background: #e0b23f;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 40px;
+            font-size: 14px;
+        }
+
+        .btn-edit:hover {
+            background: #c89b2d;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            /* espacio entre Editar y 2FA */
+            margin-top: 10px;
+        }
+
+        .btn-2fa {
+            background: #e0b23f;
+            color: white;
+            border-radius: 20px;
+            width: 120px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-2fa:hover {
+            background: #c89b2d;
+            color: #fff;
+        }
+
+        .session-modal-overlay {
+            display: block;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        body {
+            background: #f4f7fb;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* CONTENEDOR */
+        .page-card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .12);
+            overflow: hidden;
+        }
+
+        /* HEADER AZUL */
+        .page-header {
+            background: #bfe0f4;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-header h3 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .page-header small {
+            color: #555;
+        }
+
+        /* BOTÓN DORADO */
         .btn-gold {
             background: #e0b23f;
             color: #fff;
-            border-radius: 25px;
             border: none;
-            padding: 10px 35px;
+            border-radius: 25px;
+            padding: 10px 26px;
+            font-weight: 600;
         }
 
         .btn-gold:hover {
             background: #c89b2d;
         }
 
-        input {
-            border-radius: 8px !important;
+        /* TABLA */
+        .table thead th {
+            border-bottom: 2px solid #ddd;
+            font-weight: 600;
+        }
+
+        .table tbody tr:hover {
+            background: #f8fbff;
+        }
+
+        /* BADGES */
+        .badge-activo {
+            background: #1e8e3e;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .badge-inactivo {
+            background: #d93025;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        /* FORM CARD */
+        .form-card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, .12);
+            padding: 30px;
+            max-width: 600px;
+            margin: auto;
         }
 
         .icon-profile::before {
@@ -203,21 +354,72 @@
             background: rgba(255, 255, 255, 0.2);
             color: #fff;
         }
+/* ======================================
+   EDITAR ESPECIALIDAD – FORMULARIO
+====================================== */
 
-        .form-control {
-            padding: 8px 12px;
-            font-size: 14px;
-        }
+/* Header superior */
+.header-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-        .form-label {
-            font-size: 13px;
-            margin-bottom: 4px;
-        }
+.header-box h4 {
+    font-size: 20px;
+}
 
-        .btn-gold {
-            padding: 8px 28px;
-            font-size: 14px;
-        }
-        
+.header-box small {
+    font-size: 13px;
+}
 
-        
+/* Panel del formulario */
+.content .panel {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+/* Limitar ancho y centrar */
+.content .panel[style*="max-width"] {
+    margin-top: 20px;
+}
+
+/* Labels */
+.form-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Inputs */
+.form-control {
+    border-radius: 10px;
+    font-size: 14px;
+    padding: 10px 12px;
+}
+
+/* Focus más elegante */
+.form-control:focus {
+    border-color: #cfa44a;
+    box-shadow: 0 0 0 2px rgba(207, 164, 74, 0.15);
+}
+
+/* Botones */
+.btn-outline-secondary {
+    border-radius: 20px;
+    font-size: 14px;
+    padding: 6px 18px;
+}
+
+.btn-gold {
+    border-radius: 20px;
+    font-size: 14px;
+    padding: 6px 22px;
+}
+
+/* Espaciado botones */
+.d-flex.gap-3 {
+    gap: 12px !important;
+}

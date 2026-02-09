@@ -11,6 +11,9 @@ use App\Models\Paciente;
 use App\Models\Citas;
 use App\Models\Especialidades;
 use App\Models\HistoriaClinica;
+use App\Rules\ValidarCedulaEcuatoriana;
+use Illuminate\Database\QueryException;
+
 
 
 class DoctorController extends Controller
@@ -85,7 +88,7 @@ class DoctorController extends Controller
     public function pacientesStore(Request $request)
     {
         $request->validate([
-            'cedula' => 'required|string|max:20|unique:pacientes,cedula',
+            'cedula' => ['required', 'string', 'max:20', new ValidarCedulaEcuatoriana],
             'nombres' => 'required|string|max:100',
             'apellidos' => 'required|string|max:100',
             'email' => 'nullable|email',
@@ -95,60 +98,108 @@ class DoctorController extends Controller
             'consentimiento_lopdp' => 'required|accepted',
         ]);
 
-        $paciente = Paciente::create([
-            'cedula' => $request->cedula,
-            'nombres' => $request->nombres,
-            'apellidos' => $request->apellidos,
-            'email' => $request->email,
-            'telefono' => $request->telefono,
-            'fecha_nacimiento' => $request->fecha_nacimiento,
-            'direccion' => $request->direccion,
-            'consentimiento_lopdp' => true,
-            'fecha_firma_lopdp' => now(),
-        ]);
+        try {
+            $paciente = Paciente::create([
+                'cedula' => $request->cedula,
+                'nombres' => $request->nombres,
+                'apellidos' => $request->apellidos,
+                'email' => $request->email,
+                'telefono' => $request->telefono,
+                'fecha_nacimiento' => $request->fecha_nacimiento,
+                'direccion' => $request->direccion,
+                'consentimiento_lopdp' => true,
+                'fecha_firma_lopdp' => now(),
+            ]);
 
-        // ✅ AUDITORÍA
-        auditar(
-            'INSERT',
-            'pacientes',
-            $paciente->id,
-            null,
-            $paciente->toArray()
-        );
+            // ✅ AUDITORÍA
+            auditar(
+                'INSERT',
+                'pacientes',
+                $paciente->id,
+                null,
+                $paciente->toArray()
+            );
 
+            return redirect()
+                ->route('doctor.pacientes.index')
+                ->with('success', 'Paciente registrado correctamente');
+        } catch (QueryException $e) {
+            $errorMessage = $e->errorInfo[2] ?? 'Error desconocido';
 
-        return redirect()
-            ->route('doctor.pacientes.index')
-            ->with('success', 'Paciente registrado correctamente');
+            if (str_contains($errorMessage, 'no cumple la edad mínima')) {
+                return back()
+                    ->withErrors(['fecha_nacimiento' => 'El paciente debe tener al menos 1 año de edad.'])
+                    ->withInput();
+            }
+
+            if (str_contains($errorMessage, 'fecha de nacimiento no puede ser futura')) {
+                return back()
+                    ->withErrors(['fecha_nacimiento' => 'La fecha no puede ser futura.'])
+                    ->withInput();
+            }
+
+            if (str_contains($errorMessage, 'El correo electrónico') && str_contains($errorMessage, 'ya está registrado')) {
+                return back()
+                    ->withErrors(['email' => 'Este correo ya está registrado en el sistema.'])
+                    ->withInput();
+            }
+
+            if (str_contains($errorMessage, 'pacientes_cedula_unique') || str_contains($errorMessage, 'cedula')) {
+                return back()
+                    ->withErrors(['cedula' => 'Esta cédula ya está registrada.'])
+                    ->withInput();
+            }
+
+            return back()
+                ->with('error', 'Error de base de datos: ' . $errorMessage)
+                ->withInput();
+        }
     }
 
     public function pacientesUpdate(Request $request, Paciente $paciente)
     {
         $antes = $paciente->toArray();
+
         $request->validate([
             'telefono' => 'required|string|max:10',
             'email' => 'nullable|email',
             'direccion' => 'nullable|string',
         ]);
 
-        $paciente->update([
-            'telefono' => $request->telefono,
-            'email' => $request->email,
-            'direccion' => $request->direccion,
-        ]);
+        try {
+            $paciente->update([
+                'telefono' => $request->telefono,
+                'email' => $request->email,
+                'direccion' => $request->direccion,
+            ]);
 
-        auditar(
-            'UPDATE',
-            'pacientes',
-            $paciente->id,
-            $antes,
-            $paciente->fresh()->toArray()
-        );
+            // ✅ AUDITORÍA
+            auditar(
+                'UPDATE',
+                'pacientes',
+                $paciente->id,
+                $antes,
+                $paciente->fresh()->toArray()
+            );
 
-        return redirect()
-            ->route('doctor.pacientes.index')
-            ->with('success', 'Paciente actualizado correctamente');
+            return redirect()
+                ->route('doctor.pacientes.index')
+                ->with('success', 'Paciente actualizado correctamente');
+        } catch (QueryException $e) {
+            $errorMessage = $e->errorInfo[2] ?? 'Error desconocido';
+
+            if (str_contains($errorMessage, 'El correo electrónico') && str_contains($errorMessage, 'ya está registrado')) {
+                return back()
+                    ->withErrors(['email' => 'Este correo ya está registrado por otro paciente.'])
+                    ->withInput();
+            }
+
+            return back()
+                ->with('error', 'Error al actualizar: ' . $errorMessage)
+                ->withInput();
+        }
     }
+
 
     public function pacientesCitas(Paciente $paciente)
     {

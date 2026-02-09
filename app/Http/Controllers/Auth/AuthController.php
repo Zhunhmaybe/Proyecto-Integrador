@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 
 
 class AuthController extends Controller
@@ -239,59 +241,51 @@ class AuthController extends Controller
         }
     }
 
-    // Mostrar formulario de registro
     public function showRegisterForm()
     {
         return view('auth.register');
     }
 
-    // Procesar registro
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string|max:100',
-            'tel' => 'nullable|string|max:20',
-            'email' => 'required|string|email|max:100|unique:usuarios,email',
-            'password' => 'required|string|min:6|confirmed',
-            // 'rol' ya no se valida porque se asigna automáticamente
-        ], [
-            'nombre.required' => 'El nombre es obligatorio',
-            'email.required' => 'El email es obligatorio',
-            'email.email' => 'Debe ser un email válido',
-            'email.unique' => 'Este email ya está registrado',
-            'password.required' => 'La contraseña es obligatoria',
-            'password.min' => 'La contraseña debe tener al menos 6 caracteres',
-            'password.confirmed' => 'Las contraseñas no coinciden',
+            'email' => 'required|string|unique:usuarios', 
+            'password' => 'required|string|confirmed', 
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $user = User::create([
-            'nombre' => $request->nombre,
-            'tel' => $request->tel,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'rol' => 4, // FORZADO A Usuario
-            'estado' => 1,
-            'two_factor_enabled' => false, // 2FA deshabilitado por defecto
-        ]);
-
-        Auth::login($user);
-
-        // Enviar notificación de registro
         try {
-            $loginTime = Carbon::now()->format('d/m/Y H:i:s');
-            $ipAddress = $request->ip();
-            $user->notify(new LoginNotification($loginTime, $ipAddress));
-        } catch (\Exception $e) {
-            Log::error('Error al enviar notificación de registro: ' . $e->getMessage());
-        }
+            DB::select("SELECT validar_fuerza_password(?)", [$request->password]);
+            $user = User::create([
+                'nombre' => $request->nombre,
+                'tel' => $request->tel,
+                'email' => $request->email, 
+                'password' => Hash::make($request->password),   
+                'rol' => 4, 
+                'estado' => 1
+            ]);
 
-        return redirect('/home'); // Nuevo usuario va siempre a home (rol 3)
+            Auth::login($user);
+            return redirect()->route('home');
+
+        } catch (QueryException $e) {
+            $errorMessage = $e->errorInfo[2] ?? 'Error en base de datos';
+            if (str_contains($errorMessage, 'PL/pgSQL: La contraseña')) {
+                $msg = explode('PL/pgSQL:', $errorMessage)[1] ?? 'Contraseña inválida';
+                $msg = explode("\n", $msg)[0]; 
+                return back()->withErrors(['password' => trim($msg)])->withInput();
+            }
+            if (str_contains($errorMessage, 'PL/pgSQL: El correo')) {
+                $msg = explode('PL/pgSQL:', $errorMessage)[1] ?? 'Email inválido';
+                $msg = explode("\n", $msg)[0];
+                return back()->withErrors(['email' => trim($msg)])->withInput();
+            }
+            return back()->withErrors(['main' => 'Error del sistema: ' . $errorMessage])->withInput();
+        }
     }
 
     // Cerrar sesión
