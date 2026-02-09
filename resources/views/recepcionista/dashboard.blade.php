@@ -97,7 +97,7 @@
                     <div class="text-center">
 
                         <div class="action-buttons">
-                            <a href="{{ route('perfil.edit') }}" class="btn btn-gold">
+                            <a href="{{ route('recepcionista.perfil.edit') }}" class="btn btn-gold">
                                 Editar
                             </a>
 

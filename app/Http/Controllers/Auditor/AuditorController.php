@@ -48,6 +48,17 @@ class AuditorController extends Controller
             ->limit(5)
             ->get();
 
+
+        AuditLog::create([
+            'usuario_id' => auth()->id() ?? 1,
+            'accion' => 'TEST',
+            'tabla_afectada' => 'auditoria',
+            'registro_id' => 1,
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
+
+
         return view('auditor.dashboard', compact('stats', 'recentLogs', 'activityByAction', 'activityByTable'));
     }
 
@@ -265,7 +276,7 @@ class AuditorController extends Controller
 
         return view('auditor.tables.citas', compact(
             'citas',
-            'totalCitas',   
+            'totalCitas',
             'citasPendientes',
             'citasConfirmadas',
             'citasCanceladas'

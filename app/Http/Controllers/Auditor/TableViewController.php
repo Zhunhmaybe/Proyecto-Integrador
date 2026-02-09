@@ -6,45 +6,46 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Citas;
 use App\Models\Paciente;
+use App\Models\AuditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class TableViewController extends Controller
 {
     public function users(Request $request)
-{
-    $query = User::query();
+    {
+        $query = User::query();
 
-    // 🔎 Buscar
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('nombre', 'like', "%{$search}%")
-              ->orWhere('email', 'like', "%{$search}%");
-        });
+        // 🔎 Buscar
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nombre', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        // 🎯 Filtro por rol (IMPORTANTE: usar filled + !== null)
+        if ($request->has('rol') && $request->rol !== '') {
+            $query->where('rol', (int)$request->rol);
+        }
+
+        $users = $query->orderBy('created_at', 'desc')
+            ->paginate(20)
+            ->appends(request()->query());
+
+        // 📊 Estadísticas (según tus roles reales)
+        $stats = [
+            'total' => User::count(),
+            'doctor' => User::where('rol', 0)->count(),
+            'admin' => User::where('rol', 1)->count(),
+            'auditor' => User::where('rol', 2)->count(),
+            'recepcion' => User::where('rol', 3)->count(),
+            'usuario' => User::where('rol', 4)->count(),
+        ];
+
+        return view('auditor.tables.users', compact('users', 'stats'));
     }
-
-    // 🎯 Filtro por rol (IMPORTANTE: usar filled + !== null)
-    if ($request->has('rol') && $request->rol !== '') {
-        $query->where('rol', (int)$request->rol);
-    }
-
-    $users = $query->orderBy('created_at', 'desc')
-                   ->paginate(20)
-                   ->appends(request()->query());
-
-    // 📊 Estadísticas (según tus roles reales)
-    $stats = [
-        'total' => User::count(),
-        'doctor' => User::where('rol', 0)->count(),
-        'admin' => User::where('rol', 1)->count(),
-        'auditor' => User::where('rol', 2)->count(),
-        'recepcion' => User::where('rol', 3)->count(),
-        'usuario' => User::where('rol', 4)->count(),
-    ];
-
-    return view('auditor.tables.users', compact('users', 'stats'));
-}
 
     //Citas
     public function citas(Request $request)
@@ -143,5 +144,60 @@ class TableViewController extends Controller
         }
 
         return view('auditor.tables.custom_query', compact('results', 'error'));
+    }
+    public function index(Request $request)
+    {
+        $query = AuditLog::with('usuario');
+
+        // 🔎 Búsqueda general
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('id', $search)
+                    ->orWhere('ip_address', 'like', "%$search%")
+                    ->orWhere('tabla_afectada', 'like', "%$search%");
+            });
+        }
+
+        // 🎯 Filtros
+        if ($request->filled('accion')) {
+            $query->where('accion', $request->accion);
+        }
+
+        if ($request->filled('tabla')) {
+            $query->where('tabla_afectada', $request->tabla);
+        }
+
+        if ($request->filled('usuario_id')) {
+            $query->where('usuario_id', $request->usuario_id);
+        }
+
+        if ($request->filled('fecha_inicio')) {
+            $query->whereDate('created_at', '>=', $request->fecha_inicio);
+        }
+
+        if ($request->filled('fecha_fin')) {
+            $query->whereDate('created_at', '<=', $request->fecha_fin);
+        }
+
+        // 📄 Paginación
+        $logs = $query
+            ->orderBy('created_at', 'desc')
+            ->paginate(20)
+            ->appends($request->query());
+
+        // 🔽 Datos para filtros
+        $tablas = AuditLog::select('tabla_afectada')
+            ->whereNotNull('tabla_afectada')
+            ->distinct()
+            ->pluck('tabla_afectada');
+
+        $usuarios = User::orderBy('nombre')->get();
+
+        return view('auditor.logs.index', compact(
+            'logs',
+            'tablas',
+            'usuarios'
+        ));
     }
 }

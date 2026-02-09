@@ -32,6 +32,8 @@ class DoctorController extends Controller
     {
         $user = Auth::user();
 
+        $antes = $user->toArray(); // 🔴 ANTES
+
         $request->validate([
             'nombre' => 'required|string|max:100',
             'email'  => 'required|email|max:100|unique:usuarios,email,' . $user->id,
@@ -44,10 +46,20 @@ class DoctorController extends Controller
             'tel'    => $request->tel,
         ]);
 
+        // ✅ AUDITORÍA
+        auditar(
+            'UPDATE',
+            'usuarios',
+            $user->id,
+            $antes,
+            $user->fresh()->toArray()
+        );
+
         return redirect()
             ->route('doctor.dashboard')
             ->with('success', 'Perfil actualizado correctamente');
     }
+
 
     //Pacientes
     public function pacientesIndex(Request $request)
@@ -83,7 +95,7 @@ class DoctorController extends Controller
             'consentimiento_lopdp' => 'required|accepted',
         ]);
 
-        Paciente::create([
+        $paciente = Paciente::create([
             'cedula' => $request->cedula,
             'nombres' => $request->nombres,
             'apellidos' => $request->apellidos,
@@ -95,6 +107,16 @@ class DoctorController extends Controller
             'fecha_firma_lopdp' => now(),
         ]);
 
+        // ✅ AUDITORÍA
+        auditar(
+            'INSERT',
+            'pacientes',
+            $paciente->id,
+            null,
+            $paciente->toArray()
+        );
+
+
         return redirect()
             ->route('doctor.pacientes.index')
             ->with('success', 'Paciente registrado correctamente');
@@ -102,6 +124,7 @@ class DoctorController extends Controller
 
     public function pacientesUpdate(Request $request, Paciente $paciente)
     {
+        $antes = $paciente->toArray();
         $request->validate([
             'telefono' => 'required|string|max:10',
             'email' => 'nullable|email',
@@ -113,6 +136,14 @@ class DoctorController extends Controller
             'email' => $request->email,
             'direccion' => $request->direccion,
         ]);
+
+        auditar(
+            'UPDATE',
+            'pacientes',
+            $paciente->id,
+            $antes,
+            $paciente->fresh()->toArray()
+        );
 
         return redirect()
             ->route('doctor.pacientes.index')
@@ -176,6 +207,8 @@ class DoctorController extends Controller
             'motivo'          => 'nullable|string|max:255',
         ]);
 
+        $antes = $cita->toArray();
+
         $cita->update([
             'doctor_id'       => $request->doctor_id,
             'especialidad_id' => $request->especialidad_id,
@@ -183,6 +216,15 @@ class DoctorController extends Controller
             'estado'          => $request->estado,
             'motivo'          => $request->motivo,
         ]);
+
+        auditar(
+            'UPDATE',
+            'citas',
+            $cita->id,
+            $antes,
+            $cita->fresh()->toArray()
+        );
+
 
         return redirect()
             ->route('doctor.pacientes.citas', $cita->paciente_id);
@@ -198,7 +240,7 @@ class DoctorController extends Controller
             'motivo' => 'nullable|string|max:255',
         ]);
 
-        Citas::create([
+        $cita = Citas::create([
             'paciente_id' => $request->paciente_id,
             'doctor_id' => $request->doctor_id,
             'especialidad_id' => $request->especialidad_id,
@@ -206,6 +248,14 @@ class DoctorController extends Controller
             'estado' => 'pendiente',
             'motivo' => $request->motivo
         ]);
+
+        auditar(
+            'INSERT',
+            'citas',
+            $cita->id,
+            null,
+            $cita->toArray()
+        );
 
         return redirect()
             ->route('doctor.pacientes.create')
@@ -290,7 +340,7 @@ class DoctorController extends Controller
             return back()->withErrors('El paciente ya tiene una historia clínica abierta');
         }
 
-        HistoriaClinica::create([
+        $historia = HistoriaClinica::create([
             'paciente_id'       => $request->paciente_id,
             'numero_historia'   => $request->numero_historia,
             'fecha_atencion'    => $request->fecha_atencion,
@@ -335,6 +385,14 @@ class DoctorController extends Controller
             'profesional_id' => Auth::id(),
         ]);
 
+        auditar(
+            'INSERT',
+            'historias_clinicas',
+            $historia->id,
+            null,
+            $historia->toArray()
+        );
+
         return redirect()
             ->route('doctor.pacientes.index')
             ->with('success', 'Historia clínica creada correctamente');
@@ -368,15 +426,24 @@ class DoctorController extends Controller
             'password' => 'required|min:6',
         ]);
 
-        User::create([
+        $doctor = User::create([
             'nombre' => $request->nombre,
             'email' => $request->email,
             'tel' => $request->tel,
             'password' => Hash::make($request->password),
-            'rol' => 0, // 👈 DOCTOR
+            'rol' => 0,
             'estado' => 1,
             'two_factor_enabled' => false,
         ]);
+
+        auditar(
+            'INSERT',
+            'usuarios',
+            $doctor->id,
+            null,
+            $doctor->toArray()
+        );
+
 
         return redirect()
             ->route('admin.doctores.index')

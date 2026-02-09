@@ -95,7 +95,7 @@
                     </div>
                     @endif
 
-                    <form method="POST" action="{{ route('perfil.update') }}">
+                    <form method="POST" action="{{ route('admin.perfil.update') }}">
                         @csrf
                         @method('PUT')
 

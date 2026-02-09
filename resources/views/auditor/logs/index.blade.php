@@ -70,26 +70,6 @@
                     </div>
 
                     <div>
-                        <label class="form-label">Tabla</label>
-                        <select name="tabla" class="form-control">
-                            <option value="">Todas</option>
-                            @foreach($tablas as $tabla)
-                                <option value="{{ $tabla }}">{{ $tabla }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="form-label">Usuario</label>
-                        <select name="usuario_id" class="form-control">
-                            <option value="">Todos</option>
-                            @foreach($usuarios as $usuario)
-                                <option value="{{ $usuario->id }}">{{ $usuario->nombre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
                         <label class="form-label">Fecha inicio</label>
                         <input type="date" name="fecha_inicio" class="form-control">
                     </div>

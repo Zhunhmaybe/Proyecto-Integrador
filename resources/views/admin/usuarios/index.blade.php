@@ -92,6 +92,7 @@
                                 <th>Nombre</th>
                                 <th>Email</th>
                                 <th>Rol</th>
+                                <th>Accion</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -103,6 +104,11 @@
                                         <span class="badge-role">
                                             {{ $u->nombre_rol }}
                                         </span>
+                                    </td>
+                                    <td><a href="{{ route('admin.usuarios.edit', $u->id) }}"
+                                            class="btn btn-sm btn-warning">
+                                            Editar / Rol
+                                        </a>
                                     </td>
                                 </tr>
                             @empty

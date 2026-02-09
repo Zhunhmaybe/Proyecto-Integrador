@@ -26,7 +26,7 @@
                 <i class="fas fa-user-md"></i> Mi Perfil
             </a>
             <a href="{{ route('secretaria.citas.index') }}"
-                class="nav-link {{ request()->routeIs('recpcionista.citas.*') ? 'active' : '' }}">
+                class="nav-link active {{ request()->routeIs('recpcionista.citas.*') ? 'active' : '' }}">
                 <i class="fas fa-calendar-alt"></i> Citas
             </a>
             <a href="{{ route('secretaria.pacientes.index') }}"
