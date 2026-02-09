@@ -99,16 +99,6 @@
                                         ✏️ Editar
                                     </a>
 
-                                    <form method="POST" action="{{ route('admin.especialidades.destroy', $e->id) }}"
-                                        class="d-inline" onsubmit="return confirm('¿Eliminar esta especialidad?')">
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button class="btn btn-sm btn-outline-danger">
-                                            🗑 Eliminar
-                                        </button>
-                                    </form>
-
                                 </td>
                             </tr>
                         @endforeach

@@ -95,10 +95,7 @@ class TableViewController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('nombres', 'like', "%{$search}%")
-                    ->orWhere('apellidos', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('telefono', 'like', "%{$search}%");
+                $q->where('cedula', 'like', "%{$search}%");
             });
         }
 
