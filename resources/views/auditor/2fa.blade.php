@@ -22,7 +22,7 @@
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('auditor.dashboard') }}">Mi perfil</a>
+            <a href="{{ route('auditor.dashboard') }}">Dashboard</a>
             <a href="{{ route('auditor.logs.index') }}">LOGS</a>
             <a href="{{ route('auditor.tables.citas') }}">Citas</a>
             <a href="{{ route('auditor.tables.pacientes') }}">Pacientes</a>
