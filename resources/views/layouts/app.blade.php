@@ -16,26 +16,38 @@
 
     <div class="wrapper">
 
+
         <aside class="sidebar">
             <div class="logo">
                 <img src="/images/logo-danny.png" alt="Logo Danny">
             </div>
 
-            <a href="{{ route('doctor.dashboard') }}" class="{{ request()->routeIs('doctor.dashboard') ? 'active' : '' }}">
-                🧑‍⚕️ Mi perfil
-            </a>
-            <a href="{{ route('doctor.pacientes.index') }}" class="{{ request()->routeIs('doctor.pacientes.*') ? 'active' : '' }}">
-                🧑 Pacientes
-            </a>
-            <a href="{{ route('doctor.citas.index') }}" class="{{ request()->routeIs('doctor.citas.*') ? 'active' : '' }}">
-                📅 Citas
-            </a>
-            <a href="{{ route('historia_clinica.index') }}" class="{{ request()->routeIs('historia_clinica.*') ? 'active' : '' }}">
-                📋 Historial Clínico
-            </a>
-            <a href="{{ route('profile.2fa') }}" class="{{ request()->routeIs('profile.2fa') ? 'active' : '' }}">
-                🔐 Seguridad 2FA
-            </a>
+            <nav>
+                <a href="{{ route('doctor.dashboard') }}"
+                    class="nav-link {{ request()->routeIs('doctor.dashboard') ? 'active' : '' }}">
+                    <i class="fas fa-user-md"></i> Mi Perfil
+                </a>
+
+                <a href="{{ route('doctor.pacientes.index') }}"
+                    class="nav-link {{ request()->routeIs('doctor.pacientes.*') ? 'active' : '' }}">
+                    <i class="fas fa-users"></i> Pacientes
+                </a>
+
+                <a href="{{ route('doctor.citas.index') }}"
+                    class="nav-link {{ request()->routeIs('doctor.citas.*') ? 'active' : '' }}">
+                    <i class="fas fa-calendar-alt"></i> Citas
+                </a>
+
+                <a href="{{ route('historia_clinica.index') }}"
+                    class="nav-link {{ request()->routeIs('historia_clinica.*') ? 'active' : '' }}">
+                    <i class="fas fa-file-medical"></i> Historial Clínico
+                </a>
+
+                <a href="{{ route('profile.2fa') }}"
+                    class="nav-link {{ request()->routeIs('profile.2fa') ? 'active' : '' }}">
+                    <i class="fas fa-shield-alt"></i> Seguridad 2FA
+                </a>
+            </nav>
 
             <div class="user">
                 <strong>{{ Auth::user()->nombre }}</strong><br>
@@ -43,7 +55,10 @@
 
                 <form method="POST" action="{{ route('logout') }}" class="mt-2">
                     @csrf
-                    <button class="btn btn-sm btn-light w-100">Cerrar Sesión</button>
+                    <button class="btn btn-sm btn-outline-light w-100 border-0 text-start ps-0">
+                        <i class="fa-solid fa-right-from-bracket me-2"></i> Cerrar Sesión
+                    </button>
+
                 </form>
             </div>
         </aside>

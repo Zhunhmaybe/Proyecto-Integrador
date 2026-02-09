@@ -25,7 +25,7 @@ class RecepcionistaController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-
+        $antes = $user->toArray();
         $request->validate([
             'nombre' => 'required|string|max:100',
             'email'  => 'required|email|max:100|unique:usuarios,email,' . $user->id,
@@ -38,6 +38,13 @@ class RecepcionistaController extends Controller
             'tel'    => $request->tel,
         ]);
 
+        auditar(
+            'UPDATE',
+            'usuarios',
+            $user->id,
+            $antes,
+            $user->fresh()->toArray()
+        );
         return redirect()
             ->route('recepcionista.home')
             ->with('success', 'Perfil actualizado correctamente');
@@ -126,6 +133,7 @@ class RecepcionistaController extends Controller
 
     public function pacientesUpdate(Request $request, Paciente $paciente)
     {
+        $antes = $paciente->toArray();
         $request->validate([
             'telefono' => 'required|string|max:10',
             'email' => 'nullable|email',
@@ -218,7 +226,7 @@ class RecepcionistaController extends Controller
             'motivo' => 'nullable|string|max:255',
         ]);
 
-        Citas::create([
+        $cita = Citas::create([
             'paciente_id' => $request->paciente_id,
             'doctor_id' => $request->doctor_id,
             'especialidad_id' => $request->especialidad_id,
@@ -227,6 +235,13 @@ class RecepcionistaController extends Controller
             'motivo' => $request->motivo
         ]);
 
+        auditar(
+            'INSERT',
+            'citas',
+            $cita->id,
+            null,
+            $cita->toArray()
+        );
         return redirect()
             ->route('secretaria.citas.create')
             ->with('success', 'Cita agendada correctamente');

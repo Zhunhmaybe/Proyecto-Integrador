@@ -11,6 +11,7 @@ use App\Models\Especialidades;
 
 
 
+
 class AdminController extends Controller
 {
     //Editar perfil Admin
@@ -24,6 +25,8 @@ class AdminController extends Controller
     {
         $user = Auth::user();
 
+        $antes = $user->toArray();
+
         $request->validate([
             'nombre' => 'required|string|max:100',
             'email'  => 'required|email|max:100|unique:usuarios,email,' . $user->id,
@@ -36,6 +39,13 @@ class AdminController extends Controller
             'tel'    => $request->tel,
         ]);
 
+        auditar(
+            'UPDATE',
+            'usuarios',
+            $user->id,
+            $antes,
+            $user->fresh()->toArray()
+        );
         return redirect()
             ->route('admin.dashboard')
             ->with('success', 'Perfil actualizado correctamente');
@@ -75,7 +85,7 @@ class AdminController extends Controller
             'consentimiento_lopdp' => 'required|accepted',
         ]);
 
-        Paciente::create([
+        $paciente = Paciente::create([
             'cedula' => $request->cedula,
             'nombres' => $request->nombres,
             'apellidos' => $request->apellidos,
@@ -87,6 +97,14 @@ class AdminController extends Controller
             'fecha_firma_lopdp' => now(),
         ]);
 
+        // ✅ AUDITORÍA
+        auditar(
+            'INSERT',
+            'pacientes',
+            $paciente->id,
+            null,
+            $paciente->toArray()
+        );
         return redirect()
             ->route('admin.pacientes.index')
             ->with('success', 'Paciente registrado correctamente');
@@ -94,6 +112,7 @@ class AdminController extends Controller
 
     public function pacientesUpdate(Request $request, Paciente $paciente)
     {
+        $antes = $paciente->toArray();
         $request->validate([
             'telefono' => 'required|string|max:10',
             'email' => 'nullable|email',
@@ -105,6 +124,14 @@ class AdminController extends Controller
             'email' => $request->email,
             'direccion' => $request->direccion,
         ]);
+
+        auditar(
+            'UPDATE',
+            'pacientes',
+            $paciente->id,
+            $antes,
+            $paciente->fresh()->toArray()
+        );
 
         return redirect()
             ->route('admin.pacientes.index')
@@ -128,6 +155,52 @@ class AdminController extends Controller
 
         return view('admin.usuarios.index', compact('usuarios'));
     }
+
+    public function usuariosEdit(User $user)
+    {
+        $roles = [
+            0 => 'Doctor',
+            1 => 'Administrador',
+            2 => 'Auditor',
+            3 => 'Recepcionista',
+        ];
+
+        return view('admin.usuarios.edit', compact('user', 'roles'));
+    }
+
+    public function usuariosUpdate(Request $request, User $user)
+{
+    $antes = $user->toArray();
+
+    $request->validate([
+        'nombre' => 'required|string|max:100',
+        'email'  => 'required|email|unique:usuarios,email,' . $user->id,
+        'tel'    => 'nullable|string|max:20',
+        'rol'    => 'required|in:0,1,2,3',
+    ]);
+
+    $user->update([
+        'nombre' => $request->nombre,
+        'email'  => $request->email,
+        'tel'    => $request->tel,
+        'rol'    => $request->rol,
+    ]);
+
+    // ✅ AUDITORÍA DEL CAMBIO DE ROL
+    auditar(
+        'UPDATE',
+        'usuarios',
+        $user->id,
+        $antes,
+        $user->fresh()->toArray()
+    );
+
+    return redirect()
+        ->route('admin.usuarios.index')
+        ->with('success', 'Usuario actualizado y rol asignado correctamente');
+}
+
+
     //Citas
 
     public function Admincreate(Request $request)
@@ -160,6 +233,7 @@ class AdminController extends Controller
 
         return view('admin.citas.create', compact('citas'));
     }
+
     public function citasEdit(Citas $cita)
     {
         $cita->load(['paciente', 'doctor', 'especialidad']);
@@ -176,6 +250,7 @@ class AdminController extends Controller
 
     public function citasUpdate(Request $request, Citas $cita)
     {
+        $antes = $cita->toArray();
         $request->validate([
             'doctor_id'       => 'required|exists:usuarios,id',
             'especialidad_id' => 'required|exists:especialidades,id',
@@ -192,6 +267,13 @@ class AdminController extends Controller
             'motivo'          => $request->motivo,
         ]);
 
+        auditar(
+            'UPDATE',
+            'citas',
+            $cita->id,
+            $antes,
+            $cita->fresh()->toArray()
+        );
         return redirect()
             ->route('admin.pacientes.citas', $cita->paciente_id);
     }
@@ -206,7 +288,7 @@ class AdminController extends Controller
             'motivo' => 'nullable|string|max:255',
         ]);
 
-        Citas::create([
+        $cita = Citas::create([
             'paciente_id' => $request->paciente_id,
             'doctor_id' => $request->doctor_id,
             'especialidad_id' => $request->especialidad_id,
@@ -215,6 +297,13 @@ class AdminController extends Controller
             'motivo' => $request->motivo
         ]);
 
+        auditar(
+            'INSERT',
+            'citas',
+            $cita->id,
+            null,
+            $cita->toArray()
+        );
         return redirect()
             ->route('admin.citas.create')
             ->with('success', 'Cita agendada correctamente');

@@ -21,7 +21,7 @@
             </div>
 
             <nav>
-                <a href="{{ route('auditor.dashboard') }}" class="nav-link icon-profile">Mi perfil</a>
+                <a href="{{ route('auditor.dashboard') }}" class="nav-link icon-profile">Mi Perfil</a>
                 <a href="{{ route('auditor.logs.index') }}" class="nav-link icon-logs">Logs</a>
                 <a href="{{ route('auditor.tables.citas') }}" class="nav-link icon-citas">Citas</a>
                 <a href="{{ route('auditor.tables.pacientes') }}" class="nav-link icon-pacientes">Pacientes</a>
@@ -85,11 +85,6 @@
 
                         <div>
                             <label class="form-label">Buscar</label>
-                            <input type="text" name="search" value="{{ request('search') }}" class="form-control"
-                                placeholder="Nombre o email">
-                        </div>
-
-                        <div>
                             <label class="form-label">Rol</label>
                             <select class="form-control" name="rol">
                                 <option value="">Todos</option>
@@ -103,6 +98,8 @@
                         </div>
 
                     </div>
+                    
+                    <p></p>
 
                     <div class="filter-actions">
                         <a href="{{ route('auditor.tables.users') }}" class="btn btn-secondary">Limpiar</a>
