@@ -157,6 +157,10 @@
             color: #f4c430;
             font-weight: 600;
         }
+        .volver-link{
+            color:#2c7fb8;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -250,6 +254,7 @@
             <div class="text-center mt-3">
                 <span style="font-size: 13px;">¿No tienes cuenta?</span>
                 <a href="{{ url('/register') }}" class="register-link">Regístrate</a>
+                <a href="{{ url('inicial') }}" class="volver-link">Volver</a>
             </div>
         </form>
 
