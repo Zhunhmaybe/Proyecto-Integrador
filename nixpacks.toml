@@ -1,9 +1,13 @@
 [phases.setup]
 nixPkgs = [
-  "php81",
-  "php81Packages.composer",
-  "php81Extensions.pdo_mysql",
-  "php81Extensions.mysqli"
+  "php82",
+  "php82Extensions.pdo",
+  "php82Extensions.pdo_mysql",
+  "php82Extensions.mbstring",
+  "php82Extensions.openssl",
+  "php82Extensions.tokenizer",
+  "php82Extensions.xml",
+  "php82Extensions.curl"
 ]
 
 [phases.build]
