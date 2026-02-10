@@ -62,61 +62,56 @@
                 </form>
             </div>
         </aside>
-
-        {{-- CONTENT --}}
         <main class="content">
 
-            {{-- HEADER --}}
-            <div class="header-box mb-4">
-                <div>
-                    <h4 class="fw-bold mb-1">🦷 Especialidades</h4>
-                    <small class="text-muted">Gestión de especialidades del sistema</small>
+            <div class="page-card">
+
+                {{-- HEADER --}}
+                <div class="page-header">
+                    <div>
+                        <h3>🦷 Especialidades</h3>
+                        <small>Gestión de especialidades del sistema</small>
+                    </div>
+
+                    <a href="{{ route('admin.especialidades.create') }}" class="btn btn-gold">
+                        + Nueva Especialidad
+                    </a>
                 </div>
 
-                <a href="{{ route('admin.especialidades.create') }}" class="btn btn-gold">
-                    + Nueva Especialidad
-                </a>
-            </div>
+                {{-- BODY --}}
+                <div class="panel">
 
-            {{-- PANEL --}}
-            <div class="panel">
-
-                <table class="table table-hover align-middle">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th class="text-end">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($especialidades as $e)
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
                             <tr>
-                                <td>{{ $e->nombre }}</td>
-                                <td class="text-end">
-
-                                    <a href="{{ route('admin.especialidades.edit', $e->id) }}"
-                                        class="btn btn-sm btn-outline-primary">
-                                        ✏️ Editar
-                                    </a>
-
-                                    <form method="POST" action="{{ route('admin.especialidades.destroy', $e->id) }}"
-                                        class="d-inline" onsubmit="return confirm('¿Eliminar esta especialidad?')">
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button class="btn btn-sm btn-outline-danger">
-                                            🗑 Eliminar
-                                        </button>
-                                    </form>
-
-                                </td>
+                                <th>Nombre</th>
+                                <th class="text-end">Acciones</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($especialidades as $e)
+                                <tr>
+                                    <td class="fw-semibold">
+                                        {{ $e->nombre }}
+                                    </td>
+                                    <td class="text-end">
 
+                                        <a href="{{ route('admin.especialidades.edit', $e->id) }}"
+                                            class="btn btn-sm btn-outline-primary me-1">
+                                            ✏️ Editar
+                                        </a>
+
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                </div>
             </div>
+
         </main>
+
 
     </div>
 </body>

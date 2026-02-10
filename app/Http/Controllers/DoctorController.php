@@ -15,6 +15,7 @@ use App\Rules\ValidarCedulaEcuatoriana;
 use Illuminate\Database\QueryException;
 
 
+
 class DoctorController extends Controller
 {
     // LISTAR DOCTORES
@@ -112,6 +113,7 @@ class DoctorController extends Controller
                 'fecha_firma_lopdp' => now(),
             ]);
 
+            // ✅ AUDITORÍA
             auditar(
                 'INSERT',
                 'pacientes',
@@ -123,10 +125,35 @@ class DoctorController extends Controller
             return redirect()
                 ->route('doctor.pacientes.index')
                 ->with('success', 'Paciente registrado correctamente');
-
         } catch (QueryException $e) {
+            $errorMessage = $e->errorInfo[2] ?? 'Error desconocido';
+
+            if (str_contains($errorMessage, 'no cumple la edad mínima')) {
+                return back()
+                    ->withErrors(['fecha_nacimiento' => 'El paciente debe tener al menos 1 año de edad.'])
+                    ->withInput();
+            }
+
+            if (str_contains($errorMessage, 'fecha de nacimiento no puede ser futura')) {
+                return back()
+                    ->withErrors(['fecha_nacimiento' => 'La fecha no puede ser futura.'])
+                    ->withInput();
+            }
+
+            if (str_contains($errorMessage, 'El correo electrónico') && str_contains($errorMessage, 'ya está registrado')) {
+                return back()
+                    ->withErrors(['email' => 'Este correo ya está registrado en el sistema.'])
+                    ->withInput();
+            }
+
+            if (str_contains($errorMessage, 'pacientes_cedula_unique') || str_contains($errorMessage, 'cedula')) {
+                return back()
+                    ->withErrors(['cedula' => 'Esta cédula ya está registrada.'])
+                    ->withInput();
+            }
+
             return back()
-                ->withErrors(['error' => 'Error de base de datos'])
+                ->with('error', 'Error de base de datos: ' . $errorMessage)
                 ->withInput();
         }
     }
@@ -149,6 +176,7 @@ class DoctorController extends Controller
                 'direccion' => $request->direccion,
             ]);
 
+            // ✅ AUDITORÍA
             auditar(
                 'UPDATE',
                 'pacientes',
@@ -160,10 +188,17 @@ class DoctorController extends Controller
             return redirect()
                 ->route('doctor.pacientes.index')
                 ->with('success', 'Paciente actualizado correctamente');
-
         } catch (QueryException $e) {
+            $errorMessage = $e->errorInfo[2] ?? 'Error desconocido';
+
+            if (str_contains($errorMessage, 'El correo electrónico') && str_contains($errorMessage, 'ya está registrado')) {
+                return back()
+                    ->withErrors(['email' => 'Este correo ya está registrado por otro paciente.'])
+                    ->withInput();
+            }
+
             return back()
-                ->withErrors(['error' => 'Error al actualizar paciente'])
+                ->with('error', 'Error al actualizar: ' . $errorMessage)
                 ->withInput();
         }
     }

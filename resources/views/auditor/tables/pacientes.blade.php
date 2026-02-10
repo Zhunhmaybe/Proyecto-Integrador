@@ -20,7 +20,7 @@
         </div>
 
         <nav>
-            <a href="{{ route('auditor.dashboard') }}" class="nav-link icon-profile">Mi Perfil</a>
+            <a href="{{ route('auditor.dashboard') }}" class="nav-link icon-profile">Dashboard</a>
             <a href="{{ route('auditor.logs.index') }}" class="nav-link icon-logs">Logs</a>
             <a href="{{ route('auditor.tables.citas') }}" class="nav-link icon-citas">Citas</a>
             <a href="{{ route('auditor.tables.pacientes') }}" class="nav-link icon-pacientes active">Pacientes</a>
@@ -70,7 +70,7 @@
                     <input type="text"
                            name="search"
                            class="form-control"
-                           placeholder="Nombre, apellido, email o teléfono"
+                           placeholder="Cedula"
                            value="{{ request('search') }}">
                 </div>
 
@@ -87,6 +87,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Cedula</th>
                             <th>Nombre Completo</th>
                             <th>Email</th>
                             <th>Teléfono</th>
@@ -99,6 +100,7 @@
                         @forelse($pacientes as $paciente)
                         <tr>
                             <td>#{{ $paciente->id }}</td>
+                            <td>{{ $paciente->cedula ?? 'N/A'}}</td>
                             <td>{{ $paciente->nombres }} {{ $paciente->apellidos }}</td>
                             <td>{{ $paciente->email ?? 'N/A' }}</td>
                             <td>{{ $paciente->telefono ?? 'N/A' }}</td>

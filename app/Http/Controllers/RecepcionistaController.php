@@ -85,7 +85,7 @@ class RecepcionistaController extends Controller
         ]);
 
         try {
-            Paciente::create([
+            $paciente = Paciente::create([
                 'cedula' => $request->cedula,
                 'nombres' => $request->nombres,
                 'apellidos' => $request->apellidos,
@@ -96,6 +96,15 @@ class RecepcionistaController extends Controller
                 'consentimiento_lopdp' => true,
                 'fecha_firma_lopdp' => now(),
             ]);
+
+            // ✅ AUDITORÍA
+            auditar(
+                'INSERT',
+                'pacientes',
+                $paciente->id,
+                null,
+                $paciente->toArray()
+            );
 
             return redirect()
                 ->route('secretaria.pacientes.index')
@@ -127,13 +136,16 @@ class RecepcionistaController extends Controller
                     ->withInput();
             }
 
-            return back()->with('error', 'Error de base de datos: ' . $errorMessage)->withInput();
+            return back()
+                ->with('error', 'Error de base de datos: ' . $errorMessage)
+                ->withInput();
         }
     }
 
     public function pacientesUpdate(Request $request, Paciente $paciente)
     {
         $antes = $paciente->toArray();
+
         $request->validate([
             'telefono' => 'required|string|max:10',
             'email' => 'nullable|email',
@@ -147,24 +159,20 @@ class RecepcionistaController extends Controller
                 'direccion' => $request->direccion,
             ]);
 
+            // ✅ AUDITORÍA
+            auditar(
+                'UPDATE',
+                'pacientes',
+                $paciente->id,
+                $antes,
+                $paciente->fresh()->toArray()
+            );
+
             return redirect()
                 ->route('secretaria.pacientes.index')
                 ->with('success', 'Paciente actualizado correctamente');
         } catch (QueryException $e) {
             $errorMessage = $e->errorInfo[2] ?? 'Error desconocido';
-
-            // Validaciones de trigger
-            if (str_contains($errorMessage, 'no cumple la edad mínima')) {
-                return back()
-                    ->withErrors(['fecha_nacimiento' => 'El paciente debe tener al menos 1 año de edad.'])
-                    ->withInput();
-            }
-
-            if (str_contains($errorMessage, 'fecha de nacimiento no puede ser futura')) {
-                return back()
-                    ->withErrors(['fecha_nacimiento' => 'La fecha no puede ser futura.'])
-                    ->withInput();
-            }
 
             if (str_contains($errorMessage, 'El correo electrónico') && str_contains($errorMessage, 'ya está registrado')) {
                 return back()
@@ -172,9 +180,12 @@ class RecepcionistaController extends Controller
                     ->withInput();
             }
 
-            return back()->with('error', 'Error al actualizar: ' . $errorMessage)->withInput();
+            return back()
+                ->with('error', 'Error al actualizar: ' . $errorMessage)
+                ->withInput();
         }
     }
+
 
     public function pacientesCitas(Paciente $paciente)
     {
