@@ -1,8 +1,18 @@
 [phases.setup]
-nixPkgs = ["php81", "php81Packages.composer"]
+nixPkgs = [
+  "php81",
+  "php81Packages.composer",
+  "php81Extensions.pdo_mysql",
+  "php81Extensions.mysqli"
+]
 
 [phases.build]
-cmds = ["composer install --no-dev --optimize-autoloader"]
+cmds = [
+  "composer install --no-dev --optimize-autoloader",
+  "php artisan key:generate --force",
+  "php artisan config:clear",
+  "php artisan config:cache"
+]
 
 [start]
 cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
