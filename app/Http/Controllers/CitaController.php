@@ -43,7 +43,7 @@ class CitaController extends Controller
             'motivo' => 'nullable|string|max:255',
         ]);
 
-        Citas::create([
+        $cita=Citas::create([
             'paciente_id' => $request->paciente_id,
             'doctor_id' => $request->doctor_id,
             'especialidad_id' => $request->especialidad_id,
@@ -52,6 +52,13 @@ class CitaController extends Controller
             'motivo' => $request->motivo
         ]);
 
+        auditar(
+            'INSERT',
+            'citas',
+            $cita->id,
+            null,
+            $cita->toArray()
+        );
         return redirect()
             ->route('citas.create')
             ->with('success', 'Cita agendada correctamente');

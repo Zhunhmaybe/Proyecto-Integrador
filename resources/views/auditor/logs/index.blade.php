@@ -20,7 +20,7 @@
         </div>
 
         <nav>
-            <a href="{{ route('auditor.dashboard') }}" class="nav-link icon-profile">Mi Perfil</a>
+            <a href="{{ route('auditor.dashboard') }}" class="nav-link icon-profile">Dashboard</a>
             <a href="{{ route('auditor.logs.index') }}" class="nav-link icon-logs active">Logs</a>
             <a href="{{ route('auditor.tables.citas') }}" class="nav-link icon-citas">Citas</a>
             <a href="{{ route('auditor.tables.pacientes') }}" class="nav-link icon-pacientes">Pacientes</a>
@@ -70,26 +70,6 @@
                     </div>
 
                     <div>
-                        <label class="form-label">Tabla</label>
-                        <select name="tabla" class="form-control">
-                            <option value="">Todas</option>
-                            @foreach($tablas as $tabla)
-                                <option value="{{ $tabla }}">{{ $tabla }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="form-label">Usuario</label>
-                        <select name="usuario_id" class="form-control">
-                            <option value="">Todos</option>
-                            @foreach($usuarios as $usuario)
-                                <option value="{{ $usuario->id }}">{{ $usuario->nombre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
                         <label class="form-label">Fecha inicio</label>
                         <input type="date" name="fecha_inicio" class="form-control">
                     </div>
@@ -101,8 +81,10 @@
                 </div>
 
                 <div class="filter-actions">
-                    <a href="{{ route('auditor.logs.index') }}" class="btn btn-secondary">Limpiar</a>
                     <button class="btn btn-primary">Filtrar</button>
+
+                    <a href="{{ route('auditor.logs.index') }}" class="btn btn-secondary">Limpiar</a>
+                    
                     <a href="{{ route('auditor.logs.export') }}" class="btn btn-success icon-export">
                         Exportar CSV
                     </a>
@@ -122,7 +104,6 @@
                             <th>Registro</th>
                             <th>IP</th>
                             <th>Fecha</th>
-                            <th>Detalles</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -139,9 +120,6 @@
                                 <td>{{ $log->registro_id ?? 'N/A' }}</td>
                                 <td class="mono">{{ $log->ip_address }}</td>
                                 <td>{{ $log->created_at->format('d/m/Y H:i') }}</td>
-                                <td>
-                                    <button class="details-btn">Ver</button>
-                                </td>
                             </tr>
                         @empty
                             <tr>
