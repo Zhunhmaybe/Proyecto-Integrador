@@ -6,7 +6,7 @@
     <title>Doctores</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    @vite(['resources/css/admin/Doctores/index.css'])
+    @vite(['resources/css/admin/Doctor/index.css'])
 </head>
 
 <body>
