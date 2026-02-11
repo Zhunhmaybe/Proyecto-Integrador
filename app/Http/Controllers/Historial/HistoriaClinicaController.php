@@ -12,6 +12,8 @@ use App\Models\Historial_Clinico\Odontograma;
 use App\Models\Historial_Clinico\IndicesSaludBucal;
 use App\Models\Diagnostico;
 use App\Models\Tratamiento;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class HistoriaClinicaController extends Controller
 {
@@ -232,12 +234,20 @@ class HistoriaClinicaController extends Controller
      */
     public function generarPDF($id)
     {
-        $historia = HistoriaClinica::with(['paciente', 'odontograma', 'diagnosticos', 'tratamientos'])->findOrFail($id);
+        $historia = HistoriaClinica::with([
+            'paciente',
+            'profesional',
+            'odontograma',
+            'diagnosticos',
+            'tratamientos',
+            'indicesSaludBucal',
+            'examenesComplementarios'
+        ])->findOrFail($id);
 
-        // Aquí usarías DomPDF: $pdf = PDF::loadView('pdf.historia', compact('historia'));
-        // return $pdf->stream();
+        $pdf = Pdf::loadView('historia_clinica.pdf', compact('historia'))
+            ->setPaper('a4', 'portrait');
 
-        return view('historia_clinica.pdf_preview', compact('historia'));
+        return $pdf->stream('historia_clinica_' . $historia->numero_historia . '.pdf');
     }
 
     // ==========================================
@@ -250,17 +260,61 @@ class HistoriaClinicaController extends Controller
     private function inicializarDientes($historiaId)
     {
         // Array completo de piezas dentales (Adulto + Niño)
-       $piezas = [
+        $piezas = [
             // Permanentes
-            18, 17, 16, 15, 14, 13, 12, 11,
-            21, 22, 23, 24, 25, 26, 27, 28,
-            31, 32, 33, 34, 35, 36, 37, 38,
-            41, 42, 43, 44, 45, 46, 47, 48,
+            18,
+            17,
+            16,
+            15,
+            14,
+            13,
+            12,
+            11,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
             // Temporales
-            55, 54, 53, 52, 51,
-            61, 62, 63, 64, 65,
-            71, 72, 73, 74, 75,
-            81, 82, 83, 84, 85
+            55,
+            54,
+            53,
+            52,
+            51,
+            61,
+            62,
+            63,
+            64,
+            65,
+            71,
+            72,
+            73,
+            74,
+            75,
+            81,
+            82,
+            83,
+            84,
+            85
         ];
 
         $insertData = [];
