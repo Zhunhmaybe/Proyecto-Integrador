@@ -15,6 +15,7 @@ use App\Rules\ValidarCedulaEcuatoriana;
 use Illuminate\Database\QueryException;
 
 
+
 class DoctorController extends Controller
 {
     // LISTAR DOCTORES
@@ -36,6 +37,8 @@ class DoctorController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
+        $antes = $user->toArray(); // 🔴 ANTES
+
         $request->validate([
             'nombre' => 'required|string|max:100',
             'email'  => 'required|email|max:100|unique:usuarios,email,' . $user->id,
@@ -48,10 +51,20 @@ class DoctorController extends Controller
             'tel'    => $request->tel,
         ]);
 
+        // ✅ AUDITORÍA
+        auditar(
+            'UPDATE',
+            'usuarios',
+            $user->id,
+            $antes,
+            $user->fresh()->toArray()
+        );
+
         return redirect()
             ->route('doctor.dashboard')
             ->with('success', 'Perfil actualizado correctamente');
     }
+
 
     //Pacientes
     public function pacientesIndex(Request $request)
@@ -88,7 +101,7 @@ class DoctorController extends Controller
         ]);
 
         try {
-            Paciente::create([
+            $paciente = Paciente::create([
                 'cedula' => $request->cedula,
                 'nombres' => $request->nombres,
                 'apellidos' => $request->apellidos,
@@ -99,6 +112,15 @@ class DoctorController extends Controller
                 'consentimiento_lopdp' => true,
                 'fecha_firma_lopdp' => now(),
             ]);
+
+            // ✅ AUDITORÍA
+            auditar(
+                'INSERT',
+                'pacientes',
+                $paciente->id,
+                null,
+                $paciente->toArray()
+            );
 
             return redirect()
                 ->route('doctor.pacientes.index')
@@ -130,12 +152,16 @@ class DoctorController extends Controller
                     ->withInput();
             }
 
-            return back()->with('error', 'Error de base de datos: ' . $errorMessage)->withInput();
+            return back()
+                ->with('error', 'Error de base de datos: ' . $errorMessage)
+                ->withInput();
         }
     }
 
     public function pacientesUpdate(Request $request, Paciente $paciente)
     {
+        $antes = $paciente->toArray();
+
         $request->validate([
             'telefono' => 'required|string|max:10',
             'email' => 'nullable|email',
@@ -149,24 +175,20 @@ class DoctorController extends Controller
                 'direccion' => $request->direccion,
             ]);
 
+            // ✅ AUDITORÍA
+            auditar(
+                'UPDATE',
+                'pacientes',
+                $paciente->id,
+                $antes,
+                $paciente->fresh()->toArray()
+            );
+
             return redirect()
                 ->route('doctor.pacientes.index')
                 ->with('success', 'Paciente actualizado correctamente');
         } catch (QueryException $e) {
             $errorMessage = $e->errorInfo[2] ?? 'Error desconocido';
-
-            // Validaciones de trigger
-            if (str_contains($errorMessage, 'no cumple la edad mínima')) {
-                return back()
-                    ->withErrors(['fecha_nacimiento' => 'El paciente debe tener al menos 1 año de edad.'])
-                    ->withInput();
-            }
-
-            if (str_contains($errorMessage, 'fecha de nacimiento no puede ser futura')) {
-                return back()
-                    ->withErrors(['fecha_nacimiento' => 'La fecha no puede ser futura.'])
-                    ->withInput();
-            }
 
             if (str_contains($errorMessage, 'El correo electrónico') && str_contains($errorMessage, 'ya está registrado')) {
                 return back()
@@ -174,9 +196,12 @@ class DoctorController extends Controller
                     ->withInput();
             }
 
-            return back()->with('error', 'Error al actualizar: ' . $errorMessage)->withInput();
+            return back()
+                ->with('error', 'Error al actualizar: ' . $errorMessage)
+                ->withInput();
         }
     }
+
 
     public function pacientesCitas(Paciente $paciente)
     {
@@ -235,6 +260,8 @@ class DoctorController extends Controller
             'motivo'          => 'nullable|string|max:255',
         ]);
 
+        $antes = $cita->toArray();
+
         $cita->update([
             'doctor_id'       => $request->doctor_id,
             'especialidad_id' => $request->especialidad_id,
@@ -242,6 +269,15 @@ class DoctorController extends Controller
             'estado'          => $request->estado,
             'motivo'          => $request->motivo,
         ]);
+
+        auditar(
+            'UPDATE',
+            'citas',
+            $cita->id,
+            $antes,
+            $cita->fresh()->toArray()
+        );
+
 
         return redirect()
             ->route('doctor.pacientes.citas', $cita->paciente_id);
@@ -257,7 +293,7 @@ class DoctorController extends Controller
             'motivo' => 'nullable|string|max:255',
         ]);
 
-        Citas::create([
+        $cita = Citas::create([
             'paciente_id' => $request->paciente_id,
             'doctor_id' => $request->doctor_id,
             'especialidad_id' => $request->especialidad_id,
@@ -265,6 +301,14 @@ class DoctorController extends Controller
             'estado' => 'pendiente',
             'motivo' => $request->motivo
         ]);
+
+        auditar(
+            'INSERT',
+            'citas',
+            $cita->id,
+            null,
+            $cita->toArray()
+        );
 
         return redirect()
             ->route('doctor.pacientes.create')
@@ -349,7 +393,7 @@ class DoctorController extends Controller
             return back()->withErrors('El paciente ya tiene una historia clínica abierta');
         }
 
-        HistoriaClinica::create([
+        $historia = HistoriaClinica::create([
             'paciente_id'       => $request->paciente_id,
             'numero_historia'   => $request->numero_historia,
             'fecha_atencion'    => $request->fecha_atencion,
@@ -394,6 +438,14 @@ class DoctorController extends Controller
             'profesional_id' => Auth::id(),
         ]);
 
+        auditar(
+            'INSERT',
+            'historias_clinicas',
+            $historia->id,
+            null,
+            $historia->toArray()
+        );
+
         return redirect()
             ->route('doctor.pacientes.index')
             ->with('success', 'Historia clínica creada correctamente');
@@ -427,15 +479,24 @@ class DoctorController extends Controller
             'password' => 'required|min:6',
         ]);
 
-        User::create([
+        $doctor = User::create([
             'nombre' => $request->nombre,
             'email' => $request->email,
             'tel' => $request->tel,
             'password' => Hash::make($request->password),
-            'rol' => 20, // 👈 DOCTOR
+            'rol' => 0,
             'estado' => 1,
             'two_factor_enabled' => false,
         ]);
+
+        auditar(
+            'INSERT',
+            'usuarios',
+            $doctor->id,
+            null,
+            $doctor->toArray()
+        );
+
 
         return redirect()
             ->route('admin.doctores.index')

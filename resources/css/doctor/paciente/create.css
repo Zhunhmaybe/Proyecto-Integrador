@@ -1,0 +1,244 @@
+﻿/* =========================================
+   1. RESET Y BASE
+   ========================================= */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f4f7fb;
+    font-family: 'Segoe UI', sans-serif;
+    color: #1f2937;
+}
+
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =========================================
+   2. SIDEBAR (MISMO ESTILO DOCTOR)
+   ========================================= */
+.sidebar {
+    width: 260px;
+    background: #0b4f79;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar .logo {
+    text-align: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar .logo img {
+    width: 110px;
+}
+
+/* Links simples (emoji) */
+.sidebar a {
+    display: block;
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    transform: translateX(4px);
+}
+
+.sidebar a.active {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Usuario */
+.sidebar .user {
+    margin-top: auto;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding-top: 15px;
+    font-size: 13px;
+    color: #e0e7ff;
+}
+
+/* =========================================
+   3. CONTENIDO PRINCIPAL
+   ========================================= */
+.content {
+    margin-left: 260px;
+    padding: 40px;
+    width: calc(100% - 260px);
+}
+
+/* =========================================
+   4. TÍTULOS
+   ========================================= */
+.page-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0b4f79;
+    margin-bottom: 4px;
+}
+
+.page-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 25px;
+}
+
+/* =========================================
+   5. PANEL PRINCIPAL
+   ========================================= */
+.panel-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+}
+
+/* Header del panel */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.panel-header h5 {
+    margin: 0;
+    font-weight: 700;
+    color: #0b4f79;
+}
+
+/* =========================================
+   6. LINKS SUAVES
+   ========================================= */
+.btn-link-soft {
+    color: #0b4f79;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-link-soft:hover {
+    text-decoration: underline;
+}
+
+/* =========================================
+   7. FORMULARIO
+   ========================================= */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+/* Secciones */
+.section-title {
+    font-weight: 600;
+    color: #0b4f79;
+    margin-bottom: 15px;
+    font-size: 15px;
+}
+
+/* Inputs */
+.form-label {
+    font-size: 13px;
+    color: #4b5563;
+    font-weight: 500;
+}
+
+.form-control {
+    border-radius: 10px;
+    font-size: 14px;
+    padding: 10px 12px;
+}
+
+textarea.form-control {
+    resize: none;
+}
+
+/* Checkbox */
+.form-check-label.lopdp {
+    font-size: 13px;
+    color: #374151;
+}
+
+/* =========================================
+   8. ACCIONES
+   ========================================= */
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+/* Botón dorado */
+.btn-gold {
+    background: #e0b23f;
+    color: #fff;
+    border: none;
+    border-radius: 22px;
+    padding: 8px 36px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-gold:hover {
+    background: #c89b2d;
+    color: #fff;
+}
+
+/* =========================================
+   9. ALERTAS
+   ========================================= */
+.alert {
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+/* =========================================
+   10. RESPONSIVE
+   ========================================= */
+@media (max-width: 1024px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+    }
+
+    .wrapper {
+        flex-direction: column;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}

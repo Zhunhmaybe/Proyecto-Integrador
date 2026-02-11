@@ -37,10 +37,17 @@ class EspecialidadesController extends Controller
             'nombre.unique'   => 'Esta especialidad ya existe',
         ]);
 
-        Especialidades::create([
+        $espe = Especialidades::create([
             'nombre' => $request->nombre,
         ]);
 
+        auditar(
+            'INSERT',
+            'citas',
+            $espe->id,
+            null,
+            $espe->toArray()
+        );
         return redirect()
             ->route('admin.especialidades.index')
             ->with('success', 'Especialidad creada correctamente');
@@ -62,7 +69,7 @@ class EspecialidadesController extends Controller
     public function update(Request $request, $id)
     {
         $especialidad = Especialidades::findOrFail($id);
-
+        $antes = $especialidad->toArray();
         $request->validate([
             'nombre' => 'required|string|max:100|unique:especialidades,nombre,' . $especialidad->id,
         ]);
@@ -71,6 +78,13 @@ class EspecialidadesController extends Controller
             'nombre' => $request->nombre,
         ]);
 
+        auditar(
+            'UPDATE',
+            'citas',
+            $especialidad->id,
+            $antes,
+            $especialidad->fresh()->toArray()
+        );
         return redirect()
             ->route('admin.especialidades.index')
             ->with('success', 'Especialidad actualizada correctamente');
