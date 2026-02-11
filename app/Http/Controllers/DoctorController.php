@@ -287,9 +287,12 @@ class DoctorController extends Controller
             'paciente_id' => 'required|exists:pacientes,id',
             'doctor_id' => 'required|exists:usuarios,id',
             'especialidad_id' => 'required|exists:especialidades,id',
-            'fecha_inicio' => 'required|date',
+            'fecha_inicio' => 'required|date|after:now',
             'motivo' => 'nullable|string|max:255',
+        ], [
+            'fecha_inicio.after' => 'La fecha y hora debe ser posterior al momento actual.',
         ]);
+
 
         $cita = Citas::create([
             'paciente_id' => $request->paciente_id,
@@ -312,6 +315,7 @@ class DoctorController extends Controller
             ->route('doctor.pacientes.create')
             ->with('success', 'Cita agendada correctamente');
     }
+
 
     public function historiaIndex()
     {
