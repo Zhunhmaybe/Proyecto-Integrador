@@ -55,9 +55,9 @@ export default defineConfig({
                 'resources/css/admin/especialidades/edit.css',
                 'resources/css/admin/especialidades/create.css',
 
-                'resources/css/admin/Doctor/create.css',
-                'resources/css/admin/Doctor/edit.css',
-                'resources/css/admin/Doctor/index.css',
+                'resources/css/admin/Doctores/create.css',
+                'resources/css/admin/Doctores/edit.css',
+                'resources/css/admin/Doctores/index.css',
 
                 'resources/css/admin/Citas/create.css',
                 'resources/css/admin/Citas/edit-citas.css',
