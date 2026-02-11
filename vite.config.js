@@ -26,7 +26,8 @@ export default defineConfig({
                 'resources/css/welcome.css',
                 'resources/css/auditor/layout.css',
                 'resources/css/auditor/dashboard.css',
-                'resources/css/auditor/tables.css'
+                'resources/css/auditor/tables.css',
+                'resources/css/admin/admin-panel.css',
             ],
             refresh: true,
         }),

@@ -15,16 +15,16 @@ use App\Rules\ValidarCedulaEcuatoriana;
 use Illuminate\Database\QueryException;
 
 
+require_once __DIR__ . '/../../Helpers/audit.php';
 
 class DoctorController extends Controller
+
 {
-    // LISTAR DOCTORES
     public function index()
     {
         $doctores = User::where('rol', 0)->orderBy('nombre')->get();
         return view('admin.doctores.index', compact('doctores'));
     }
-    //Perfil
     public function editProfile()
     {
         /** @var \App\Models\User $user */
@@ -37,7 +37,7 @@ class DoctorController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        $antes = $user->toArray(); // 🔴 ANTES
+        $antes = $user->toArray();
 
         $request->validate([
             'nombre' => 'required|string|max:100',
@@ -51,7 +51,7 @@ class DoctorController extends Controller
             'tel'    => $request->tel,
         ]);
 
-        // ✅ AUDITORÍA
+
         auditar(
             'UPDATE',
             'usuarios',
@@ -157,6 +157,7 @@ class DoctorController extends Controller
                 ->withInput();
         }
     }
+
 
     public function pacientesUpdate(Request $request, Paciente $paciente)
     {
