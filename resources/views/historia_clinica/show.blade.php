@@ -329,44 +329,6 @@
                     </div>
                 </div>
             </div>
-
-            @if($historia->tieneOdontograma())
-            <div class="info-card">
-                <div class="card-header-custom card-header-primary">
-                    <i class="fas fa-tooth"></i>
-                    <span>RESUMEN ODONTOGRAMA</span>
-                </div>
-                <div class="card-body">
-                    @php
-                    $cariados = $historia->odontograma->where('estado', 'caries')->count();
-                    $obturados = $historia->odontograma->where('estado', 'obturado')->count();
-                    $perdidos = $historia->odontograma->whereIn('estado', ['perdido_caries', 'perdido_otra'])->count();
-                    @endphp
-
-                    <div class="odontograma-stat">
-                        <span><i class="fas fa-circle text-danger me-2"></i>Cariados</span>
-                        <strong class="text-danger">{{ $cariados }}</strong>
-                    </div>
-                    <div class="odontograma-stat">
-                        <span><i class="fas fa-circle text-primary me-2"></i>Obturados</span>
-                        <strong class="text-primary">{{ $obturados }}</strong>
-                    </div>
-                    <div class="odontograma-stat">
-                        <span><i class="fas fa-circle text-dark me-2"></i>Perdidos</span>
-                        <strong class="text-dark">{{ $perdidos }}</strong>
-                    </div>
-                    <div class="odontograma-stat">
-                        <span class="fw-bold text-primary">TOTAL CPO</span>
-                        <strong class="text-primary fs-3">{{ $cariados + $obturados + $perdidos }}</strong>
-                    </div>
-
-                    <a href="{{ route('historia_clinica.odontograma', $historia->id) }}" class="btn btn-action btn-gradient-primary w-100 mt-3">
-                        <i class="fas fa-tooth me-2"></i> Ver Odontograma Completo
-                    </a>
-                </div>
-            </div>
-            @endif
-
             <div class="info-card">
                 <div class="card-header-custom card-header-info">
                     <i class="fas fa-microscope"></i>

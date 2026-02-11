@@ -266,34 +266,6 @@ Route::middleware(['auth', 'role:1'])->group(function () {
         ->name('admin.roles.index');
 });
 
-//Auditor
-Route::middleware(['auth', 'role:2'])->prefix('auditor')->name('auditor.')->group(function () {
-
-    Route::get('/', [AuditorDashboardController::class, 'index'])
-        ->name('dashboard');
-
-    Route::get('/logs', [AuditorController::class, 'logs'])
-        ->name('logs.index');
-
-    Route::get('/logs/{id}', [AuditorController::class, 'logDetail'])
-        ->name('logs.detail');
-
-    Route::get('/logs/export/csv', [AuditorController::class, 'exportLogs'])
-        ->name('logs.export');
-
-    Route::get('/citas', [AuditorDashboardController::class, 'citas'])
-        ->name('tables.citas');
-
-    Route::get('/pacientes', [AuditorDashboardController::class, 'pacientes'])
-        ->name('tables.pacientes');
-
-    Route::get('/users', [AuditorDashboardController::class, 'users'])
-        ->name('tables.users');
-
-    Route::get('/api/stats/realtime', [AuditorDashboardController::class, 'getRealtimeStats'])
-        ->name('api.stats.realtime');
-});
-
 //Recepcionista 
 Route::middleware(['auth', 'role:3'])->group(function () {
     Route::get('/secretaria', function () {

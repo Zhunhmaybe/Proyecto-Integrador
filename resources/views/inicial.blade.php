@@ -30,7 +30,6 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link text-white" href="{{ route('login') }}">Ingresar</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="{{ route('servicios') }}">Servicios</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Nosotros</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="{{ route('contacto') }}">Contacto</a></li>
                 </ul>
             </div>
@@ -46,7 +45,7 @@
                 En el Consultorio Odontológico Danny brindamos atención profesional,
                 humana y de calidad para el cuidado integral de tu salud dental.
             </p>
-            <a href="#" class="btn btn-light mt-4">Agendar Cita</a>
+            <a href="{{ route('login') }}" class="btn btn-light mt-4">Agendar Cita</a>
         </div>
     </section>
 
